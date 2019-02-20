@@ -9,8 +9,16 @@ class Cube:
 		self.front = front
 		self.back = back
 		self.left = left
-		self.right = right	
+		self.right = right
 		
+	def remapAll(self):
+		self.up.remap()
+		self.down.remap()
+		self.front.remap()
+		self.back.remap()
+		self.left.remap()
+		self.right.remap()
+	
 	def flip(self, dir):
 		# 'i' stands for 'inverse' (i.e. 'counter-clockwise)
 		# X-axis goes through the left and right faces (same dir as right)

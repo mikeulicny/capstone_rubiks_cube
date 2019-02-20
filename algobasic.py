@@ -10,21 +10,21 @@ class AlgoBasic:
 	# Initializer
 	def __init__(self, cube):
 		self.c = cube
-			
+		
 	def solve(self):
-		# Simplify attributes
+		# Simplify attributes and methods
 		up = self.c.up
 		down = self.c.down
 		front = self.c.front
 		back = self.c.back
 		left = self.c.left
 		right = self.c.right
-
-		# Simplify methods
-		flip = self.c.flip()
-		turn = self.c.turn()
+		flip = self.c.flip
+		turn = self.c.turn
 		
+		#-----------------------
 		# Get yellow edge on top
+		#-----------------------
 		if front.mc == 'y':
 			flip('X')
 		elif back.mc == 'y':
@@ -36,9 +36,10 @@ class AlgoBasic:
 		elif down.mc == 'y':
 			flip('2X')
 	
+		#---------------------------------
 		# While the 'daisy' isn't complete
+		#---------------------------------
 		while not up.allEdges('w'):
-		
 		# If white edge in middle slice:
 			# If it's already in the front, move it up
 			if front.mr == 'w':
@@ -74,34 +75,40 @@ class AlgoBasic:
 				flip('Yi')
 			elif back.mr == 'w' or back.ml == 'w':
 				flip('2Y')
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+
+
+def Main():				
+	# Test: yellow top, green front: R U L F B R U F U L B
+	up = np.array([['o', 'b', 'b'],
+		['r', 'y', 'b'],
+		['o', 'o', 'b']])	
+	front = np.array([['b', 'y', 'r'],
+		['w', 'g', 'g'],
+		['y', 'b', 'r']])
+	left = np.array([['w', 'g', 'w'],
+		['o', 'r', 'y'],
+		['g', 'g', 'w']])
+	down = np.array([['w', 'r', 'b'],
+		['b', 'w', 'w'],
+		['g', 'o', 'o']])
+	back = np.array([['r', 'g', 'g'],
+		['y', 'b', 'w'],
+		['g', 'y', 'o']])
+	right = np.array([['y', 'r', 'r'],
+		['r', 'o', 'w'],
+		['y', 'o', 'y']])
+
+	up = Face(up)
+	down = Face(down)
+	front = Face(front)
+	back = Face(back)
+	left = Face(left)
+	right = Face(right)
+
+	cube = Cube(up, down, front, back, left, right)
+	algo = AlgoBasic(cube)
+	algo.solve()
+
+# Calling Test
+if __name__ == '__main__': 
+    Main() 
