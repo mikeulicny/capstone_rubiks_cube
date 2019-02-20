@@ -75,10 +75,16 @@ class AlgoBasic:
 				flip('Yi')
 			elif back.mr == 'w' or back.ml == 'w':
 				flip('2Y')
-
+				
+		# If white edge in top slice:
+			elif front.tc == 'w':
+				if up.mr != 'w':
+					turn('F')
+					turn('R')
+					
 
 def Main():				
-	# Test: yellow top, green front: R U L F B R U F U L B
+	# Test: yellow top center, green front center: R U L F B R U F U L B
 	up = np.array([['o', 'b', 'b'],
 		['r', 'y', 'b'],
 		['o', 'o', 'b']])	
@@ -106,6 +112,9 @@ def Main():
 	right = Face(right)
 
 	cube = Cube(up, down, front, back, left, right)
+	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
+	print(cube)
+	input('Press enter to enter solutioning loop...')
 	algo = AlgoBasic(cube)
 	algo.solve()
 
