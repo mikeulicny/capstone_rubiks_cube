@@ -10,13 +10,7 @@ class AlgoBasic:
 	# Initializer
 	def __init__(self, cube):
 		self.c = cube
-	
-	def flip(self):
-		super().flip()
 		
-	def turn(self):
-		super().turn()
-
 	def solve(self):
 		# Simplify attributes and methods
 		up = self.c.up
