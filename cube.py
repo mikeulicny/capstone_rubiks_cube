@@ -19,6 +19,32 @@ class Cube:
 		self.left.remap()
 		self.right.remap()
 	
+	# Default print function (it's gross but compact)
+	def __str__(self):
+	
+		u = self.up
+		d = self.down
+		f = self.front
+		b = self.back
+		l = self.left
+		r = self.right
+		s = ' '
+		g = s*6
+		output=(g+b.tl+s+b.tc+s+b.tr+'\n'+
+			g+b.ml+s+b.mc+s+b.mr+'\n'+
+			g+b.bl+s+b.bc+s+b.br+'\n'+
+			l.tl+s+l.tc+s+l.tr+s+u.tl+s+u.tc+s+u.tr+s+
+			r.tl+s+r.tc+s+r.tr+s+d.tl+s+d.tc+s+d.tr+'\n'+
+			l.ml+s+l.mc+s+l.mr+s+u.ml+s+u.mc+s+u.mr+s+
+			r.ml+s+r.mc+s+r.mr+s+d.ml+s+d.mc+s+d.mr+'\n'+
+			l.bl+s+l.bc+s+l.br+s+u.bl+s+u.bc+s+u.br+s+
+			r.bl+s+r.bc+s+r.br+s+d.bl+s+d.bc+s+d.br+'\n'+
+			g+f.tl+s+f.tc+s+f.tr+s+'\n'+
+			g+f.ml+s+f.mc+s+f.mr+s+'\n'+
+			g+f.bl+s+f.bc+s+f.br+s+'\n')
+		return output
+
+		
 	def flip(self, dir):
 		# 'i' stands for 'inverse' (i.e. 'counter-clockwise)
 		# X-axis goes through the left and right faces (same dir as right)
