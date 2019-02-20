@@ -11,6 +11,8 @@
 # face.ml face.mc face.mr
 # face.bl face.bc face.br
 
+import numpy as np
+
 class Face:
 	# Initializer
 	def __init__(self, faceArray):
@@ -24,10 +26,12 @@ class Face:
 		self.bc = faceArray[2,1]
 		self.br = faceArray[2,2]
 	
-	# Sub-arrays:
-	wholeFace = np.array([[tl, tc, tr],[ml, mc, mr],[bl, bc, br]])
-	edges = np.array([ml, tc, mr, bc])
-	crnrs = np.array([tl, tr, br, bl])
+	def map(self):
+		wholeFace = np.array([[self.tl, self.tc, self.tr],
+			[self.ml, self.mc, self.mr],
+			[self.bl, self.c, self.br]])
+		edges = np.array([self.ml, self.tc, self.mr, self.bc])
+		crnrs = np.array([self.tl, self.tr, self.br, self.bl])
 	
 	def allEdges(self, color):
 		out = True
