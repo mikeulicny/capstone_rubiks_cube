@@ -25,13 +25,16 @@ class Face:
 		self.bl = faceArray[2,0]
 		self.bc = faceArray[2,1]
 		self.br = faceArray[2,2]
-	
-	def map(self):
-		wholeFace = np.array([[self.tl, self.tc, self.tr],
+		self.wholeFace = np.empty(shape=(3,3))
+		self.edges = np.empty(shape=(1,4))
+		self.crnrs = np.empty(shape=(1,4))
+		
+	def remap(self):
+		self.wholeFace = np.array([[self.tl, self.tc, self.tr],
 			[self.ml, self.mc, self.mr],
-			[self.bl, self.c, self.br]])
-		edges = np.array([self.ml, self.tc, self.mr, self.bc])
-		crnrs = np.array([self.tl, self.tr, self.br, self.bl])
+			[self.bl, self.bc, self.br]])
+		self.edges = np.array([self.ml, self.tc, self.mr, self.bc])
+		self.crnrs = np.array([self.tl, self.tr, self.br, self.bl])
 	
 	def allEdges(self, color):
 		out = True
@@ -53,9 +56,4 @@ class Face:
 			if cubelet != self.mc:
 				out = False
 		return out
-				
-	# def remap(self):	
-		# wholeFace = ([[tl, tc, tr],[ml, mc, mr],[bl, bc, br]])
-		# edges = np.array([ml, tc, mr, bc])
-		# crnrs = np.array([tl, tr, br, bl])
 		
