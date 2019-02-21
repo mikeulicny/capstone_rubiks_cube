@@ -21,6 +21,7 @@ class AlgoBasic:
 		right = self.c.right
 		flip = self.c.flip
 		turn = self.c.turn
+		remapAll = self.c.remapAll
 		
 		#-----------------------
 		# Get yellow edge on top
@@ -77,14 +78,113 @@ class AlgoBasic:
 				flip('2Y')
 				
 		# If white edge in top slice:
+			# If it's already in the front, move it up
 			elif front.tc == 'w':
 				if up.mr != 'w':
 					turn('F')
 					turn('R')
-					
-
+				elif up.ml != 'w':
+					turn('Fi')
+					turn('Li')
+				elif up.tc != 'w':
+					turn('F')
+					turn('U')
+					turn('R')
+			# If it's NOT in the front, move it there
+			elif right.tc == 'w':
+				flip('Y')
+			elif left.tc == 'w':
+				flip('Yi')
+			elif back.tc == 'w':
+				flip('2Y')
+		
+		# If white edge in bottom slice:
+			# If it's already in the front, move it up
+			elif front.bc == 'w':
+				if up.bc != 'w':
+					if up.mr != 'w':
+						turn('Fi')
+						turn('R')
+					elif up.ml != 'w':
+						turn('F')
+						turn('Li')
+					elif up.tc != 'w':
+						turn('Fi')
+						turn('U')
+						turn('R')
+				else:
+					if up.mr != 'w':
+						turn('U')
+						turn('Fi')
+						turn('Ui')
+						turn('R')
+					elif up.ml != 'w':
+						turn('Ui')
+						turn('F')
+						turn('U')
+						turn('Li')
+					elif up.tc != 'w':
+						turn('2U')
+						turn('Fi')
+						turn('Ui')
+						turn('R')					
+			# If it's NOT in the front, move it there
+			elif right.bc == 'w':
+				flip('Y')
+			elif left.bc == 'w':
+				flip('Yi')
+			elif back.bc == 'w':
+				flip('2Y')
+		
+		# If white edge on down face:
+			# If it's already in the 'front', move it up
+			elif down.bc == 'w':
+				if up.bc != 'w':
+					turn('2F')
+				else:
+					if up.mr != 'w':
+						turn('U')
+						turn('2F')
+					elif up.ml != 'w':
+						turn('Ui')
+						turn('2F')
+					elif up.tc != 'w':
+						turn('2U')
+						turn('2F')
+						
+			# Remap corner and edge groups after turns
+				remapAll()
+	
+		#-------------------------------------
+		# While the white cross isn't complete
+		#-------------------------------------
+		while not down.allEdges('w'):
+			if up.bc == 'w' and front.mc == front.tc:
+				turn('2F')
+			if up.ml == 'w' and left.mc == left.tc:
+				turn('2L')
+			if up.tc == 'w' and back.mc == back.tc:
+				turn('2B')
+			if up.mr == 'w' and right.mc == right.tc:
+				turn('2R')
+			turn('U')
+			# Remap corner and edge groups after turns
+			remapAll()	
+			
+		#------------------------------------
+		# While the white side isn't complete
+		#------------------------------------
+		while not down.isComplete():
+			# TO BE WRITTEN
+		
+		
 def Main():				
 	# Test: yellow top center, green front center: R U L F B R U F U L B
+	# Let's shoot for ~ 120 moves in general
+	# ~100 moves for this particular cube
+	# If a given turn takes 2 seconds, that's a goal of 4 minutes
+	# If a given turn takes 1.5 seconds, that's a goal of 3 minutes
+	# If a given turn takes 1 second, that's a goal of 2 minutes
 	up = np.array([['o', 'b', 'b'],
 		['r', 'y', 'b'],
 		['o', 'o', 'b']])	

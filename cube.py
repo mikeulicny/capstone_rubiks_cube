@@ -21,7 +21,6 @@ class Cube:
 	
 	# Default print function (it's gross but compact)
 	def __str__(self):
-	
 		u = self.up
 		d = self.down
 		f = self.front
@@ -76,7 +75,7 @@ class Cube:
 		# left = front, front = right, right = back, and back = left) and claws.
 		# This would significantly cut down on the number of flips needed.
 		
-		print(dir)
+		print('Flip along ' + dir + 'axis')
 	
 	def turn(self, dir):
 		
@@ -112,7 +111,7 @@ class Cube:
 		# Up turns could also be done more efficiently by remapping the faces,
 		# however this would likely be rather complicated and doing so nuanced.
 		
-		print(dir)
+		print('Turn ' + dir)
 		
 		
 		
