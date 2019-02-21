@@ -25,9 +25,11 @@ class Face:
 		self.bl = faceArray[2,0]
 		self.bc = faceArray[2,1]
 		self.br = faceArray[2,2]
-		self.wholeFace = np.empty(shape=(3,3))
-		self.edges = np.empty(shape=(1,4))
-		self.crnrs = np.empty(shape=(1,4))
+		self.wholeFace = np.array([[self.tl, self.tc, self.tr],
+			[self.ml, self.mc, self.mr],
+			[self.bl, self.bc, self.br]])
+		self.edges = np.array([self.ml, self.tc, self.mr, self.bc])
+		self.crnrs = np.array([self.tl, self.tr, self.br, self.bl])
 		
 	def remap(self):
 		self.wholeFace = np.array([[self.tl, self.tc, self.tr],
@@ -50,7 +52,7 @@ class Face:
 				out = False
 		return out	
 	
-	def complete(self):
+	def isComplete(self):
 		out = True
 		for cublet in self.wholeFace:
 			if cubelet != self.mc:
