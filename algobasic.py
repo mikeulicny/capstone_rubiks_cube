@@ -242,12 +242,9 @@ def Main():
 	# } End of image processing part
 	
 	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
-	print('Before:\n')
-	print(cube)
-	# cube.flip('Yi')
-	cube.turn('Bi')
 
 	print('After:\n')
+	cube.flip('Zi')
 	print(cube)
 	
 	input('Press enter to enter solutioning loop...')

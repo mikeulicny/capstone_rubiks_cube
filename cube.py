@@ -20,19 +20,23 @@ class Cube:
 		l = self.left
 		r = self.right
 		s = ' '
-		g = s*6
-		output=(g+u.tl+s+u.tc+s+u.tr+'\n'+
-			g+u.ml+s+u.mc+s+u.mr+'\n'+
-			g+u.bl+s+u.bc+s+u.br+'\n'+
-			l.tl+s+l.tc+s+l.tr+s+f.tl+s+f.tc+s+f.tr+s+
-			r.tl+s+r.tc+s+r.tr+s+b.tl+s+b.tc+s+b.tr+'\n'+
-			l.ml+s+l.mc+s+l.mr+s+f.ml+s+f.mc+s+f.mr+s+
-			r.ml+s+r.mc+s+r.mr+s+b.ml+s+b.mc+s+b.mr+'\n'+
-			l.bl+s+l.bc+s+l.br+s+f.bl+s+f.bc+s+f.br+s+
-			r.bl+s+r.bc+s+r.br+s+b.bl+s+b.bc+s+b.br+'\n'+
-			g+d.tl+s+d.tc+s+d.tr+s+'\n'+
-			g+d.ml+s+d.mc+s+d.mr+s+'\n'+
-			g+d.bl+s+d.bc+s+d.br+s+'\n')
+		g = s*8
+		output=(g+'┏━━━━━━━┓\n'+
+			g+'┃ '+u.tl+s+u.tc+s+u.tr+' ┃\n'+ 
+			g+'┃ '+u.ml+s+u.mc+s+u.mr+' ┃\n'+
+			g+'┃ '+u.bl+s+u.bc+s+u.br+' ┃\n'+
+			'┏━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓\n'+
+			'┃ '+l.tl+s+l.tc+s+l.tr+' ┃ '+f.tl+s+f.tc+s+f.tr+s+
+			'┃ '+r.tl+s+r.tc+s+r.tr+' ┃ '+b.tl+s+b.tc+s+b.tr+' ┃\n'+
+			'┃ '+l.ml+s+l.mc+s+l.mr+' ┃ '+f.ml+s+f.mc+s+f.mr+s+
+			'┃ '+r.ml+s+r.mc+s+r.mr+' ┃ '+b.ml+s+b.mc+s+b.mr+' ┃\n'+
+			'┃ '+l.bl+s+l.bc+s+l.br+' ┃ '+f.bl+s+f.bc+s+f.br+s+
+			'┃ '+r.bl+s+r.bc+s+r.br+' ┃ '+b.bl+s+b.bc+s+b.br+' ┃\n'+
+			'┗━━━━━━━╋━━━━━━━╋━━━━━━━┻━━━━━━━┛\n'+
+			g+'┃ '+d.tl+s+d.tc+s+d.tr+' ┃\n'+
+			g+'┃ '+d.ml+s+d.mc+s+d.mr+' ┃\n'+
+			g+'┃ '+d.bl+s+d.bc+s+d.br+' ┃\n'+
+			g+'┗━━━━━━━┛\n')
 		return output
 
 	def flip(self, dir):
@@ -56,6 +60,7 @@ class Cube:
 			back.fill(up.c180())
 			up.fill(front)
 			front.fill(down)
+			down.fill(temp)
 		
 		# flip('Xi')
 		elif dir == 'Xi':
