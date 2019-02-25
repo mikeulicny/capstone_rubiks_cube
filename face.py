@@ -53,31 +53,37 @@ class Face:
 
 	# Rotates face clockwise
 	def cw(self):
+		temp = Face()
 		self.tl, self.bl = self.bl, self.tl
 		self.tc, self.ml = self.ml, self.tc
 		self.tr, self.bl = self.bl, self.tr
 		self.ml, self.bc = self.bc, self.ml
 		self.bl, self.br = self.br, self.bl
 		self.bc, self.mr = self.mr, self.bc
-		return self
+		temp.fill(self)
+		return temp
 
 	# Rotates face counter-clockwise		
 	def ccw(self):
+		temp = Face()
 		self.tl, self.tr = self.tr, self.tl
 		self.tc, self.mr = self.mr, self.tc
 		self.tr, self.br = self.br, self.tr
 		self.ml, self.mr = self.mr, self.ml
 		self.bl, self.br = self.br, self.bl
 		self.bc, self.mr = self.mr, self.bc
-		return self
+		temp.fill(self)
+		return temp
 	
 	# Rotates face 180 degrees
 	def c180(self):
+		temp = Face()
 		self.tl, self.br = self.br, self.tl
 		self.tc, self.bc = self.bc, self.tc
 		self.tr, self.bl = self.bl, self.tr
 		self.ml, self.mr = self.mr, self.ml
-		return self
+		temp.fill(self)
+		return temp
 		
 	# Fills face with values from another face	
 	def fill(self, otherFace):
@@ -111,6 +117,3 @@ class Face:
 			self.mr = otherFace.mr
 			self.br = otherFace.br
 		return self
-	
-		
-		

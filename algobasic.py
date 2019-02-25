@@ -244,7 +244,8 @@ def Main():
 	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
 	print('Before:\n')
 	print(cube)
-	cube.turn('F')
+	#cube.flip('2X')
+	cube.turn('Fi')
 
 	print('After:\n')
 	print(cube)
