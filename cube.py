@@ -50,8 +50,8 @@ class Cube:
 		
 		# flip('X')
 		if dir == 'X':
-			right.cw()
-			left.ccw()
+			right.fill(right.cw())
+			left.fill(left.ccw())
 			temp.fill(back.c180())
 			back.fill(up.c180())
 			up.fill(front)
@@ -59,8 +59,8 @@ class Cube:
 		
 		# flip('Xi')
 		elif dir == 'Xi':
-			left.cw()
-			right.ccw()
+			left.fill(left.cw())
+			right.fill(right.ccw())
 			temp.fill(back.c180())
 			back.fill(down.c180())
 			down.fill(front)
@@ -69,8 +69,8 @@ class Cube:
 				
 		# flip('Z')
 		elif dir == 'Z':
-			front.cw()
-			back.ccw()
+			front.fill(front.cw())
+			back.fill(back.ccw())
 			temp.fill(up.cw())
 			up.fill(left.cw())
 			left.fill(down.cw())
@@ -79,8 +79,8 @@ class Cube:
 			
 		# flip('Zi')
 		elif dir == 'Zi':
-			back.cw()
-			front.ccw()
+			back.fill(back.cw())
+			front.fill(front.ccw())
 			temp.fill(up.ccw())
 			up.fill(right.ccw())
 			right.fill(down.ccw())
@@ -89,8 +89,8 @@ class Cube:
 		
 		# flip('Y')
 		elif dir == 'Y':
-			up.cw()
-			down.ccw()
+			up.fill(up.cw())
+			down.fill(down.ccw())
 			temp.fill(back)
 			back.fill(left)
 			left.fill(front)
@@ -99,8 +99,8 @@ class Cube:
 			
 		# flip('Yi')
 		elif dir == 'Yi':
-			down.cw()
-			up.ccw()
+			down.fill(down.cw())
+			up.fill(up.ccw())
 			temp.fill(back)
 			back.fill(right)
 			right.fill(front)
@@ -109,8 +109,8 @@ class Cube:
 		
 		# flip('2X')
 		elif dir == '2X':
-			right.c180()
-			left.c180()
+			right.fill(right.c180())
+			left.fill(left.c180())
 			temp.fill(back.c180())
 			back.fill(front.c180())
 			front.fill(temp)
@@ -120,8 +120,8 @@ class Cube:
 			
 		# flip('2Y')
 		elif dir == '2Y':
-			up.c180()
-			down.c180()
+			up.fill(up.c180())
+			down.fill(down.c180())
 			temp.fill(back)
 			back.fill(front)
 			front.fill(temp)
@@ -131,8 +131,8 @@ class Cube:
 		
 		# flip('2Z')
 		elif dir == '2Z':
-			front.c180()
-			back.c180()
+			front.fill(front.c180())
+			back.fill(back.c180())
 			temp.fill(up.c180())
 			up.fill(down.c180())
 			down.fill(temp)
@@ -180,7 +180,7 @@ class Cube:
 		
 		# turn('F')
 		if dir == 'F':
-			front.cw()
+			front.fill(front.cw())
 			temp.fillEdge('l', up.cw())
 			up.fillEdge('b', left.cw())
 			left.fillEdge('r', down.cw())
@@ -188,6 +188,14 @@ class Cube:
 			right.fillEdge('l', temp)
 		
 		# turn('Fi')
+		elif dir == 'Fi':
+			front.fill(front.ccw())
+			temp.fillEdge('r', up.ccw())
+			up.fillEdge('b', right.ccw())
+			right.fillEdge('l', down.ccw())
+			down.fillEdge('t', left.ccw())
+			left.fillEdge('r', temp)
+			
 		# turn('B')
 		# turn('Bi')
 		# turn('L')
