@@ -197,7 +197,23 @@ class Cube:
 			left.fillEdge('r', temp)
 			
 		# turn('B')
-		# turn('Bi')
+		elif dir == 'B':
+			back.fill(back.cw())
+			temp.fillEdge('l', up.ccw())
+			up.fillEdge('t', right.ccw())
+			right.fillEdge('r', down.ccw())
+			down.fillEdge('b', left.ccw())
+			left.fillEdge('l', temp)
+			
+			# turn('Bi')
+		elif dir == 'Bi':
+			back.fill(back.ccw())
+			temp.fillEdge('r', up.cw())
+			up.fillEdge('t', left.cw())
+			left.fillEdge('l', down.cw())
+			down.fillEdge('b', right.cw())
+			right.fillEdge('r', temp)
+			
 		# turn('L')
 		# turn('Li')
 		# turn('R')

@@ -51,38 +51,46 @@ class Face:
 			out = False
 		return out
 
-	# Rotates face clockwise
+	# Rotates face clockwise (creates temp face in case checking desired)
 	def cw(self):
 		temp = Face()
-		self.tl, self.bl = self.bl, self.tl
-		self.tc, self.ml = self.ml, self.tc
-		self.tr, self.bl = self.bl, self.tr
-		self.ml, self.bc = self.bc, self.ml
-		self.bl, self.br = self.br, self.bl
-		self.bc, self.mr = self.mr, self.bc
-		temp.fill(self)
+		temp.tl = self.bl
+		temp.tc = self.ml
+		temp.tr = self.tl
+		temp.ml = self.bc
+		temp.mc = self.mc
+		temp.mr = self.tc
+		temp.bl = self.br
+		temp.bc = self.mr
+		temp.br = self.tr
 		return temp
 
-	# Rotates face counter-clockwise		
+	# Rotates face counter-clockwise (creates temp face in case checking desired)
 	def ccw(self):
 		temp = Face()
-		self.tl, self.tr = self.tr, self.tl
-		self.tc, self.mr = self.mr, self.tc
-		self.tr, self.br = self.br, self.tr
-		self.ml, self.mr = self.mr, self.ml
-		self.bl, self.br = self.br, self.bl
-		self.bc, self.mr = self.mr, self.bc
-		temp.fill(self)
+		temp.tl = self.tr
+		temp.tc = self.mr
+		temp.tr = self.br
+		temp.ml = self.tc
+		temp.mc = self.mc
+		temp.mr = self.bc
+		temp.bl = self.tl
+		temp.bc = self.ml
+		temp.br = self.bl
 		return temp
 	
-	# Rotates face 180 degrees
+	# Rotates face 180 degrees (creates temp face in case checking desired)
 	def c180(self):
 		temp = Face()
-		self.tl, self.br = self.br, self.tl
-		self.tc, self.bc = self.bc, self.tc
-		self.tr, self.bl = self.bl, self.tr
-		self.ml, self.mr = self.mr, self.ml
-		temp.fill(self)
+		temp.tl = self.br
+		temp.tc = self.bc
+		temp.tr = self.bl
+		temp.ml = self.mr
+		temp.mc = self.mc
+		temp.mr = self.ml
+		temp.bl = self.tr
+		temp.bc = self.tc
+		temp.br = self.tl
 		return temp
 		
 	# Fills face with values from another face	
@@ -100,19 +108,19 @@ class Face:
 	
 	# Fills one side of face with values from another face
 	def fillEdge(self, edge, otherFace):
-		if edge == 't':
+		if edge == 't': # 'top' edge
 			self.tl = otherFace.tl
 			self.tc = otherFace.tc
 			self.tr = otherFace.tr
-		elif edge =='b':
+		elif edge =='b': # 'bottom' edge
 			self.bl = otherFace.bl
 			self.bc = otherFace.bc
 			self.br = otherFace.br
-		elif edge =='l':
+		elif edge =='l': # 'left' edge
 			self.tl = otherFace.tl
 			self.ml = otherFace.ml
 			self.bl = otherFace.bl
-		elif edge =='r':
+		elif edge =='r': # 'right' edge
 			self.tr = otherFace.tr
 			self.mr = otherFace.mr
 			self.br = otherFace.br
