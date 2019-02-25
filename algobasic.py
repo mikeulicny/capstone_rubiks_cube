@@ -21,7 +21,6 @@ class AlgoBasic:
 		right = self.c.right
 		flip = self.c.flip
 		turn = self.c.turn
-		remapAll = self.c.remapAll
 		
 		#-----------------------
 		# Get yellow edge on top
@@ -151,9 +150,7 @@ class AlgoBasic:
 					elif up.tc != 'w':
 						turn('2U')
 						turn('2F')
-						
-			# Remap corner and edge groups after turns
-				remapAll()
+					# WHERE I STOPPED
 	
 		#-------------------------------------
 		# While the white cross isn't complete
@@ -168,15 +165,28 @@ class AlgoBasic:
 			if up.mr == 'w' and right.mc == right.tc:
 				turn('2R')
 			turn('U')
-			# Remap corner and edge groups after turns
-			remapAll()	
 			
 		#------------------------------------
 		# While the white side isn't complete
 		#------------------------------------
 		while not down.isComplete():
-			# TO BE WRITTEN
-		
+			if front.tl == 'w' and top.bl == front.mc:
+				turn('Ui')
+				turn('Li')
+				turn('U')
+				turn('L')
+			elif front.tr =='w' and top.br == front.mc:
+				turn('Fi')
+				turn('Ui')
+				turn('F')
+			elif up.bl == 'w' and front.tl == left.mc:
+				turn('Li')
+				turn('2U')
+				turn('L')
+				turn('U')
+				turn('Li')
+				turn('Ui')
+				turn('L')		
 		
 def Main():				
 	# Test: yellow top center, green front center: R U L F B R U F U L B
@@ -185,25 +195,41 @@ def Main():
 	# If a given turn takes 2 seconds, that's a goal of 4 minutes
 	# If a given turn takes 1.5 seconds, that's a goal of 3 minutes
 	# If a given turn takes 1 second, that's a goal of 2 minutes
+
+	
+	# X Z X Z X Z
+	# 1st image: Up (correct orientation)
+	# 2nd image: Front (correct orientation)
+	# 3rd image: Left (correct orientation)
+	# 4th image: Down (needs to be rotated 90 degrees counter-clockwise)
+	# 5th image: Back (needs to be rotated 90 degrees clockwise)
+	# 6th image: Right (needs to be rotated 90 degrees clockwise)
+	
+	# { This is part of the image processing class
 	up = np.array([['o', 'b', 'b'],
 		['r', 'y', 'b'],
 		['o', 'o', 'b']])	
 	front = np.array([['b', 'y', 'r'],
 		['w', 'g', 'g'],
 		['y', 'b', 'r']])
-	left = np.array([['w', 'g', 'w'],
-		['o', 'r', 'y'],
-		['g', 'g', 'w']])
-	down = np.array([['w', 'r', 'b'],
-		['b', 'w', 'w'],
-		['g', 'o', 'o']])
-	back = np.array([['r', 'g', 'g'],
-		['y', 'b', 'w'],
-		['g', 'y', 'o']])
+	left = np.array([['w', 'y', 'w'],
+		['g', 'r', 'g'],
+		['w', 'o', 'g']])
+	down = np.array([['b', 'w', 'o'],
+		['r', 'w', 'o'],
+		['w', 'b', 'g']])
+	back = np.array([['g', 'y', 'r'],
+		['y', 'b', 'g'],
+		['o', 'w', 'g']])
 	right = np.array([['y', 'r', 'r'],
 		['r', 'o', 'w'],
 		['y', 'o', 'y']])
-
+	
+	# Rotate arrays
+	down = np.rot90(down, 1)
+	back = np.rot90(back, 3)
+	right = np.rot90(right, 3)
+		
 	up = Face(up)
 	down = Face(down)
 	front = Face(front)
@@ -212,11 +238,20 @@ def Main():
 	right = Face(right)
 
 	cube = Cube(up, down, front, back, left, right)
+	
+	# } End of image processing part
+	
 	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
+	print('Before:\n')
 	print(cube)
+	cube.turn('F')
+
+	print('After:\n')
+	print(cube)
+	
 	input('Press enter to enter solutioning loop...')
 	algo = AlgoBasic(cube)
-	algo.solve()
+	# algo.solve()
 
 # Calling Test
 if __name__ == '__main__': 
