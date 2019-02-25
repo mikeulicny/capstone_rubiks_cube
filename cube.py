@@ -2,7 +2,7 @@ import numpy as np
 from face import Face
 
 class Cube:		
-	# Initializer
+	# Initializer	
 	def __init__(self, up, down, front, back, left, right):
 		self.up = up
 		self.down = down
@@ -10,14 +10,6 @@ class Cube:
 		self.back = back
 		self.left = left
 		self.right = right
-		
-	def remapAll(self):
-		self.up.remap()
-		self.down.remap()
-		self.front.remap()
-		self.back.remap()
-		self.left.remap()
-		self.right.remap()
 	
 	# Default print function (it's gross but compact)
 	def __str__(self):
@@ -29,36 +21,132 @@ class Cube:
 		r = self.right
 		s = ' '
 		g = s*6
-		output=(g+b.tl+s+b.tc+s+b.tr+'\n'+
-			g+b.ml+s+b.mc+s+b.mr+'\n'+
-			g+b.bl+s+b.bc+s+b.br+'\n'+
-			l.tl+s+l.tc+s+l.tr+s+u.tl+s+u.tc+s+u.tr+s+
-			r.tl+s+r.tc+s+r.tr+s+d.tl+s+d.tc+s+d.tr+'\n'+
-			l.ml+s+l.mc+s+l.mr+s+u.ml+s+u.mc+s+u.mr+s+
-			r.ml+s+r.mc+s+r.mr+s+d.ml+s+d.mc+s+d.mr+'\n'+
-			l.bl+s+l.bc+s+l.br+s+u.bl+s+u.bc+s+u.br+s+
-			r.bl+s+r.bc+s+r.br+s+d.bl+s+d.bc+s+d.br+'\n'+
-			g+f.tl+s+f.tc+s+f.tr+s+'\n'+
-			g+f.ml+s+f.mc+s+f.mr+s+'\n'+
-			g+f.bl+s+f.bc+s+f.br+s+'\n')
+		output=(g+u.tl+s+u.tc+s+u.tr+'\n'+
+			g+u.ml+s+u.mc+s+u.mr+'\n'+
+			g+u.bl+s+u.bc+s+u.br+'\n'+
+			l.tl+s+l.tc+s+l.tr+s+f.tl+s+f.tc+s+f.tr+s+
+			r.tl+s+r.tc+s+r.tr+s+b.tl+s+b.tc+s+b.tr+'\n'+
+			l.ml+s+l.mc+s+l.mr+s+f.ml+s+f.mc+s+f.mr+s+
+			r.ml+s+r.mc+s+r.mr+s+b.ml+s+b.mc+s+b.mr+'\n'+
+			l.bl+s+l.bc+s+l.br+s+f.bl+s+f.bc+s+f.br+s+
+			r.bl+s+r.bc+s+r.br+s+b.bl+s+b.bc+s+b.br+'\n'+
+			g+d.tl+s+d.tc+s+d.tr+s+'\n'+
+			g+d.ml+s+d.mc+s+d.mr+s+'\n'+
+			g+d.bl+s+d.bc+s+d.br+s+'\n')
 		return output
 
-		
 	def flip(self, dir):
-		# 'i' stands for 'inverse' (i.e. 'counter-clockwise)
-		# X-axis goes through the left and right faces (same dir as right)
-		# Y-axis goes through the up and down faces (same dir as up)
-		# Z-axis goes through the front and back faces (same dir as front)
-		# example: 	flip('X') = flip whole cube along X-axis clockwise
-		#			flip('Zi') = flip whole cube along Z-axis counter-clockwise
+	
+		# Simplify attributes
+		up = self.up
+		down = self.down
+		front = self.front
+		back = self.back
+		left = self.left
+		right = self.right
 		
-		# Define following whole-cube flips:
-		# Regular (90 degree) flips
+		# Create temp face for storage
+		temp = Face()	
+		
 		# flip('X')
-		# flip('Xi')
-		# flip('Z')
-		# flip('Zi')
+		if dir == 'X':
+			right.cw()
+			left.ccw()
+			temp.fill(back.c180())
+			back.fill(up.c180())
+			up.fill(front)
+			front.fill(down)
 		
+		# flip('Xi')
+		elif dir == 'Xi':
+			left.cw()
+			right.ccw()
+			temp.fill(back.c180())
+			back.fill(down.c180())
+			down.fill(front)
+			front.fill(up)
+			up.fill(temp)
+				
+		# flip('Z')
+		elif dir == 'Z':
+			front.cw()
+			back.ccw()
+			temp.fill(up.cw())
+			up.fill(left.cw())
+			left.fill(down.cw())
+			down.fill(right.cw())
+			right.fill(temp)
+			
+		# flip('Zi')
+		elif dir == 'Zi':
+			back.cw()
+			front.ccw()
+			temp.fill(up.ccw())
+			up.fill(right.ccw())
+			right.fill(down.ccw())
+			down.fill(left.ccw())
+			left.fill(temp)			
+		
+		# flip('Y')
+		elif dir == 'Y':
+			up.cw()
+			down.ccw()
+			temp.fill(back)
+			back.fill(left)
+			left.fill(front)
+			front.fill(right)
+			right.fill(temp)
+			
+		# flip('Yi')
+		elif dir == 'Yi':
+			down.cw()
+			up.ccw()
+			temp.fill(back)
+			back.fill(right)
+			right.fill(front)
+			front.fill(left)
+			left.fill(temp)
+		
+		# flip('2X')
+		elif dir == '2X':
+			right.c180()
+			left.c180()
+			temp.fill(back.c180())
+			back.fill(front.c180())
+			front.fill(temp)
+			temp.fill(up)
+			up.fill(down)
+			down.fill(temp)
+			
+		# flip('2Y')
+		elif dir == '2Y':
+			up.c180()
+			down.c180()
+			temp.fill(back)
+			back.fill(front)
+			front.fill(temp)
+			temp.fill(left)
+			left.fill(right)
+			right.fill(temp)
+		
+		# flip('2Z')
+		elif dir == '2Z':
+			front.c180()
+			back.c180()
+			temp.fill(up.c180())
+			up.fill(down.c180())
+			down.fill(temp)
+			temp.fill(right.c180())
+			right.fill(left.c180())
+			left.fill(temp)
+		
+		# Endmatter
+		print('Flip ' + dir)
+		del temp
+		return self
+		
+		# ------------------------------------------------------------------------
+		# COMMENTS:		
 		# Special composite (3 stage) flips (because of claw limitations)
 		# flip('Y') = flip('Z') + flip('X') + flip('Zi')
 		# flip('Yi') = flip('Z') + flip('Xi') + flip('Zi')
@@ -73,18 +161,32 @@ class Cube:
 		# move-wise if they were instead represented by an internal re-mapping
 		# of the faces (e.g. flip('Y') would actually just re-map the faces:
 		# left = front, front = right, right = back, and back = left) and claws.
-		# This would significantly cut down on the number of flips needed.
-		
-		print('Flip along ' + dir + 'axis')
-	
+		# This would significantly cut down on the number of flips needed,
+		# because 'Y' moves wouldn't actually turn the cube.
+		# ------------------------------------------------------------------------
+
 	def turn(self, dir):
 		
-		# example: 	turn('F') = turn front face clockwise
-		#			turn('Li') = turn left face counter-clockwise ('inverse')
+		# Simplify attributes
+		up = self.up
+		down = self.down
+		front = self.front
+		back = self.back
+		left = self.left
+		right = self.right	
 		
-		# Define following turns:
-		# Regular (90 degree) turns
+		# Create temp face for storage
+		temp = Face()	
+		
 		# turn('F')
+		if dir == 'F':
+			front.cw()
+			temp.fillEdge('l', up.cw())
+			up.fillEdge('b', left.cw())
+			left.fillEdge('r', down.cw())
+			down.fillEdge('t', right.cw())
+			right.fillEdge('l', temp)
+		
 		# turn('Fi')
 		# turn('B')
 		# turn('Bi')
@@ -92,6 +194,25 @@ class Cube:
 		# turn('Li')
 		# turn('R')
 		# turn('Ri')
+		# turn('U')
+		# turn('Ui')
+		# turn('D')
+		# turn('Di')
+		# turn('2F')
+		# turn('2B')
+		# turn('2L')
+		# turn('2R')
+		# turn('2U')
+		# turn('2D')
+		
+		print('Turn ' + dir)
+		del temp
+		return self
+		
+		# ------------------------------------------------------------------------
+		# COMMENTS:
+		# example: 	turn('F') = turn front face clockwise
+		#			turn('Li') = turn left face counter-clockwise ('inverse')
 		
 		# Special composite (3 stage) turns (because of claw limitations)
 		# turn('U')	= flip('Z') + turn('R') + flip('Zi')
@@ -110,8 +231,8 @@ class Cube:
 		
 		# Up turns could also be done more efficiently by remapping the faces,
 		# however this would likely be rather complicated and doing so nuanced.
-		
-		print('Turn ' + dir)
+		# ------------------------------------------------------------------------		
+
 		
 		
 		
