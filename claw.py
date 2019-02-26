@@ -14,8 +14,8 @@ class Claw:
 		kit.servo[clawID].angle = 60
 
 	def closeClaw(self):
-		# TODO: Change the value to correct claw grip size
-		kit.servo[clawID].angle = 0
+
+		kit.servo[clawID].angle = 14
 
 	def rotate(self, angle):
 		kit.servo[armID].angle = angle
