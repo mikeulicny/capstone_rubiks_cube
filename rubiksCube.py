@@ -108,7 +108,7 @@ class rubiksCube:
         if axis != 'X' or 'Y' or 'Z':
             print("Error: rotate180 function invalid axis parameter")
             return NULL
-        # 
+        # TODO: this
 
     def turn90(face, inverse = False):
         """
@@ -118,7 +118,7 @@ class rubiksCube:
         if face != 'F' or 'B' or 'L' or 'R' or 'U' or 'D':
             print("Error: turn90 function invalid face parameter")
             return NULL
-
+        # TODO: this
 
     def turn180(face, inverse = False):
         """
@@ -128,3 +128,4 @@ class rubiksCube:
         if face != 'F' or 'B' or 'L' or 'R' or 'U' or 'D':
             print("Error: turn180 function invalid face parameter")
             return NULL
+            # TODO: this
