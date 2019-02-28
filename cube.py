@@ -147,6 +147,7 @@ class Cube:
 		
 		# Endmatter
 		print('Flip ' + dir)
+		print(self)
 		del temp
 		return self
 		
@@ -339,7 +340,7 @@ class Cube:
 			back.fillEdge('t', temp)
 			temp.fillEdge('t', left)
 			left.fillEdge('t', right)
-			right.fillEdge('t', left)
+			right.fillEdge('t', temp)
 			
 		# turn('2D')
 		elif dir == '2D':
@@ -349,9 +350,10 @@ class Cube:
 			back.fillEdge('b', temp)
 			temp.fillEdge('b', left)
 			left.fillEdge('b', right)
-			right.fillEdge('b', left)		
+			right.fillEdge('b', temp)		
 		
 		print('Turn ' + dir)
+		print(self)
 		del temp
 		return self
 		

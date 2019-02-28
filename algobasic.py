@@ -248,6 +248,7 @@ def Main():
 
 	print('Before:\n')
 	print(cube)
+	#cube.turn('2U')
 	
 	input('Press Enter to solve...')
 	algo = AlgoBasic(cube)
