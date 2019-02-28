@@ -1,5 +1,5 @@
 import time
-import claw
+from claw import Claw
 import numpy
 
 class Frame:
@@ -38,9 +38,9 @@ class Frame:
         rotate function will rotate the cube. If the rotation is along the "Y" axis it will instead
         remap which claw is the front, right, left, and back
         """
-        if axis != 'X' or 'Y' or 'Z':
+        if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate90 function invalid axis parameter")
-            return NULL
+            return None
         elif axis == 'X':
             self.frontClaw.openClaw()       # open z axis
             self.backClaw.openClaw()
@@ -112,9 +112,9 @@ class Frame:
         remap which claw is the front, right, left, and back.
         The 180 degree rotation just pre-sets the position of the claws and then calls the rotate90 function
         """
-        if axis != 'X' or 'Y' or 'Z':
+        if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate180 function invalid axis parameter")
-            return NULL
+            return None
         elif axis == 'X':
             self.rightClaw.openClaw()           # open x axis
             self.leftClaw.openClaw()
@@ -168,9 +168,9 @@ class Frame:
         turn90(face, inverse=0)
         turn function does not remap any faces
         """
-        if face != 'F' or 'B' or 'L' or 'R' or 'U' or 'D':
+        if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
             print("Error: turn90 function invalid face parameter")
-            return NULL
+            return None
         if inverse:
             deg = 0
         else:
@@ -184,6 +184,7 @@ class Frame:
             time.sleep(rotateDelay)
             self.frontClaw.closeClaw()      # close claw
             time.sleep(clawDelay)
+
         elif face == 'B':
             self.backClaw.rotate(deg)
             time.sleep(rotateDelay)
@@ -192,6 +193,7 @@ class Frame:
             self.backClaw.rotate(90)
             time.sleep(rotateDelay)
             self.backClaw.closeClaw()
+
         elif face == 'L':
             self.leftClaw.rotate(deg)
             time.sleep(rotateDelay)
@@ -200,6 +202,7 @@ class Frame:
             self.leftClaw.rotate(90)
             time.sleep(rotateDelay)
             self.leftClaw.closeClaw()
+
         elif face == 'R':
             self.rightClaw.rotate(deg)
             time.sleep(rotateDelay)
@@ -208,6 +211,7 @@ class Frame:
             self.rightClaw.rotate(90)
             time.sleep(rotateDelay)
             self.rightClaw.closeClaw()
+            
         elif face == 'U' or 'D':
             self.rightClaw.openClaw()       # open x axis
             self.leftClaw.openClaw()
@@ -259,9 +263,9 @@ class Frame:
         turn180(face, inverse=0)
         turn function does not remap any faces
         """
-        if face != 'F' or 'B' or 'L' or 'R' or 'U' or 'D':
+        if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
             print("Error: turn180 function invalid face parameter")
-            return NULL
+            return None
         elif face == 'F':
             pass
         elif face == 'B':
