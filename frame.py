@@ -20,10 +20,10 @@ class Frame:
 
     def __init__(self, clawDelay=1, rotateDelay=1):
         self.__servoArray = numpy.arange(8)
-        self.frontClaw = claw(clawID=__servoArray[0], armID=__servoArray[1])
-        self.rightClaw = claw(clawID=__servoArray[2], armID=__servoArray[3])
-        self.backClaw = claw(clawID=__servoArray[4], armID=__servoArray[5])
-        self.leftClaw = claw(clawID=__servoArray[6], armID=__servoArray[7])
+        self.frontClaw = claw(self.clawID=__servoArray[0], self.armID=__servoArray[1])
+        self.rightClaw = claw(self.clawID=__servoArray[2], self.armID=__servoArray[3])
+        self.backClaw = claw(self.clawID=__servoArray[4], self.armID=__servoArray[5])
+        self.leftClaw = claw(self.clawID=__servoArray[6], self.armID=__servoArray[7])
         self.clawDelay = clawDelay
         self.rotateDelay = rotateDelay
         # NOTE: clawDelay and rotateDelay are currently set to 1 second for debugging
@@ -38,6 +38,8 @@ class Frame:
         rotate function will rotate the cube. If the rotation is along the "Y" axis it will instead
         remap which claw is the front, right, left, and back
         """
+        clawDelay = self.clawDelay
+        rotateDelay=self.rotateDelay
         if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate90 function invalid axis parameter")
             return None
@@ -112,6 +114,9 @@ class Frame:
         remap which claw is the front, right, left, and back.
         The 180 degree rotation just pre-sets the position of the claws and then calls the rotate90 function
         """
+        clawDelay = self.clawDelay
+        rotateDelay=self.rotateDelay
+
         if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate180 function invalid axis parameter")
             return None
@@ -168,6 +173,9 @@ class Frame:
         turn90(face, inverse=0)
         turn function does not remap any faces
         """
+        clawDelay = self.clawDelay
+        rotateDelay=self.rotateDelay
+
         if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
             print("Error: turn90 function invalid face parameter")
             return None
@@ -263,6 +271,9 @@ class Frame:
         turn180(face, inverse=0)
         turn function does not remap any faces
         """
+        clawDelay = self.clawDelay
+        rotateDelay=self.rotateDelay
+        
         if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
             print("Error: turn180 function invalid face parameter")
             return None
