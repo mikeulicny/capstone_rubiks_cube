@@ -210,7 +210,7 @@ class Cube:
 			down.fillEdge('b', left.ccw())
 			left.fillEdge('l', temp)
 			
-			# turn('Bi')
+		# turn('Bi')
 		elif dir == 'Bi':
 			back.fill(back.ccw())
 			temp.fillEdge('r', up.cw())
@@ -220,19 +220,136 @@ class Cube:
 			right.fillEdge('r', temp)
 			
 		# turn('L')
+		elif dir == 'L':
+			left.fill(left.cw())
+			temp.fillEdge('l', up)
+			up.fillEdge('l', back.c180())
+			back.fillEdge('r', down.c180())
+			down.fillEdge('l', front)
+			front.fillEdge('l', temp)
+
 		# turn('Li')
+		elif dir == 'Li':
+			left.fill(left.ccw())
+			temp.fillEdge('r', up.c180())
+			up.fillEdge('l', front)
+			front.fillEdge('l', down)
+			down.fillEdge('l', back.c180())
+			back.fillEdge('r', temp)
+		
 		# turn('R')
+		elif dir == 'R':
+			right.fill(right.cw())
+			temp.fillEdge('l', up.c180())
+			up.fillEdge('r', front)
+			front.fillEdge('r', down)
+			down.fillEdge('r', back.c180())
+			back.fillEdge('l', temp)
+		
 		# turn('Ri')
+		elif dir == 'Ri':
+			right.fill(right.ccw())
+			temp.fillEdge('r', up)
+			up.fillEdge('r', back.c180())
+			back.fillEdge('l', down.c180())
+			down.fillEdge('r', front)
+			front.fillEdge('r', temp)
+
 		# turn('U')
+		elif dir == 'U':
+			up.fill(up.cw())
+			temp.fillEdge('t', front)
+			front.fillEdge('t', right)
+			right.fillEdge('t', back)
+			back.fillEdge('t', left)
+			left.fillEdge('t', temp)
+		
 		# turn('Ui')
+		elif dir == 'Ui':
+			up.fill(up.ccw())
+			temp.fillEdge('t', front)
+			front.fillEdge('t', left)
+			left.fillEdge('t', back)
+			back.fillEdge('t', right)
+			right.fillEdge('t', temp)
+			
 		# turn('D')
+		elif dir == 'D':
+			down.fill(down.cw())
+			temp.fillEdge('b', front)
+			front.fillEdge('b', left)
+			left.fillEdge('b', back)
+			back.fillEdge('b', right)
+			right.fillEdge('b', temp)
+			
 		# turn('Di')
+		elif dir == 'Di':
+			down.fill(down.ccw())
+			temp.fillEdge('b', front)
+			front.fillEdge('b', right)
+			right.fillEdge('b', back)
+			back.fillEdge('b', left)
+			left.fillEdge('b', temp)			
+		
 		# turn('2F')
+		elif dir == '2F':
+			front.fill(front.c180())
+			temp.fillEdge('t', up.c180())
+			up.fillEdge('b', down.c180())
+			down.fillEdge('t', temp)
+			temp.fillEdge('l', left.c180())
+			left.fillEdge('r', right.c180())
+			right.fillEdge('l', temp)
+			
 		# turn('2B')
+		elif dir == '2B':
+			back.fill(back.c180())
+			temp.fillEdge('b', up.c180())
+			up.fillEdge('t', down.c180())
+			down.fillEdge('b', temp)
+			temp.fillEdge('r', left.c180())
+			left.fillEdge('l', right.c180())
+			right.fillEdge('r', temp)
+			
 		# turn('2L')
+		elif dir == '2L':
+			left.fill(left.c180())
+			temp.fillEdge('l', up)
+			up.fillEdge('l', down)
+			down.fillEdge('l', temp)
+			temp.fillEdge('r', front.c180())
+			front.fillEdge('l', back.c180())
+			back.fillEdge('r', temp)
+			
 		# turn('2R')
+		elif dir == '2R':
+			right.fill(right.c180())
+			temp.fillEdge('r', up)
+			up.fillEdge('r', down)
+			down.fillEdge('r', temp)
+			temp.fillEdge('l', front.c180())
+			front.fillEdge('r', back.c180())
+			back.fillEdge('l', temp)
+			
 		# turn('2U')
+		elif dir == '2U':
+			up.fill(up.c180())
+			temp.fillEdge('t', front)
+			front.fillEdge('t', back)
+			back.fillEdge('t', temp)
+			temp.fillEdge('t', left)
+			left.fillEdge('t', right)
+			right.fillEdge('t', left)
+			
 		# turn('2D')
+		elif dir == '2D':
+			down.fill(down.c180())
+			temp.fillEdge('b', front)
+			front.fillEdge('b', back)
+			back.fillEdge('b', temp)
+			temp.fillEdge('b', left)
+			left.fillEdge('b', right)
+			right.fillEdge('b', left)		
 		
 		print('Turn ' + dir)
 		del temp
