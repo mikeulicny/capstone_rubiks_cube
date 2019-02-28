@@ -169,6 +169,7 @@ class AlgoBasic:
 		#------------------------------------
 		# While the white side isn't complete
 		#------------------------------------
+		'''
 		while not down.isComplete():
 			if front.tl == 'w' and top.bl == front.mc:
 				turn('Ui')
@@ -187,7 +188,7 @@ class AlgoBasic:
 				turn('Li')
 				turn('Ui')
 				turn('L')		
-		
+		'''
 def Main():				
 	# Test: yellow top center, green front center: R U L F B R U F U L B
 	# Let's shoot for ~ 120 moves in general
@@ -195,8 +196,8 @@ def Main():
 	# If a given turn takes 2 seconds, that's a goal of 4 minutes
 	# If a given turn takes 1.5 seconds, that's a goal of 3 minutes
 	# If a given turn takes 1 second, that's a goal of 2 minutes
+	# If a given turn takes 1 second, that's a goal of 2 minutes
 
-	
 	# X Z X Z X Z
 	# 1st image: Up (correct orientation)
 	# 2nd image: Front (correct orientation)
@@ -229,7 +230,8 @@ def Main():
 	down = np.rot90(down, 1)
 	back = np.rot90(back, 3)
 	right = np.rot90(right, 3)
-		
+
+	# Instantiate faces
 	up = Face(up)
 	down = Face(down)
 	front = Face(front)
@@ -237,22 +239,23 @@ def Main():
 	left = Face(left)
 	right = Face(right)
 
+	# Instantiate cube
 	cube = Cube(up, down, front, back, left, right)
 	
 	# } End of image processing part
 	
 	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
+
 	print('Before:\n')
 	print(cube)
-	# cube.flip('Yi')
-	cube.turn('Bi')
-
+	#cube.turn('2U')
+	
+	input('Press Enter to solve...')
+	algo = AlgoBasic(cube)
+	algo.solve()
+	
 	print('After:\n')
 	print(cube)
-	
-	input('Press enter to enter solutioning loop...')
-	algo = AlgoBasic(cube)
-	# algo.solve()
 
 # Calling Test
 if __name__ == '__main__': 
