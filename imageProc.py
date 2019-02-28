@@ -1,11 +1,8 @@
 # Image Capture and Processing
-# -----------------------------
-# February 18, 2019
 
 import picamera
 import picamera.array
 import numpy as np
-import matplotlib.pyplot as plt
 import time
 from cube import Cube
 from face import Face
@@ -13,19 +10,34 @@ from face import Face
 def takePic():
     with picamera.PiCamera() as camera:
         with picamera.array.PiRGBArray(camera) as output:
-            res = 128
-            #camera.awb_mode = 'incandescent'
-            #camera.exposure_mode = 'verylong'
-            #camera.image_effect = 'colorpoint'
-            camera.resolution = (res, res)
-            camera.start_preview()
-            time.sleep(2)
-            output = np.empty((res, res, 3), dtype=np.uint8)
-            camera.capture(output, 'rgb')
-    return output
+ 
+			# Camera options for white balance, exposure, aperature, etc.
+            # camera.awb_mode = ''
+            # camera.exposure_mode = ''
+            # camera.image_effect = ''
+            
+			res = 128											# resolution to 128 
+			camera.resolution = (res, res)						# 128x128 pixel image
+            
+			# camera.start_preview()							# preview camera to set up photo
+            time.sleep(1)										# sleep to let camera start up / see preview
+            
+			# Initialize output
+			output = np.empty((res, res, 3), dtype=np.uint8)	# make empty 128x128 array
+            camera.capture(output, 'rgb')						# capture picture to array as RGB image
+    
+	return output
 
 def findColor(RGB):
-    
+    # This function determines the color of a given pixel by comparing it's RGB values
+	# to the RGB values sampled from a standard Rubik's Cube. Comparison is done by 
+	# utilizing the Euclidian Distance Formula: d = sqrt((R2-R1)^2 +(G2-G1)^2 + (G2-G1)^2)
+	# R1, G1, and B1 represent the RGB values of the pixel passed into the function
+	# while R2, G2, and B2 represent the RGB values of the sampled color of the cube.
+	# The function returns a character value of either 'w', 'y', 'r', 'o', 'g', or 'b', 
+	# corresponding to the six colors found on a Rubik's Cube.
+	
+	# RGB values of sampled colors from Rubik's Cube
     w = np.array([175, 178, 176])
     y = np.array([157, 176, 88 ])
     r = np.array([152, 58 , 64 ])
@@ -33,28 +45,42 @@ def findColor(RGB):
     g = np.array([26 , 143, 89 ])
     b = np.array([36 , 76 , 127])
     
-    colors =[w, y, r, o, g, b]
-    dist = np.empty((6), dtype=np.float)
-    i = 0
-    for col in colors:
+    colors =[w, y, r, o, g, b]  			# array of RGB values to iterate through
+    dist = np.empty((6), dtype=np.float) 	# create empty array to store distance values
+    
+	i = 0									# initialize counter to 0
+    
+	# FOR loop to calculate distance btwn each RGB value
+	for col in colors:
         dist[i] = (np.sqrt((RGB[0]-col[0])**2 + 
             (RGB[1]-col[1])**2 + (RGB[2]-col[2])**2))
         i+=1
         
-    out = np.argmin(dist)
-    clrs = ['w', 'y', 'r', 'o', 'g', 'b']
+    out = np.argmin(dist)					# finds location of min distance in array of distances
+    clrs = ['w', 'y', 'r', 'o', 'g', 'b']	# character array of color outputs
     
-    return clrs [out]       
+    return clrs [out]						# outputs character of the color determined     
 
-def makeFace():
-
-    colorArray = np.empty((3, 3), dtype=str)
-    img = takePic()
-    X = 20
-    Y = 24
-    d = 40
+def makeArray():
+	# This function creates a 3x3 Numpy array that represents a face of the cube.
+	# The fnctions returns an array with character values that represent 
+	# the color of the cubelets in colorArray 
+	
+    colorArray = np.empty((3, 3), dtype=str)	# create empty 3x3 Numpy array
+    img = takePic()								# call function to take picture 
     
-    # (Y, X, [R G B])
+	# Coordinates of the top left cubelet and the distance 
+
+	X = 20	# X start value
+    Y = 24	# Y start value
+    d = 40	# distance to next sample point
+		
+	# (X, Y)		(X+d, Y)		(X+2*d, Y)
+	# (X, Y+d)	    (X+d, Y+d)		(X+2*d, Y+d)
+	# (X, Y+2*d)	(X+d, Y+2*d)	(X+2*d, Y+2*d)
+    
+    # Function calls for each cubelet
+	# (Y, X, [R G B])
     
     # First Row
     colorArray[0,0] = findColor(img[Y,X,:])
@@ -71,56 +97,4 @@ def makeFace():
     colorArray[2,1] = findColor(img[Y+2*d,X+d,:])
     colorArray[2,2] = findColor(img[Y+2*d,X+2*d,:])
     
-    return colorArray
-
-input('Press enter to capture Upper Face...')
-upperFace = makeFace()
-up = Face(upperFace)
-print('\nUpper Face\n')
-print(upperFace)
-print('\n')
-
-input('Press enter to capture Front Face...')
-frontFace = makeFace()
-front = Face(frontFace)
-print('\nFront Face\n')
-print(frontFace)
-print('\n')
-
-input('Press enter to capture Left Face...')
-leftFace = makeFace()
-leftFace = np.rot90(leftFace,3)
-left = Face(leftFace)
-print('\nLeft Face\n')
-print(leftFace)
-print('\n')
-input('Press enter...')
-
-downFace = makeFace()
-downFace = np.rot90(downFace,3)
-down = Face(downFace)
-print('\nDown Face\n')
-print(downFace)
-print('\n')
-
-input('Press enter to capture Back Face...')
-backFace = makeFace()
-backFace = np.rot90(backFace,1)
-back = Face(backFace)
-print('\nBack Face\n')
-print(backFace)
-print('\n')
-
-input('Press enter to capture Right Face...')
-rightFace = makeFace()
-right = Face(rightFace)
-print('\nRight Face\n')
-print(rightFace)
-print('\n')
-
-input('Press enter to print The Cube...')
-theCube = Cube(up,down,front,back,left,right)
-print('\nThe Cube\n')
-print(theCube)
-print('\n')
-input('Press enter to exit...')
+    return colorArray 
