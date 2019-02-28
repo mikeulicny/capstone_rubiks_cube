@@ -41,7 +41,7 @@ class Frame:
         if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate90 function invalid axis parameter")
             return None
-        elif axis == 'X':
+        if axis == 'X':
             self.frontClaw.openClaw()       # open z axis
             self.backClaw.openClaw()
             time.sleep(clawDelay)
@@ -115,7 +115,7 @@ class Frame:
         if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate180 function invalid axis parameter")
             return None
-        elif axis == 'X':
+        if axis == 'X':
             self.rightClaw.openClaw()           # open x axis
             self.leftClaw.openClaw()
             time.sleep(clawDelay)
@@ -175,7 +175,7 @@ class Frame:
             deg = 0
         else:
             deg = 180
-        elif face == 'F':
+        if face == 'F':
             self.frontClaw.rotate(deg)      # turn side
             time.sleep(rotateDelay)
             self.frontClaw.openClaw()       # open claw
