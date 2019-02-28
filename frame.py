@@ -212,12 +212,8 @@ class Frame:
             self.rightClaw.openClaw()       # open x axis
             self.leftClaw.openClaw()
             time.sleep(clawDelay)
-            if face == 'U':
-                self.rightClaw.rotate(180)    # set x axis to +90 deg position
-                self.leftClaw.rotate(0)   #   OR
-            elif face == 'D':
-                self.rightClaw.rotate(0)  # set x axis to -90 deg position
-                self.leftClaw.rotate(180)
+            self.rightClaw.rotate(180)      # set x axis to +90 deg position
+            self.leftClaw.rotate(0)
             time.sleep(rotateDelay)
             self.rightClaw.closeClaw()      # close x axis
             self.leftClaw.closeClaw()
@@ -226,21 +222,37 @@ class Frame:
             self.backClaw.openClaw()
             time.sleep(clawDelay)
             self.rightClaw.rotate(90)       # rotate claws to 0 deg position
-            self.leftClaw.rotate(90)        # showing either up face or down face
-            time.sleep(rotateDelay)
-            self.frontClaw.closeClaw()      # grab current front face
-            time.sleep(clawDelay)
-            self.frontClaw.rotate(deg)      # rotate up/down clockwise/counterclockwise
-            time.sleep(rotateDelay)
-            self.frontClaw.openClaw()       # open front claw
-            time.sleep(clawDelay)
-            self.frontClaw.rotate(90)       # rotate front claw to 0 deg position
-            time.sleep(rotateDelay)
-            self.rightClaw.rotate(90)       # set cube back to original position
             self.leftClaw.rotate(90)
             time.sleep(rotateDelay)
             self.frontClaw.closeClaw()      # close z axis
             self.backClaw.closeClaw()
+            time.sleep(clawDelay)
+            if face == 'U':
+                self.frontClaw.rotate(deg)  # rotate up face
+                time.sleep(rotateDelay)
+            elif face == 'D':
+                self.backClaw.rotate(deg)   # rotate down face
+                time.sleep(rotateDelay)
+            self.frontClaw.openClaw()       # open z axis
+            self.backClaw.openClaw()         
+            time.sleep(clawDelay)
+            self.frontClaw.rotate(90)       # rotate z axis to 0 deg position
+            self.backClaw.rotate(90)
+            time.sleep(rotateDelay)
+            self.rightClaw.rotate(0)        # set cube back to original position
+            self.leftClaw.rotate(180)
+            time.sleep(rotateDelay)
+            self.frontClaw.closeClaw()      # close z axis
+            self.backClaw.closeClaw()
+            time.sleep(clawDelay)
+            self.rightClaw.openClaw()       # open x axis
+            self.leftClaw.openClaw()
+            time.sleep(clawDelay)
+            self.rightClaw.rotate(90)       # rotate x axis to 0 deg position
+            self.leftClaw.rotate(90)
+            time.sleep(rotateDelay)
+            self.rightClaw.closeClaw()      # close x axis
+            self.leftClaw.closeClaw()
 
     def turn180(face, inverse = False):
         """
@@ -251,11 +263,11 @@ class Frame:
             print("Error: turn180 function invalid face parameter")
             return NULL
         elif face == 'F':
-
+            pass
         elif face == 'B':
-
+            pass
         elif face == 'L':
-
+            pass
         elif face == 'R':
-
+            pass
         
