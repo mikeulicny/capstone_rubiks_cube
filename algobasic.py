@@ -9,8 +9,74 @@ from cube import Cube
 class AlgoBasic:			
 	# Initializer
 	def __init__(self, cube):
-		self.c = cube
+		self.c = cube		
+		self.movelist = []
+	
+	# Function to determine if down slice is complete
+	def downSliceComplete(self):
+		# Simplify attributes
+		down = self.c.down
+		front = self.c.front
+		back = self.c.back
+		left = self.c.left
+		right = self.c.right	
 		
+		out = True
+		if (down.isComplete() == False or front.bc != front.br or 
+		left.bc != left.br or back.bc != back.br or 
+		right.bc != right.br):
+			out = False	
+		return out
+	
+	# Expansion of cube flip method to include list appending
+	def flip(self, dir):
+		self.c.flip(dir)
+		self.movelist.append(dir)
+		
+	# Expansion of cube turn method to include appending		
+	def turn(self, dir):
+		self.c.turn(dir)
+		self.movelist.append(dir)
+	
+	# Function to optimize list by removing duplicates
+	def trimList(self):
+		ml = np.array(self.movelist)
+		# 5 passes over the list should catch most un-optimized move combos
+		for k in range (5):
+			for i in range (0, len(ml)):
+				j = i + 1
+				try:
+					if ml[i] == 'RM' or ml[j] == 'RM':
+						continue
+					# [X , X] -> [2X]
+					elif ml[i] == ml[j] and ml[0] != '2':
+						ml[j] = 'RM'
+						ml[i] = '2' + ml[i][0] 
+					# [X, Xi] or [Xi, X] -> RM both
+					elif ml[i][0] == ml[j][0] and len(ml[i]) != len(ml[j]):
+						ml[i] = 'RM'
+						ml[j] = 'RM'
+					# [X, 2X] or [Xi, 2X] -> [Xi] or [X], respectively
+					elif len(ml[j]) == 2 and ml[i][0] == ml[j][1]:
+						if len(ml[i]) == 1:
+							ml[i] = ml[i] + 'i'
+							ml[j] = 'RM'
+						else:
+							ml[i] = ml[i][0]
+							ml[j] = 'RM'
+					# [2X, X] or [2X, Xi] -> [Xi] or [X], respectively
+					elif len(ml[i]) == 2 and ml[i][1] == ml[j][0]:
+						if len(ml[j]) == 1:
+							ml[i] = ml[j] + 'i'
+							ml[j] = 'RM'
+						else:
+							ml[i] = ml[j][0]
+							ml[j] = 'RM'
+				except:
+					pass	
+		# New movelist without values marked 'RM'
+		self.movelist = [move for move in ml.tolist() if move != 'RM']
+	
 	def solve(self):
 		# Simplify attributes and methods
 		up = self.c.up
@@ -19,8 +85,9 @@ class AlgoBasic:
 		back = self.c.back
 		left = self.c.left
 		right = self.c.right
-		flip = self.c.flip
-		turn = self.c.turn
+		flip = self.flip
+		turn = self.turn
+		downSliceComplete = self.downSliceComplete
 		
 		#-----------------------
 		# Get yellow edge on top
@@ -35,7 +102,7 @@ class AlgoBasic:
 			flip('Zi')
 		elif down.mc == 'y':
 			flip('2X')
-	
+			
 		#---------------------------------
 		# While the 'daisy' isn't complete
 		#---------------------------------
@@ -164,19 +231,20 @@ class AlgoBasic:
 				turn('2B')
 			if up.mr == 'w' and right.mc == right.tc:
 				turn('2R')
-			turn('U')
-			
+			if not down.allEdges('w'):
+				turn('U')
+				
 		#------------------------------------
 		# While the white side isn't complete
 		#------------------------------------
-		'''
-		while not down.isComplete():
-			if front.tl == 'w' and top.bl == front.mc:
+		while not downSliceComplete():
+		# If desired piece in 'good' position:
+			if front.tl == 'w' and up.bl == front.mc:
 				turn('Ui')
 				turn('Li')
 				turn('U')
 				turn('L')
-			elif front.tr =='w' and top.br == front.mc:
+			elif front.tr == 'w' and up.br == front.mc:
 				turn('Fi')
 				turn('Ui')
 				turn('F')
@@ -187,15 +255,66 @@ class AlgoBasic:
 				turn('U')
 				turn('Li')
 				turn('Ui')
-				turn('L')		
-		'''
+				turn('L')
+		# If desired piece in top slice at all:
+			# Get it to the front
+			elif right.tr == 'w' and up.tr == front.mc:
+				turn('U')
+			elif left.tr == 'w' and up.bl == front.mc:
+				turn('Ui')
+			elif back.tr == 'w' and up.tl == front.mc:
+				turn('2U')
+				
+			elif right.tl == 'w' and up.br == front.mc:
+				turn('U')
+			elif left.tl == 'w' and up.tl == front.mc:
+				turn('Ui')
+			elif back.tl == 'w' and up.tr == front.mc:
+				turn('2U')
+			
+			elif up.br == 'w' and front.tr == front.mc:
+				turn('U')
+			elif up.tl == 'w' and back.tr == front.mc:
+				turn('Ui')
+			elif up.tr == 'w' and right.tr == front.mc:
+				turn('2U')
+		
+		# If white pieces remain on the front side:
+			# Toss them to the top slice
+			elif front.bl == 'w':
+				turn('Li')
+				turn('Ui')
+				turn('L')
+			elif front.br == 'w':
+				turn('Fi')
+				turn('Ui')
+				turn('F')
+		
+		# If incorrect white piece on bottom:
+			# Toss it to the top slice
+			elif down.tl == 'w' and front.bl != front.mc:
+				turn('Li')
+				turn('Ui')
+				turn('L')	
+			elif down.tr == 'w' and front.br != front.mc:
+				turn('Fi')
+				turn('Ui')
+				turn('F')
+		
+		# Otherwise this side is done, make next side front
+			elif not downSliceComplete():
+				flip('Y')
+	
+		# Optimize the list by removing superfluous/duplicate turns
+		self.trimList()
+	
+	
 def Main():				
 	# Test: yellow top center, green front center: R U L F B R U F U L B
 	# Let's shoot for ~ 120 moves in general
 	# ~100 moves for this particular cube
 	# If a given turn takes 2 seconds, that's a goal of 4 minutes
 	# If a given turn takes 1.5 seconds, that's a goal of 3 minutes
-	# If a given turn takes 1 second, that's a goal of 2 minutes
 	# If a given turn takes 1 second, that's a goal of 2 minutes
 
 	# X Z X Z X Z
@@ -207,6 +326,9 @@ def Main():
 	# 6th image: Right (needs to be rotated 90 degrees clockwise)
 	
 	# { This is part of the image processing class
+	
+	# Test cube 1:
+	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
 	up = np.array([['o', 'b', 'b'],
 		['r', 'y', 'b'],
 		['o', 'o', 'b']])	
@@ -225,7 +347,28 @@ def Main():
 	right = np.array([['y', 'r', 'r'],
 		['r', 'o', 'w'],
 		['y', 'o', 'y']])
-	
+	'''
+	# Test cube 2:
+	print('Test from solved: o @ up, b @ front: U Li B R Fi L U B Fi Ui D')
+	up = np.array([['r', 'y', 'g'],
+		['g', 'o', 'r'],
+		['b', 'y', 'o']])	
+	front = np.array([['o', 'r', 'y'],
+		['y', 'b', 'r'],
+		['w', 'o', 'w']])
+	left = np.array([['y', 'o', 'y'],
+		['w', 'w', 'b'],
+		['w', 'g', 'o']])
+	down = np.array([['b', 'w', 'g'],
+		['g', 'r', 'y'],
+		['b', 'w', 'b']])
+	back = np.array([['g', 'o', 'r'],
+		['g', 'g', 'r'],
+		['w', 'o', 'r']])
+	right = np.array([['r', 'b', 'y'],
+		['b', 'y', 'b'],
+		['g', 'w', 'o']])	
+	'''
 	# Rotate arrays
 	down = np.rot90(down, 1)
 	back = np.rot90(back, 3)
@@ -244,19 +387,18 @@ def Main():
 	
 	# } End of image processing part
 	
-	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
-
 	print('Before:\n')
-	print(cube)
-	#cube.turn('2U')
+	#print(cube)
 	
-	input('Press Enter to solve...')
+	# input('Press Enter to solve...')
 	algo = AlgoBasic(cube)
 	algo.solve()
-	
+
 	print('After:\n')
 	print(cube)
-
+	print(algo.movelist)
+	print('Current number of turns: ' + str(len(algo.movelist)))
+	
 # Calling Test
 if __name__ == '__main__': 
     Main() 
