@@ -18,14 +18,15 @@ class Frame:
     """
 
 
-    def __init__(self, clawDelay=1, rotateDelay=1):
+    def __init__(self, clawDelay=1, rotateDelay90=1):
         self.__servoArray = numpy.arange(8)
         self.frontClaw = claw(self.clawID=__servoArray[0], self.armID=__servoArray[1])
         self.rightClaw = claw(self.clawID=__servoArray[2], self.armID=__servoArray[3])
         self.backClaw = claw(self.clawID=__servoArray[4], self.armID=__servoArray[5])
         self.leftClaw = claw(self.clawID=__servoArray[6], self.armID=__servoArray[7])
         self.clawDelay = clawDelay
-        self.rotateDelay = rotateDelay
+        self.rotateDelay90 = rotateDelay90
+        self.rotateDelay180 = 2*rotateDelay90
         # NOTE: clawDelay and rotateDelay are currently set to 1 second for debugging
         #   pursposes. These are to be changed to clawDelay = 0.35 and rotateDelay = 0.5
         #   for final runs. These numbers are rough estimates and should be fine tuned
@@ -39,56 +40,61 @@ class Frame:
         remap which claw is the front, right, left, and back
         """
         clawDelay = self.clawDelay
-        rotateDelay=self.rotateDelay
+        rotateDelay90 = self.rotateDelay90
+        rotateDelay180 = self.rotateDelay180
+        frontClaw = self.frontClaw
+        backClaw = self.backClaw
+        rightClaw = self.rightClaw
+        leftClaw = self.leftClaw
+
         if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate90 function invalid axis parameter")
             return None
         if axis == 'X':
-            self.frontClaw.openClaw()       # open z axis
-            self.backClaw.openClaw()
+            frontClaw.openClaw()       # open z axis
+            backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                self.righClaw.rotate(180)   # rotate x axis -90 deg position
-                self.leftClaw.rotate(0)     #   OR
+                righClaw.rotate(180)   # rotate x axis -90 deg position
+                leftClaw.rotate(0)     #   OR
             else:
-                self.rightClaw.rotate(0)    # rotate x axis +90 deg position
-                self.leftClaw.rotate(180)
-            time.sleep(rotateDelay)
-            # TODO: get position of servo to determine delay. (0 deg smaller delay, 180 deg larger delay)
-            self.frontClaw.closeClaw()      # close z axis
-            self.backClaw.closeClaw()
+                rightClaw.rotate(0)    # rotate x axis +90 deg position
+                leftClaw.rotate(180)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()      # close z axis
+            backClaw.closeClaw()
             time.sleep(clawDelay)
-            self.rightClaw.openClaw()       # open x axis
-            self.leftClaw.openClaw()
+            rightClaw.openClaw()       # open x axis
+            leftClaw.openClaw()
             time.sleep(clawDelay)
-            self.rightClaw.rotate(90)       # set x axis to 0 deg position
-            self.leftClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.rightClaw.close()          # close x axis
-            self.leftClaw.close()
+            rightClaw.rotate(90)       # set x axis to 0 deg position
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            rightClaw.close()          # close x axis
+            leftClaw.close()
             time.sleep(clawDelay)
         elif axis == 'Z':
-            self.leftClaw.openClaw()        # open x axis
-            self.rightClaw.openClaw()
+            leftClaw.openClaw()        # open x axis
+            rightClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                self.frontClaw.rotate(180)  # rotate z axis -90 deg position
-                self.backClaw.rotate(0)     #   OR
+                frontClaw.rotate(180)  # rotate z axis -90 deg position
+                backClaw.rotate(0)     #   OR
             else:
-                self.frontClaw.rotate(0)    # rotate z axis +90 deg position
-                self.backClaw.rotate(180)
-            time.sleep(rotateDelay)
-            self.rightClaw.closeClaw()       # close x axis
-            self.leftClaw.closeClaw()
+                frontClaw.rotate(0)    # rotate z axis +90 deg position
+                backClaw.rotate(180)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()       # close x axis
+            leftClaw.closeClaw()
             time.sleep(clawDelay)
-            self.frontClaw.openClaw()       # open z axis
-            self.backClaw.openClaw()
+            frontClaw.openClaw()       # open z axis
+            backClaw.openClaw()
             time.sleep(clawDelay)
-            self.frontClaw.rotate(90)       # set z axis to 0 deg position
-            self.backClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.frontClaw.closeClaw()      # close z axis
-            self.backClaw.closeClaw()
+            frontClaw.rotate(90)       # set z axis to 0 deg position
+            backClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()      # close z axis
+            backClaw.closeClaw()
             time.sleep(clawDelay)
         elif axis == 'Y':
             # remap claws instead of making moves. Reduces time and moves
@@ -97,14 +103,14 @@ class Frame:
                 self.__servoArray = numpy.roll(__servoArray, -2)
             else:
                 self.__servoArray = numpy.roll(__servoArray, 2)
-            self.frontClaw.clawID = __servoArray[0]
-            self.frontClaw.armID = __servoArray[1]
-            self.rightClaw.clawID = __servoArray[2]
-            self.rightClaw.armID = __servoArray[3]
-            self.backClaw.clawID = __servoArray[4] 
-            self.backClaw.armID = __servoArray[5]
-            self.leftClaw.clawID = __servoArray[6]
-            self.leftClaw.armID = __servoArray[7]
+            frontClaw.clawID = __servoArray[0]
+            frontClaw.armID = __servoArray[1]
+            rightClaw.clawID = __servoArray[2]
+            rightClaw.armID = __servoArray[3]
+            backClaw.clawID = __servoArray[4] 
+            backClaw.armID = __servoArray[5]
+            leftClaw.clawID = __servoArray[6]
+            leftClaw.armID = __servoArray[7]
             
 
     def rotate180(axis, inverse = False):
@@ -115,41 +121,89 @@ class Frame:
         The 180 degree rotation just pre-sets the position of the claws and then calls the rotate90 function
         """
         clawDelay = self.clawDelay
-        rotateDelay=self.rotateDelay
+        rotateDelay90 = self.rotateDelay90
+        rotateDelay180 = self.rotateDelay180
+        frontClaw = self.frontClaw
+        backClaw = self.backClaw
+        rightClaw = self.rightClaw
+        leftClaw = self.leftClaw
 
         if axis != ('X' or 'Y' or 'Z'):
             print("Error: rotate180 function invalid axis parameter")
             return None
         if axis == 'X':
-            self.rightClaw.openClaw()           # open x axis
-            self.leftClaw.openClaw()
+            rightClaw.openClaw()           # open x axis
+            leftClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                self.rightClaw.rotate(180)        # set x axis to +90 deg position
-                self.leftClaw.rotate(0)       #   OR
+                rightClaw.rotate(180)        # set x axis to +90 deg position
+                leftClaw.rotate(0)       #   OR
             else:
-                self.rightClaw.rotate(0)      # set x axis to -90 deg position
-                self.leftClaw.rotate(180)
-            time.sleep(rotateDelay)
-            self.rightClaw.closeClaw()          # close x axis
-            self.leftClaw.closeClaw()
+                rightClaw.rotate(0)      # set x axis to -90 deg position
+                leftClaw.rotate(180)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()          # close x axis
+            leftClaw.closeClaw()
             time.sleep(clawDelay)
-            self.rotate90('X', inverse=inverse) # This will complete 180 deg rotation
+            frontClaw.openClaw()       # open z axis
+            backClaw.openClaw()
+            time.sleep(clawDelay)
+            if inverse:
+                righClaw.rotate(0)   # rotate x axis -90 deg position
+                leftClaw.rotate(180)     #   OR
+            else:
+                rightClaw.rotate(180)    # rotate x axis +90 deg position
+                leftClaw.rotate(0)
+            time.sleep(rotateDelay180)
+            frontClaw.closeClaw()      # close z axis
+            backClaw.closeClaw()
+            time.sleep(clawDelay)
+            rightClaw.openClaw()       # open x axis
+            leftClaw.openClaw()
+            time.sleep(clawDelay)
+            rightClaw.rotate(90)       # set x axis to 0 deg position
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            rightClaw.close()          # close x axis
+            leftClaw.close()
+            time.sleep(clawDelay)
+
 
         elif axis == 'Z':
-            self.frontClaw.openClaw()           # open z axis
-            self.backClaw.openClaw()
+            frontClaw.openClaw()           # open z axis
+            backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                self.frontClaw.rotate(180)        # set z axis to +90 deg position
-                self.backClaw.rotate(0)       #   OR
+                frontClaw.rotate(180)        # set z axis to +90 deg position
+                backClaw.rotate(0)       #   OR
             else:
-                self.frontClaw.rotate(0)      # set z axis to -90 deg position
-                self.backClaw.rotate(180)
-            time.sleep(rotateDelay)
-            self.frontClaw.closeClaw()          # close z axis
-            self.backClaw.closeClaw()
-            self.rotate90('Z', inverse=inverse) # This will complete 180 deg rotation
+                frontClaw.rotate(0)      # set z axis to -90 deg position
+                backClaw.rotate(180)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()          # close z axis
+            backClaw.closeClaw()
+            leftClaw.openClaw()        # open x axis
+            rightClaw.openClaw()
+            time.sleep(clawDelay)
+            if inverse:
+                frontClaw.rotate(0)  # rotate z axis -90 deg position
+                backClaw.rotate(180)     #   OR
+            else:
+                frontClaw.rotate(180)    # rotate z axis +90 deg position
+                backClaw.rotate(0)
+            time.sleep(rotateDelay180)
+            rightClaw.closeClaw()       # close x axis
+            leftClaw.closeClaw()
+            time.sleep(clawDelay)
+            frontClaw.openClaw()       # open z axis
+            backClaw.openClaw()
+            time.sleep(clawDelay)
+            frontClaw.rotate(90)       # set z axis to 0 deg position
+            backClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()      # close z axis
+            backClaw.closeClaw()
+            time.sleep(clawDelay)
 
         elif axis == 'Y':
             # remap claws instead of making moves. Reduces time and moves
@@ -158,14 +212,14 @@ class Frame:
                 self.__servoArray = numpy.roll(__servoArray, -4)
             else:
                 self.__servoArray = numpy.roll(__servoArray, 4)
-            self.frontClaw.clawID = __servoArray[0]
-            self.frontClaw.armID = __servoArray[1]
-            self.rightClaw.clawID = __servoArray[2]
-            self.rightClaw.armID = __servoArray[3]
-            self.backClaw.clawID = __servoArray[4] 
-            self.backClaw.armID = __servoArray[5]
-            self.leftClaw.clawID = __servoArray[6]
-            self.leftClaw.armID = __servoArray[7]
+            frontClaw.clawID = __servoArray[0]
+            frontClaw.armID = __servoArray[1]
+            rightClaw.clawID = __servoArray[2]
+            rightClaw.armID = __servoArray[3]
+            backClaw.clawID = __servoArray[4] 
+            backClaw.armID = __servoArray[5]
+            leftClaw.clawID = __servoArray[6]
+            leftClaw.armID = __servoArray[7]
 
 
     def turn90(face, inverse = False):
@@ -174,7 +228,12 @@ class Frame:
         turn function does not remap any faces
         """
         clawDelay = self.clawDelay
-        rotateDelay=self.rotateDelay
+        rotateDelay90 = self.rotateDelay90
+        rotateDelay180 = self.rotateDelay180
+        frontClaw = self.frontClaw
+        backClaw = self.backClaw
+        rightClaw = self.rightClaw
+        leftClaw = self.leftClaw
 
         if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
             print("Error: turn90 function invalid face parameter")
@@ -184,87 +243,87 @@ class Frame:
         else:
             deg = 180
         if face == 'F':
-            self.frontClaw.rotate(deg)      # turn side
-            time.sleep(rotateDelay)
-            self.frontClaw.openClaw()       # open claw
+            frontClaw.rotate(deg)      # turn side
+            time.sleep(rotateDelay90)
+            frontClaw.openClaw()       # open claw
             time.sleep(clawDelay)
-            self.frontClaw.rotate(90)       # reset claw
-            time.sleep(rotateDelay)
-            self.frontClaw.closeClaw()      # close claw
+            frontClaw.rotate(90)       # reset claw
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()      # close claw
             time.sleep(clawDelay)
 
         elif face == 'B':
-            self.backClaw.rotate(deg)
-            time.sleep(rotateDelay)
-            self.backClaw.openClaw()
+            backClaw.rotate(deg)
+            time.sleep(rotateDelay90)
+            backClaw.openClaw()
             time.sleep(clawDelay)
-            self.backClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.backClaw.closeClaw()
+            backClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            backClaw.closeClaw()
 
         elif face == 'L':
-            self.leftClaw.rotate(deg)
-            time.sleep(rotateDelay)
-            self.leftClaw.openClaw()
+            leftClaw.rotate(deg)
+            time.sleep(rotateDelay90)
+            leftClaw.openClaw()
             time.sleep(clawDelay)
-            self.leftClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.leftClaw.closeClaw()
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            leftClaw.closeClaw()
 
         elif face == 'R':
-            self.rightClaw.rotate(deg)
-            time.sleep(rotateDelay)
-            self.rightClaw.openClaw()
+            rightClaw.rotate(deg)
+            time.sleep(rotateDelay90)
+            rightClaw.openClaw()
             time.sleep(clawDelay)
-            self.rightClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.rightClaw.closeClaw()
+            rightClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()
             
         elif face == 'U' or 'D':
-            self.rightClaw.openClaw()       # open x axis
-            self.leftClaw.openClaw()
+            rightClaw.openClaw()       # open x axis
+            leftClaw.openClaw()
             time.sleep(clawDelay)
-            self.rightClaw.rotate(180)      # set x axis to +90 deg position
-            self.leftClaw.rotate(0)
-            time.sleep(rotateDelay)
-            self.rightClaw.closeClaw()      # close x axis
-            self.leftClaw.closeClaw()
+            rightClaw.rotate(180)      # set x axis to +90 deg position
+            leftClaw.rotate(0)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()      # close x axis
+            leftClaw.closeClaw()
             time.sleep(clawDelay)
-            self.frontClaw.openClaw()       # open z axis
-            self.backClaw.openClaw()
+            frontClaw.openClaw()       # open z axis
+            backClaw.openClaw()
             time.sleep(clawDelay)
-            self.rightClaw.rotate(90)       # rotate claws to 0 deg position
-            self.leftClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.frontClaw.closeClaw()      # close z axis
-            self.backClaw.closeClaw()
+            rightClaw.rotate(90)       # rotate claws to 0 deg position
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()      # close z axis
+            backClaw.closeClaw()
             time.sleep(clawDelay)
             if face == 'U':
-                self.frontClaw.rotate(deg)  # rotate up face
-                time.sleep(rotateDelay)
+                frontClaw.rotate(deg)  # rotate up face
+                time.sleep(rotateDelay90)
             elif face == 'D':
-                self.backClaw.rotate(deg)   # rotate down face
-                time.sleep(rotateDelay)
-            self.frontClaw.openClaw()       # open z axis
-            self.backClaw.openClaw()         
+                backClaw.rotate(deg)   # rotate down face
+                time.sleep(rotateDelay90)
+            frontClaw.openClaw()       # open z axis
+            backClaw.openClaw()         
             time.sleep(clawDelay)
-            self.frontClaw.rotate(90)       # rotate z axis to 0 deg position
-            self.backClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.rightClaw.rotate(0)        # set cube back to original position
-            self.leftClaw.rotate(180)
-            time.sleep(rotateDelay)
-            self.frontClaw.closeClaw()      # close z axis
-            self.backClaw.closeClaw()
+            frontClaw.rotate(90)       # rotate z axis to 0 deg position
+            backClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            rightClaw.rotate(0)        # set cube back to original position
+            leftClaw.rotate(180)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()      # close z axis
+            backClaw.closeClaw()
             time.sleep(clawDelay)
-            self.rightClaw.openClaw()       # open x axis
-            self.leftClaw.openClaw()
+            rightClaw.openClaw()       # open x axis
+            leftClaw.openClaw()
             time.sleep(clawDelay)
-            self.rightClaw.rotate(90)       # rotate x axis to 0 deg position
-            self.leftClaw.rotate(90)
-            time.sleep(rotateDelay)
-            self.rightClaw.closeClaw()      # close x axis
-            self.leftClaw.closeClaw()
+            rightClaw.rotate(90)       # rotate x axis to 0 deg position
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()      # close x axis
+            leftClaw.closeClaw()
 
     def turn180(face, inverse = False):
         """
@@ -272,17 +331,166 @@ class Frame:
         turn function does not remap any faces
         """
         clawDelay = self.clawDelay
-        rotateDelay=self.rotateDelay
+        rotateDelay90 = self.rotateDelay90
+        rotateDelay180 = self.rotateDelay180
+        frontClaw = self.frontClaw
+        backClaw = self.backClaw
+        rightClaw = self.rightClaw
+        leftClaw = self.leftClaw
         
         if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
             print("Error: turn180 function invalid face parameter")
             return None
-        elif face == 'F':
-            pass
+        
+        if inverse:
+            deg = 0
+        else:
+            deg = 180
+
+        if face == 'F':
+            frontClaw.openClaw()        # open claw
+            time.sleep(clawDelay)
+            if inverse:
+                frontClaw.rotate(180)   # rotate opposite direction of turn
+            else:
+                frontClaw.rotate(0)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()       # close claw
+            time.sleep(clawDelay)
+            frontClaw.rotate(deg)       # turn side 180
+            time.sleep(rotateDelay180)
+            frontClaw.openClaw()        # open claw
+            time.sleep(clawDelay)
+            frontClaw.rotate(90)        # reset claw
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()       # close claw
+            time.sleep(clawDelay)
+
         elif face == 'B':
-            pass
+            backClaw.openClaw()
+            time.sleep(clawDelay)
+            if inverse:
+                backClaw.rotate(180)
+            else:
+                backClaw.rotate(0)
+            time.sleep(rotateDelay90)
+            backClaw.closeClaw()
+            time.sleep(clawDelay)
+            backClaw.rotate(deg)
+            time.sleep(rotateDelay180)
+            backClaw.openClaw()
+            time.sleep(clawDelay)
+            backClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            backClaw.closeClaw()
+            time.sleep(clawDelay)
+
         elif face == 'L':
-            pass
+            leftClaw.openClaw()
+            time.sleep(clawDelay)
+            if inverse:
+                leftClaw.rotate(180)
+            else:
+                leftClaw.rotate(0)
+            time.sleep(rotateDelay90)
+            leftClaw.closeClaw()
+            time.sleep(clawDelay)
+            leftClaw.rotate(deg)
+            time.sleep(rotateDelay180)
+            leftClaw.openClaw()
+            time.sleep(clawDelay)
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            leftClaw.closeClaw()
+            time.sleep(clawDelay)
         elif face == 'R':
-            pass
+            rightClaw.openClaw()
+            time.sleep(clawDelay)
+            if inverse:
+                rightClaw.rotate(180)
+            else:
+                rightClaw.rotate(0)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()
+            time.sleep(clawDelay)
+            rightClaw.rotate(deg)
+            time.sleep(rotateDelay180)
+            rightClaw.openClaw()
+            time.sleep(clawDelay)
+            rightClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()
+            time.sleep(clawDelay)
+        
+        elif face == ('U' or 'D'):
+            frontClaw.openClaw()        # rotate x axis
+            backClaw.openClaw()
+            time.sleep(clawDelay)
+            rightClaw.rotate(0)
+            leftClaw.rotate(180)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()
+            backClaw.closeClaw()
+            time.sleep(clawDelay)
+            rightClaw.openClaw()
+            leftClaw.openClaw()
+            time.sleep(clawDelay)
+            rightClaw.rotate(90)
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()
+            leftClaw.closeClaw()
+            time.sleep(clawDelay)
+            if face == 'U':
+                frontClaw.openClaw()        # turn front 180 deg
+                time.sleep(clawDelay)
+                if inverse:
+                    frontClaw.rotate(180)
+                else:
+                    frontClaw.rotate(0)
+                time.sleep(rotateDelay90)
+                frontClaw.closeClaw()
+                time.sleep(clawDelay)
+                frontClaw.rotate(deg)
+                time.sleep(rotateDelay180)
+                frontClaw.openClaw()
+                time.sleep(clawDelay)
+                frontClaw.rotate(90)
+                time.sleep(rotateDelay90)
+                frontClaw.closeClaw()
+            elif face == 'D':               # turn back 180 deg
+                backClaw.openClaw()
+                time.sleep(clawDelay)
+                if inverse:
+                    backClaw.rotate(180)
+                else:
+                    backClaw.rotate(0)
+                time.sleep(rotateDelay90)
+                backClaw.closeClaw()
+                time.sleep(clawDelay)
+                backClaw.rotate(deg)
+                time.sleep(rotateDelay180)
+                backClaw.openClaw()
+                time.sleep(clawDelay)
+                backClaw.rotate(90)
+                time.sleep(rotateDelay90)
+                backClaw.closeClaw()
+            rightClaw.openClaw()
+            leftClaw.openClaw()
+            time.sleep(clawDelay)
+            rightClaw.rotate(0)
+            leftClaw.rotate(180)
+            time.sleep(rotateDelay90)
+            rightClaw.closeClaw()
+            leftClaw.closeClaw()
+            time.sleep(clawDelay)
+            frontClaw.openClaw()
+            backClaw.openClaw()
+            time.sleep(clawDelay)
+            rightClaw.rotate(90)
+            leftClaw.rotate(90)
+            time.sleep(rotateDelay90)
+            frontClaw.closeClaw()
+            backClaw.closeClaw()
+            time.sleep(clawDelay)
         
