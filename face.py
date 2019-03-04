@@ -46,7 +46,7 @@ class Face:
 	def isComplete(self):
 		out = True
 		if (self.tl != self.mc or self.tc != self.mc or self.tr != self.mc or
-			self.ml != self.mc or self.mr != mc or
+			self.ml != self.mc or self.mr != self.mc or
 			self.bl != self.mc or self.bc != self.mc or self.br != self.mc):
 			out = False
 		return out

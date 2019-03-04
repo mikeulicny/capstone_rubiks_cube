@@ -37,8 +37,8 @@ class Cube:
 			g+'┃ '+d.ml+s+d.mc+s+d.mr+' ┃\n'+
 			g+'┃ '+d.bl+s+d.bc+s+d.br+' ┃\n'+
 			g+'┗━━━━━━━┛\n')
-		return output
-
+		return output		
+		
 	def flip(self, dir):
 	
 		# Simplify attributes
@@ -146,8 +146,9 @@ class Cube:
 			left.fill(temp)
 		
 		# Endmatter
-		print('Flip ' + dir)
-		print(self)
+		# print('Flip ' + dir)
+		# print(self)
+		# input('Press Enter to continue...')
 		del temp
 		return self
 		
@@ -352,8 +353,9 @@ class Cube:
 			left.fillEdge('b', right)
 			right.fillEdge('b', temp)		
 		
-		print('Turn ' + dir)
-		print(self)
+		# print('Turn ' + dir)
+		# print(self)
+		# input('Press Enter to continue...')
 		del temp
 		return self
 		
