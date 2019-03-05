@@ -23,11 +23,27 @@ class AlgoBasic:
 		
 		out = True
 		if (down.isComplete() == False or front.bc != front.br or 
-		left.bc != left.br or back.bc != back.br or 
-		right.bc != right.br):
+			left.bc != left.br or back.bc != back.br or 
+			right.bc != right.br):
 			out = False	
 		return out
-	
+
+	# Function to determine if middle layer is complete
+	def midSliceComplete(self):
+		# Simplify attributes
+		front = self.c.front
+		back = self.c.back
+		left = self.c.left
+		right = self.c.right
+		
+		out = False
+		if (front.ml == front.mc == front.mr and 
+			left.ml == left.mc == left.mr and 
+			right.ml == right.mc == right.mr and
+			back.ml == back.mc == back.mr):
+			out = True
+		return out
+		
 	# Expansion of cube flip method to include list appending
 	def flip(self, dir):
 		self.c.flip(dir)
@@ -88,6 +104,7 @@ class AlgoBasic:
 		flip = self.flip
 		turn = self.turn
 		downSliceComplete = self.downSliceComplete
+		midSliceComplete = self.midSliceComplete
 		
 		#-----------------------
 		# Get yellow edge on top
@@ -217,7 +234,6 @@ class AlgoBasic:
 					elif up.tc != 'w':
 						turn('2U')
 						turn('2F')
-					# WHERE I STOPPED
 	
 		#-------------------------------------
 		# While the white cross isn't complete
@@ -304,10 +320,82 @@ class AlgoBasic:
 		# Otherwise this side is done, make next side front
 			elif not downSliceComplete():
 				flip('Y')
-	
+
+		#--------------------------------------
+		# While the center slice isn't complete
+		#--------------------------------------
+		while not midSliceComplete():
+		# If piece to drop in the front, drop it down
+			if front.tc == front.mc and up.bc == left.mc:
+				turn('Ui')
+				turn('Li')
+				turn('U')
+				turn('L')
+				turn('U')
+				turn('F')
+				turn('Ui')
+				turn('Fi')
+			elif front.tc == front.mc and up.bc == right.mc:
+				turn('U')
+				turn('R')
+				turn('Ui')
+				turn('Ri')
+				turn('Ui')
+				turn('Fi')
+				turn('U')
+				turn('F')
+
+		# If desired piece in top slice at all:
+			# Get it to the front
+			elif right.tc == front.mc and up.mr != 'y':
+				turn('U')
+			elif left.tc == front.mc and up.ml != 'y':
+				turn('Ui')
+			elif back.tc == front.mc and up.tc != 'y':
+				turn('2U')
+
+		# If desired piece in top slice but flipped:
+			# Keep flipping to avoid tons of wasted turns
+			elif up.mr != 'y' and right.tc != 'y':
+				flip('Y')
+			elif up.ml != 'y' and left.tc != 'y':
+				flip('Y')
+			elif up.tc != 'y' and back.tc != 'y':
+				flip('Y')
+				
+		# If incorrect piece is currently dropped, get it out
+			elif front.mc != front.ml:
+				turn('Ui')
+				turn('Li')
+				turn('U')
+				turn('L')
+				turn('U')
+				turn('F')
+				turn('Ui')
+				turn('Fi')			
+			elif front.mc != front.mr:
+				turn('U')
+				turn('R')
+				turn('Ui')
+				turn('Ri')
+				turn('Ui')
+				turn('Fi')
+				turn('U')
+				turn('F')					
+		
+		# Otherwise this side is 'done', make next side front
+			elif not midSliceComplete():
+				flip('Y')		
+
+		#-------------------------------------------
+		# While the top (yellow) cross isn't complete
+		#-------------------------------------------
+		while not up.allEdges('y'):
+		
+		
+		
 		# Optimize the list by removing superfluous/duplicate turns
 		self.trimList()
-	
 	
 def Main():				
 	# Test: yellow top center, green front center: R U L F B R U F U L B
@@ -324,9 +412,7 @@ def Main():
 	# 4th image: Down (needs to be rotated 90 degrees counter-clockwise)
 	# 5th image: Back (needs to be rotated 90 degrees clockwise)
 	# 6th image: Right (needs to be rotated 90 degrees clockwise)
-	
-	# { This is part of the image processing class
-	
+	'''
 	# Test cube 1:
 	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
 	up = np.array([['o', 'b', 'b'],
@@ -368,7 +454,7 @@ def Main():
 	right = np.array([['r', 'b', 'y'],
 		['b', 'y', 'b'],
 		['g', 'w', 'o']])	
-	'''
+	
 	# Rotate arrays
 	down = np.rot90(down, 1)
 	back = np.rot90(back, 3)
@@ -384,11 +470,6 @@ def Main():
 
 	# Instantiate cube
 	cube = Cube(up, down, front, back, left, right)
-	
-	# } End of image processing part
-	
-	print('Before:\n')
-	#print(cube)
 	
 	# input('Press Enter to solve...')
 	algo = AlgoBasic(cube)
