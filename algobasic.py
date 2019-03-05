@@ -11,7 +11,7 @@ class AlgoBasic:
 	def __init__(self, cube):
 		self.c = cube		
 		self.movelist = []
-	
+		self.movenumber = 0
 	# Function to determine if down slice is complete
 	def downSliceComplete(self):
 		# Simplify attributes
@@ -37,10 +37,38 @@ class AlgoBasic:
 		right = self.c.right
 		
 		out = False
-		if (front.ml == front.mc == front.mr and 
-			left.ml == left.mc == left.mr and 
-			right.ml == right.mc == right.mr and
-			back.ml == back.mc == back.mr):
+		if (front.ml == front.mc and left.ml == left.mc and 
+			right.ml == right.mc and back.ml == back.mc):
+			out = True
+		return out
+
+	# Function to determine if top corners are correctly oriented
+	def topCrnrsComplete(self):
+		# Simplify attributes
+		front = self.c.front
+		back = self.c.back
+		left = self.c.left
+		right = self.c.right
+
+		out = False
+		if (front.tl == front.mc and left.tl == left.mc and
+			back.tl == back.mc and right.tl == right.tr):
+			out = True
+		return out
+
+	def cubeComplete(self):
+		# Simplify attributes
+		up = self.c.up
+		down = self.c.down
+		front = self.c.front
+		back = self.c.back
+		left = self.c.left
+		right = self.c.right
+		
+		out = False
+		if (front.isComplete() == True and back.isComplete() == True and
+			left.isComplete() == True and right.isComplete() == True and
+			up.isComplete() == True and down.isComplete() == True):
 			out = True
 		return out
 		
@@ -48,12 +76,20 @@ class AlgoBasic:
 	def flip(self, dir):
 		self.c.flip(dir)
 		self.movelist.append(dir)
-		
+		# print(dir + ' (turn ' + str(self.movenumber) + '):')
+		# self.movenumber += 1
+		# print(self.c)
+		# input('')
+
 	# Expansion of cube turn method to include appending		
 	def turn(self, dir):
 		self.c.turn(dir)
 		self.movelist.append(dir)
-	
+		# print(dir + ' (turn ' + str(self.movenumber) + '):')
+		# self.movenumber += 1
+		# print(self.c)
+		# input('')
+		
 	# Function to optimize list by removing duplicates
 	def trimList(self):
 		ml = np.array(self.movelist)
@@ -105,6 +141,8 @@ class AlgoBasic:
 		turn = self.turn
 		downSliceComplete = self.downSliceComplete
 		midSliceComplete = self.midSliceComplete
+		topCrnrsComplete = self.topCrnrsComplete
+		cubeComplete = self.cubeComplete
 		
 		#-----------------------
 		# Get yellow edge on top
@@ -391,11 +429,191 @@ class AlgoBasic:
 		# While the top (yellow) cross isn't complete
 		#-------------------------------------------
 		while not up.allEdges('y'):
+			# If only the center of the cross is yellow
+			if up.tc != 'y' and up.ml != 'y' and up.mr != 'y' and up.bc != 'y':
+				turn('F')
+				turn('R')
+				turn('U')
+				turn('Ri')
+				turn('Ui')
+				turn('Fi')
+			
+			# If there's a yellow line 
+			elif up.tc == 'y' and up.bc == 'y':
+				flip('Y')
+			elif up.ml == 'y' and up.mr == 'y':
+				turn('F')
+				turn('R')
+				turn('U')
+				turn('Ri')
+				turn('Ui')
+				turn('Fi')
+
+			# If there's a yellow triangle
+			elif up.ml == 'y' and up.bc == 'y':
+				flip('Y')
+			elif up.tc == 'y' and up.mr == 'y':
+				flip('Yi')
+			elif up.mr == 'y' and up.bc == 'y':
+				flip('2Y')
+			elif up.tc == 'y' and up.tl == 'y':
+				turn('F')
+				turn('U')
+				turn('R')
+				turn('Ui')
+				turn('Ri')
+				turn('Fi')				
 		
+		#-------------------------------------
+		# While the yellow side isn't complete
+		#-------------------------------------
+		while not up.isComplete():
+			# If no corners are yellow
+			if up.tl != 'y' and up.tr != 'y' and up.bl != 'y' and up.br != 'y':
+				if left.tr == 'y':						
+					turn('R')
+					turn('U')
+					turn('Ri')
+					turn('U')
+					turn('R')
+					turn('2U')
+					turn('Ri')
+				elif front.tr == 'y':		
+					flip('Y')
+				elif back.tr == 'y':
+					flip('Yi')
+				elif right.tr == 'y':
+					flip('2Y')
+			
+			# If exactly one corner is yellow
+			elif up.tl != 'y' and up.tr != 'y' and up.bl == 'y' and up.br != 'y':
+					turn('R')
+					turn('U')
+					turn('Ri')
+					turn('U')
+					turn('R')
+					turn('2U')
+					turn('Ri')
+			elif up.tl != 'y' and up.tr != 'y' and up.bl != 'y' and up.br == 'y':
+				flip('Y')
+			elif up.tl == 'y' and up.tr != 'y' and up.bl != 'y' and up.br != 'y':
+				flip('Yi')
+			elif up.tl != 'y' and up.tr == 'y' and up.bl != 'y' and up.br != 'y':
+				flip('2Y')
+				
+			# If any two corners are yellow
+			else:
+				if front.tl == 'y':
+					turn('R')
+					turn('U')
+					turn('Ri')
+					turn('U')
+					turn('R')
+					turn('2U')
+					turn('Ri')
+				elif right.tl == 'y':
+					flip('Y')
+				elif left.tl == 'y':
+					flip('Yi')
+				elif back.tl == 'y':
+					flip('2Y')
 		
+		#---------------------------------------
+		# While the top corners are not complete
+		#---------------------------------------
+		while not topCrnrsComplete():
+			# If back corners are correct
+			if back.tl == back.tr == back.mc:
+				turn('Ri')
+				turn('F')
+				turn('Ri')
+				turn('2B')
+				turn('R')
+				turn('Fi')
+				turn('Ri')
+				turn('2B')
+				turn('2R')
+				turn('Ui')
 		
+			# If there are two correct corners (i.e. same as back)
+			elif right.tl == right.tr == back.mc:
+				turn('Ui')
+			elif left.tl == left.tr == back.mc:
+				turn('U')		
+			elif front.tl == front.tr == back.mc:
+				turn('2U')
+				
+			# If there is any pair of correct corners
+			elif (right.tl == right.tr or front.tl == front.tr or
+				left.tl == left.tr or front.tl == front.tr):
+				flip('Y')
+			
+			# If there are no correct corners
+			else:
+				turn('Ri')
+				turn('F')
+				turn('Ri')
+				turn('2B')
+				turn('R')
+				turn('Fi')
+				turn('Ri')
+				turn('2B')
+				turn('2R')
+				turn('Ui')
+
+		#-------------------------------				
+		# While the cube is not complete
+		#-------------------------------
+		while not cubeComplete():
+			# If no top edges in correct position
+			if (front.tc != front.mc and left.tc != left.mc and
+				right.tc != right.mc and back.tc != back.mc):
+				turn('2F')
+				turn('U')
+				turn('L')
+				turn('Ri')
+				turn('2F')
+				turn('Li')
+				turn('R')
+				turn('U')
+				turn('2F')
+			
+			# If one edge in correct position, get it to back
+			elif left.tc == left.tl:
+				flip('Y')
+			elif right.tc == right.tl:
+				flip('Yi')
+			elif front.tc == front.tl:
+				flip('2Y')
+				
+			# If remaining three need to be rotated clockwise
+			elif front.tc == left.mc:
+				turn('2F')
+				turn('U')
+				turn('L')
+				turn('Ri')
+				turn('2F')
+				turn('Li')
+				turn('R')
+				turn('U')
+				turn('2F')				
+			
+			# If remaining three need to be rotated counter-clockwise
+			elif front.tc == right.mc:
+				turn('2F')
+				turn('Ui')
+				turn('L')
+				turn('Ri')
+				turn('2F')
+				turn('Li')
+				turn('R')
+				turn('Ui')
+				turn('2F')				
+			
 		# Optimize the list by removing superfluous/duplicate turns
 		self.trimList()
+		
+		print ('All done!')
 	
 def Main():				
 	# Test: yellow top center, green front center: R U L F B R U F U L B
@@ -412,8 +630,9 @@ def Main():
 	# 4th image: Down (needs to be rotated 90 degrees counter-clockwise)
 	# 5th image: Back (needs to be rotated 90 degrees clockwise)
 	# 6th image: Right (needs to be rotated 90 degrees clockwise)
-	'''
+	
 	# Test cube 1:
+	'''
 	print('Test from solved: y @ up, g @ front: R U L F B R U F U L B')
 	up = np.array([['o', 'b', 'b'],
 		['r', 'y', 'b'],
@@ -470,6 +689,9 @@ def Main():
 
 	# Instantiate cube
 	cube = Cube(up, down, front, back, left, right)
+	
+	print('After:\n')
+	print(cube)
 	
 	# input('Press Enter to solve...')
 	algo = AlgoBasic(cube)
