@@ -608,5 +608,3 @@ class AlgoBasic:
 			
 		# Optimize the list by removing superfluous/duplicate turns
 		self.trimList()
-		
-		print ('All done!')
