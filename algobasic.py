@@ -1,4 +1,5 @@
 import numpy as np
+import random
 from face import Face
 from cube import Cube
 
@@ -8,6 +9,7 @@ class AlgoBasic:
 		self.c = cube		
 		self.movelist = []
 		self.movenumber = 0
+		
 	# Function to determine if down slice is complete
 	def downSliceComplete(self):
 		# Simplify attributes
@@ -33,8 +35,8 @@ class AlgoBasic:
 		right = self.c.right
 		
 		out = False
-		if (front.ml == front.mc and left.ml == left.mc and 
-			right.ml == right.mc and back.ml == back.mc):
+		if (front.ml == front.mc == front.mr and left.ml == left.mc == left.mr and 
+			right.ml == right.mc == right.mr and back.ml == back.mc == back.mr):
 			out = True
 		return out
 
@@ -51,7 +53,8 @@ class AlgoBasic:
 			back.tl == back.mc and right.tl == right.tr):
 			out = True
 		return out
-
+	
+	# Function to determine if cube is completely solved
 	def cubeComplete(self):
 		# Simplify attributes
 		up = self.c.up
@@ -68,16 +71,7 @@ class AlgoBasic:
 			out = True
 		return out
 		
-	# Expansion of cube flip method to include list appending
-	def flip(self, dir):
-		self.c.flip(dir)
-		self.movelist.append(dir)
-		# print(dir + ' (turn ' + str(self.movenumber) + '):')
-		# self.movenumber += 1
-		# print(self.c)
-		# input('')
-
-	# Expansion of cube turn method to include appending		
+	# Expansion of cube turn method to include list appending
 	def turn(self, dir):
 		self.c.turn(dir)
 		self.movelist.append(dir)
@@ -85,7 +79,7 @@ class AlgoBasic:
 		# self.movenumber += 1
 		# print(self.c)
 		# input('')
-		
+	
 	# Function to optimize list by removing duplicates
 	def trimList(self):
 		ml = np.array(self.movelist)
@@ -97,7 +91,7 @@ class AlgoBasic:
 					if ml[i] == 'RM' or ml[j] == 'RM':
 						continue
 					# [X , X] -> [2X]
-					elif ml[i] == ml[j] and ml[0] != '2':
+					elif ml[i] == ml[j] and ml[i][0] != '2':
 						ml[j] = 'RM'
 						ml[i] = '2' + ml[i][0] 
 					# [X, Xi] or [Xi, X] -> RM both
@@ -120,11 +114,73 @@ class AlgoBasic:
 						else:
 							ml[i] = ml[j][0]
 							ml[j] = 'RM'
+					elif ml[i][0] == '2' and ml[i] == ml[j]:
+						ml[i] = 'RM'
+						ml[j] = 'RM'
 				except:
 					pass	
 		# New movelist without values marked 'RM'
 		self.movelist = [move for move in ml.tolist() if move != 'RM']
 	
+	# Function to randomize a cube (20 turns)
+	def randomize(self):
+		# Simplify attributes and methods
+		turn = self.turn
+		turn = self.turn
+		
+		# Clear existing move list
+		self.movelist = []
+		
+		# 20 random turns
+		for i in range(20):
+			randomTurn = random.randint(9,26)
+			if randomTurn == 9:
+				turn('U')				
+			elif randomTurn == 10:					
+				turn('Ui')					
+			elif randomTurn == 11:					
+				turn('D')				
+			elif randomTurn == 12:					
+				turn('Di')
+			elif randomTurn == 13:					
+				turn('F')				
+			elif randomTurn == 14:					
+				turn('Fi')
+			elif randomTurn == 15:					
+				turn('B')				
+			elif randomTurn == 16:					
+				turn('Bi')
+			elif randomTurn == 17:					
+				turn('L')				
+			elif randomTurn == 18:					
+				turn('Li')
+			elif randomTurn == 19:					
+				turn('R')	
+			elif randomTurn == 20:					
+				turn('Ri')	
+			elif randomTurn == 21:					
+				turn('2U')
+			elif randomTurn == 22:					
+				turn('2D')
+			elif randomTurn == 23:					
+				turn('2F')	
+			elif randomTurn == 24:					
+				turn('2B')	
+			elif randomTurn == 25:					
+				turn('2L')		
+			elif randomTurn == 26:					
+				turn('2R')	
+					
+		# Optimize the list by removing superfluous/duplicate turns
+		self.trimList()
+	
+	# Function to get a cube to a pre-determined configuration
+	def followMoves(self):	
+		L = len(self.movelist)
+		for i in range(L):
+			self.c.turn(self.movelist[i])
+		
+	# Function to solve a cube				
 	def solve(self):
 		# Simplify attributes and methods
 		up = self.c.up
@@ -133,26 +189,29 @@ class AlgoBasic:
 		back = self.c.back
 		left = self.c.left
 		right = self.c.right
-		flip = self.flip
+		turn = self.turn
 		turn = self.turn
 		downSliceComplete = self.downSliceComplete
 		midSliceComplete = self.midSliceComplete
 		topCrnrsComplete = self.topCrnrsComplete
 		cubeComplete = self.cubeComplete
 		
+		# Clear existing move list
+		self.movelist = []		
+		
 		#-----------------------
 		# Get yellow edge on top
 		#-----------------------
 		if front.mc == 'y':
-			flip('X')
+			turn('X')
 		elif back.mc == 'y':
-			flip('Xi')
+			turn('Xi')
 		elif left.mc == 'y':
-			flip('Z')
+			turn('Z')
 		elif right.mc == 'y':
-			flip('Zi')
+			turn('Zi')
 		elif down.mc == 'y':
-			flip('2X')
+			turn('2X')
 			
 		#---------------------------------
 		# While the 'daisy' isn't complete
@@ -180,7 +239,7 @@ class AlgoBasic:
 					if up.bc != 'w':
 						turn('U')
 						turn('Li')
-					elif u.tc != 'w':
+					elif up.tc != 'w':
 						turn('Ui')
 						turn('Li')
 					else:
@@ -188,11 +247,11 @@ class AlgoBasic:
 						turn('Li')
 			# If it's NOT in the front, move it there
 			elif right.mr == 'w' or right.ml == 'w':
-				flip('Y')
+				turn('Y')
 			elif left.mr == 'w' or left.ml == 'w':
-				flip('Yi')
+				turn('Yi')
 			elif back.mr == 'w' or back.ml == 'w':
-				flip('2Y')
+				turn('2Y')
 				
 		# If white edge in top slice:
 			# If it's already in the front, move it up
@@ -207,13 +266,18 @@ class AlgoBasic:
 					turn('F')
 					turn('U')
 					turn('R')
+				elif up.bc != 'w':
+					turn('F')
+					turn('Ui')
+					turn('R')
+					
 			# If it's NOT in the front, move it there
 			elif right.tc == 'w':
-				flip('Y')
+				turn('Y')
 			elif left.tc == 'w':
-				flip('Yi')
+				turn('Yi')
 			elif back.tc == 'w':
-				flip('2Y')
+				turn('2Y')
 		
 		# If white edge in bottom slice:
 			# If it's already in the front, move it up
@@ -228,6 +292,10 @@ class AlgoBasic:
 					elif up.tc != 'w':
 						turn('Fi')
 						turn('U')
+						turn('R')
+					elif up.bc != 'w':
+						turn('Fi')
+						turn('Ui')
 						turn('R')
 				else:
 					if up.mr != 'w':
@@ -247,15 +315,15 @@ class AlgoBasic:
 						turn('R')					
 			# If it's NOT in the front, move it there
 			elif right.bc == 'w':
-				flip('Y')
+				turn('Y')
 			elif left.bc == 'w':
-				flip('Yi')
+				turn('Yi')
 			elif back.bc == 'w':
-				flip('2Y')
+				turn('2Y')
 		
 		# If white edge on down face:
 			# If it's already in the 'front', move it up
-			elif down.bc == 'w':
+			elif down.tc == 'w':
 				if up.bc != 'w':
 					turn('2F')
 				else:
@@ -268,7 +336,14 @@ class AlgoBasic:
 					elif up.tc != 'w':
 						turn('2U')
 						turn('2F')
-	
+			# If it's NOT in the front, move it there
+			elif down.mr == 'w':
+				turn('Y')
+			elif down.ml == 'w':
+				turn('Yi')
+			elif down.bc == 'w':
+				turn('2Y')
+
 		#-------------------------------------
 		# While the white cross isn't complete
 		#-------------------------------------
@@ -353,7 +428,7 @@ class AlgoBasic:
 		
 		# Otherwise this side is done, make next side front
 			elif not downSliceComplete():
-				flip('Y')
+				turn('Y')
 
 		#--------------------------------------
 		# While the center slice isn't complete
@@ -388,14 +463,14 @@ class AlgoBasic:
 			elif back.tc == front.mc and up.tc != 'y':
 				turn('2U')
 
-		# If desired piece in top slice but flipped:
-			# Keep flipping to avoid tons of wasted turns
+		# If desired piece in top slice but turnped:
+			# Keep turnping to avoid tons of wasted turns
 			elif up.mr != 'y' and right.tc != 'y':
-				flip('Y')
+				turn('Y')
 			elif up.ml != 'y' and left.tc != 'y':
-				flip('Y')
+				turn('Y')
 			elif up.tc != 'y' and back.tc != 'y':
-				flip('Y')
+				turn('Y')
 				
 		# If incorrect piece is currently dropped, get it out
 			elif front.mc != front.ml:
@@ -419,7 +494,7 @@ class AlgoBasic:
 		
 		# Otherwise this side is 'done', make next side front
 			elif not midSliceComplete():
-				flip('Y')		
+				turn('Y')		
 
 		#-------------------------------------------
 		# While the top (yellow) cross isn't complete
@@ -436,7 +511,7 @@ class AlgoBasic:
 			
 			# If there's a yellow line 
 			elif up.tc == 'y' and up.bc == 'y':
-				flip('Y')
+				turn('Y')
 			elif up.ml == 'y' and up.mr == 'y':
 				turn('F')
 				turn('R')
@@ -447,11 +522,11 @@ class AlgoBasic:
 
 			# If there's a yellow triangle
 			elif up.ml == 'y' and up.bc == 'y':
-				flip('Y')
+				turn('Y')
 			elif up.tc == 'y' and up.mr == 'y':
-				flip('Yi')
+				turn('Yi')
 			elif up.mr == 'y' and up.bc == 'y':
-				flip('2Y')
+				turn('2Y')
 			elif up.tc == 'y' and up.ml == 'y':
 				turn('F')
 				turn('U')
@@ -474,11 +549,11 @@ class AlgoBasic:
 					turn('2U')
 					turn('Ri')
 				elif front.tr == 'y':		
-					flip('Y')
+					turn('Y')
 				elif back.tr == 'y':
-					flip('Yi')
+					turn('Yi')
 				elif right.tr == 'y':
-					flip('2Y')
+					turn('2Y')
 			
 			# If exactly one corner is yellow
 			elif up.tl != 'y' and up.tr != 'y' and up.bl == 'y' and up.br != 'y':
@@ -490,11 +565,11 @@ class AlgoBasic:
 					turn('2U')
 					turn('Ri')
 			elif up.tl != 'y' and up.tr != 'y' and up.bl != 'y' and up.br == 'y':
-				flip('Y')
+				turn('Y')
 			elif up.tl == 'y' and up.tr != 'y' and up.bl != 'y' and up.br != 'y':
-				flip('Yi')
+				turn('Yi')
 			elif up.tl != 'y' and up.tr == 'y' and up.bl != 'y' and up.br != 'y':
-				flip('2Y')
+				turn('2Y')
 				
 			# If any two corners are yellow
 			else:
@@ -507,11 +582,11 @@ class AlgoBasic:
 					turn('2U')
 					turn('Ri')
 				elif right.tl == 'y':
-					flip('Y')
+					turn('Y')
 				elif left.tl == 'y':
-					flip('Yi')
+					turn('Yi')
 				elif back.tl == 'y':
-					flip('2Y')
+					turn('2Y')
 		
 		#---------------------------------------
 		# While the top corners are not complete
@@ -541,7 +616,7 @@ class AlgoBasic:
 			# If there is any pair of correct corners
 			elif (right.tl == right.tr or front.tl == front.tr or
 				left.tl == left.tr or front.tl == front.tr):
-				flip('Y')
+				turn('Y')
 			
 			# If there are no correct corners
 			else:
@@ -575,11 +650,11 @@ class AlgoBasic:
 			
 			# If one edge in correct position, get it to back
 			elif left.tc == left.tl:
-				flip('Y')
+				turn('Y')
 			elif right.tc == right.tl:
-				flip('Yi')
+				turn('Yi')
 			elif front.tc == front.tl:
-				flip('2Y')
+				turn('2Y')
 				
 			# If remaining three need to be rotated clockwise
 			elif front.tc == left.mc:
