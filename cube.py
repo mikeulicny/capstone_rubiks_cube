@@ -39,7 +39,7 @@ class Cube:
 			g+'┗━━━━━━━┛\n')
 		return output		
 		
-	def flip(self, dir):
+	def turn(self, dir):
 	
 		# Simplify attributes
 		up = self.up
@@ -52,7 +52,7 @@ class Cube:
 		# Create temp face for storage
 		temp = Face()	
 		
-		# flip('X')
+		# turn('X')
 		if dir == 'X':
 			right.fill(right.cw())
 			left.fill(left.ccw())
@@ -62,7 +62,7 @@ class Cube:
 			front.fill(down)
 			down.fill(temp)
 		
-		# flip('Xi')
+		# turn('Xi')
 		elif dir == 'Xi':
 			left.fill(left.cw())
 			right.fill(right.ccw())
@@ -72,7 +72,7 @@ class Cube:
 			front.fill(up)
 			up.fill(temp)
 				
-		# flip('Z')
+		# turn('Z')
 		elif dir == 'Z':
 			front.fill(front.cw())
 			back.fill(back.ccw())
@@ -82,7 +82,7 @@ class Cube:
 			down.fill(right.cw())
 			right.fill(temp)
 			
-		# flip('Zi')
+		# turn('Zi')
 		elif dir == 'Zi':
 			back.fill(back.cw())
 			front.fill(front.ccw())
@@ -92,7 +92,7 @@ class Cube:
 			down.fill(left.ccw())
 			left.fill(temp)			
 		
-		# flip('Y')
+		# turn('Y')
 		elif dir == 'Y':
 			up.fill(up.cw())
 			down.fill(down.ccw())
@@ -102,7 +102,7 @@ class Cube:
 			front.fill(right)
 			right.fill(temp)
 			
-		# flip('Yi')
+		# turn('Yi')
 		elif dir == 'Yi':
 			down.fill(down.cw())
 			up.fill(up.ccw())
@@ -112,7 +112,7 @@ class Cube:
 			front.fill(left)
 			left.fill(temp)
 		
-		# flip('2X')
+		# turn('2X')
 		elif dir == '2X':
 			right.fill(right.c180())
 			left.fill(left.c180())
@@ -123,7 +123,7 @@ class Cube:
 			up.fill(down)
 			down.fill(temp)
 			
-		# flip('2Y')
+		# turn('2Y')
 		elif dir == '2Y':
 			up.fill(up.c180())
 			down.fill(down.c180())
@@ -134,7 +134,7 @@ class Cube:
 			left.fill(right)
 			right.fill(temp)
 		
-		# flip('2Z')
+		# turn('2Z')
 		elif dir == '2Z':
 			front.fill(front.c180())
 			back.fill(back.c180())
@@ -144,49 +144,8 @@ class Cube:
 			temp.fill(right.c180())
 			right.fill(left.c180())
 			left.fill(temp)
-		
-		# Endmatter
-		# print('Flip ' + dir)
-		# print(self)
-		# input('Press Enter to continue...')
-		del temp
-		return self
-		
-		# ------------------------------------------------------------------------
-		# COMMENTS:		
-		# Special composite (3 stage) flips (because of claw limitations)
-		# flip('Y') = flip('Z') + flip('X') + flip('Zi')
-		# flip('Yi') = flip('Z') + flip('Xi') + flip('Zi')
-		
-		# Special "180 degree" turns (for consistent code)
-		# (The 2Y implementation is more efficient than 2 "flip('Y') calls)
-		# flip('2X') = flip('X') + flip('X')
-		# flip('2Y') = flip('Z') + flip('2X') + flip('Zi')
-		# flip('2Z') = flip('Z') + flip('Z')		
-		
-		# flip('Y') and its variants 'Yi' and '2Y' would be more efficient
-		# move-wise if they were instead represented by an internal re-mapping
-		# of the faces (e.g. flip('Y') would actually just re-map the faces:
-		# left = front, front = right, right = back, and back = left) and claws.
-		# This would significantly cut down on the number of flips needed,
-		# because 'Y' moves wouldn't actually turn the cube.
-		# ------------------------------------------------------------------------
-
-	def turn(self, dir):
-		
-		# Simplify attributes
-		up = self.up
-		down = self.down
-		front = self.front
-		back = self.back
-		left = self.left
-		right = self.right	
-		
-		# Create temp face for storage
-		temp = Face()	
-		
 		# turn('F')
-		if dir == 'F':
+		elif dir == 'F':
 			front.fill(front.cw())
 			temp.fillEdge('l', up.cw())
 			up.fillEdge('b', left.cw())
@@ -353,22 +312,42 @@ class Cube:
 			left.fillEdge('b', right)
 			right.fillEdge('b', temp)		
 		
-		# print('Turn ' + dir)
+		# Endmatter
+		# print('turn ' + dir)
 		# print(self)
 		# input('Press Enter to continue...')
 		del temp
 		return self
 		
 		# ------------------------------------------------------------------------
-		# COMMENTS:
+		# COMMENTS:	
+		# Whole cube turns:
+		# Special composite (3 stage) turns (because of claw limitations)
+		# turn('Y') = turn('Z') + turn('X') + turn('Zi')
+		# turn('Yi') = turn('Z') + turn('Xi') + turn('Zi')
+		
+		# Special "180 degree" turns (for consistent code)
+		# (The 2Y implementation is more efficient than 2 "turn('Y') calls)
+		# turn('2X') = turn('X') + turn('X')
+		# turn('2Y') = turn('Z') + turn('2X') + turn('Zi')
+		# turn('2Z') = turn('Z') + turn('Z')		
+		
+		# turn('Y') and its variants 'Yi' and '2Y' would be more efficient
+		# move-wise if they were instead represented by an internal re-mapping
+		# of the faces (e.g. turn('Y') would actually just re-map the faces:
+		# left = front, front = right, right = back, and back = left) and claws.
+		# This would significantly cut down on the number of turns needed,
+		# because 'Y' moves wouldn't actually turn the cube.
+	
+		# Single-side turns: 
 		# example: 	turn('F') = turn front face clockwise
 		#			turn('Li') = turn left face counter-clockwise ('inverse')
 		
 		# Special composite (3 stage) turns (because of claw limitations)
-		# turn('U')	= flip('Z') + turn('R') + flip('Zi')
-		# turn('Ui') = flip('Z') + turn('Ri') + flip('Zi')
-		# turn('D') = flip('Z') + turn('L') + flip('Zi')
-		# turn('Di') = flip('Z') + turn('Li') + flip('Zi')
+		# turn('U')	= turn('Z') + turn('R') + turn('Zi')
+		# turn('Ui') = turn('Z') + turn('Ri') + turn('Zi')
+		# turn('D') = turn('Z') + turn('L') + turn('Zi')
+		# turn('Di') = turn('Z') + turn('Li') + turn('Zi')
 		
 		# Special "180 degree" turns (for consistent code)
 		# (The 2U implementation is more efficient than 2 "turn('U') calls)
@@ -376,8 +355,8 @@ class Cube:
 		# turn('2B') = turn('B') + turn('B') 
 		# turn('2L') = turn('L') + turn('L') 
 		# turn('2R') = turn('R') + turn('R')
-		# turn('2U') = flip('Z') + turn('2R') + flip('Zi')
-		# turn('2D') = flip('Z') + turn('2L') + flip('Zi')
+		# turn('2U') = turn('Z') + turn('2R') + turn('Zi')
+		# turn('2D') = turn('Z') + turn('2L') + turn('Zi')
 		
 		# Up turns could also be done more efficiently by remapping the faces,
 		# however this would likely be rather complicated and doing so nuanced.
