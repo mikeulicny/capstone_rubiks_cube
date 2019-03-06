@@ -452,14 +452,13 @@ class AlgoBasic:
 				flip('Yi')
 			elif up.mr == 'y' and up.bc == 'y':
 				flip('2Y')
-			elif up.tc == 'y' and up.tl == 'y':
+			elif up.tc == 'y' and up.ml == 'y':
 				turn('F')
 				turn('U')
 				turn('R')
 				turn('Ui')
 				turn('Ri')
-				turn('Fi')				
-		
+				turn('Fi')					
 		#-------------------------------------
 		# While the yellow side isn't complete
 		#-------------------------------------
