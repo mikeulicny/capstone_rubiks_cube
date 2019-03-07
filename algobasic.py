@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from datetime import datetime
 from face import Face
 from cube import Cube
 
@@ -127,6 +128,9 @@ class AlgoBasic:
 		# Simplify attributes and methods
 		turn = self.turn
 		turn = self.turn
+		
+		# Seed the RNG
+		random.seed(datetime.now())
 		
 		# Clear existing move list
 		self.movelist = []
@@ -463,8 +467,23 @@ class AlgoBasic:
 			elif back.tc == front.mc and up.tc != 'y':
 				turn('2U')
 
-		# If desired piece in top slice but turnped:
-			# Keep turnping to avoid tons of wasted turns
+		# If current desired piece in top slice but turned:
+			# Get it to the proper spot and then turn
+			elif up.bc == front.mc and front.tc == left.mc:
+				turn('U')
+				turn('Yi')
+			elif up.bc == front.mc and front.tc == right.mc:
+				turn('Ui')
+				turn('Y')
+			elif up.tc == front.mc and back.tc == right.mc:
+				turn('U')
+				turn('Y')
+			elif up.tc == front.mc and back.tc == left.mc:
+				turn('Ui')
+				turn('Yi')
+			
+		# If any desired piece in top slice but turned:
+			# Keep turning to avoid tons of wasted turns
 			elif up.mr != 'y' and right.tc != 'y':
 				turn('Y')
 			elif up.ml != 'y' and left.tc != 'y':
