@@ -1,7 +1,7 @@
 import numpy as np
 from face import Face
 from cube import Cube
-from algocfop import AlgoBasic
+from algocfop import AlgoCFOP
 import statistics as st
 
 def Main():
@@ -13,7 +13,7 @@ def Main():
 	maxMoveList = []
 	avgMoveList = []
 	
-	ITERS = 100000
+	ITERS = 10000
 	
 	for i in range(ITERS):
 	# Initial solved cube:
@@ -48,7 +48,7 @@ def Main():
 		cube = Cube(up, down, front, back, left, right)
 		
 		# Randomize cube
-		algo = AlgoBasic(cube)
+		algo = AlgoCFOP(cube)
 		algo.randomize()
 		setupList = algo.movelist
 
@@ -57,8 +57,6 @@ def Main():
 		algo.solve()
 		prcnt = round((i / ITERS) * 100, 2)
 		print(str(prcnt) + '%', end = '\r')
-		
-
 		
 		# Get list length without counting "Y" moves and multi-counting "U" moves:
 		listLength = 0	

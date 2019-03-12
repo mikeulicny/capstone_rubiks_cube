@@ -1,7 +1,7 @@
 import numpy as np
 from face import Face
 from cube import Cube
-from algocfop import AlgoBasic
+from algocfop import AlgoCFOP
 import time
 
 def Main():
@@ -24,11 +24,6 @@ def Main():
 	right = np.array([['o', 'o', 'o'],
 		['o', 'o', 'o'],
 		['o', 'o', 'o']])
-		
-	# Rotate arrays
-	# down = np.rot90(down, 1)
-	# back = np.rot90(back, 3)
-	# right = np.rot90(right, 3)
 
 	# Instantiate faces
 	up = Face(up)
@@ -42,18 +37,16 @@ def Main():
 	cube = Cube(up, down, front, back, left, right)
 	
 	# Cube setup
-	algo = AlgoBasic(cube)
+	algo = AlgoCFOP(cube)
 	# algo = AlgoBasic(cube, 1)	
-	algo.movelist = (['Fi', 'Fi', 'B', 'Fi', '2B', 'D', 'B', 'D', 'B', 'L', '2F', 'R', 'B', 'Ui'])
-	algo.followMoves()
-	# algo.randomize()
+	# algo.movelist = (['Fi', 'Fi', 'B', 'Fi', '2B', 'D', 'B', 'D', 'B', 'L', '2F', 'R', 'B', 'Ui'])
+	# algo.followMoves()
+	algo.randomize()
 	
 	# Print initial cube
 	print('Test from solved: y @ up, g @ front: ' + str(algo.movelist))
 	# print('Before:\n')
 	print(cube)
-	
-	# input('Press Enter to solve...')
 
 	t0 = time.time()
 	algo.solve()

@@ -1,10 +1,10 @@
 import numpy as np
-import random
-from datetime import datetime
+import secrets
+import re
 from face import Face
 from cube import Cube
 
-class AlgoBasic:			
+class AlgoCFOP:			
 	# Initializer
 	def __init__(self, cube, test = 0):
 		self.c = cube		
@@ -22,42 +22,18 @@ class AlgoBasic:
 		right = self.c.right	
 
 		out = True
-		if down.isComplete == False: 
-			out = False
-		elif front.ml != front.mc: 
-			out = False
-		elif front.mr != front.mc: 
-			out = False
-		elif front.bl != front.mc: 
-			out = False
-		elif front.br != front.mc: 
-			out = False
-		elif right.ml != right.mc: 
-			out = False
-		elif right.mr != right.mc: 
-			out = False
-		elif right.bl != right.mc: 
-			out = False
-		elif right.br != right.mc: 
-			out = False
-		elif back.ml != back.mc: 
-			out = False
-		elif back.mr != back.mc: 
-			out = False
-		elif back.bl != back.mc: 
-			out = False
-		elif back.br != back.mc: 
-			out = False
-		elif left.ml != left.mc: 
-			out = False
-		elif left.mr != left.mc: 
-			out = False
-		elif left.bl != left.mc: 
-			out = False
-		elif left.br != left.mc: 
+		if (down.isComplete() == False or 
+			front.ml != front.mc or front.mr != front.mc or
+			front.bl != front.mc or front.br != front.mc or		
+			right.ml != right.mc or right.mr != right.mc or
+			right.bl != right.mc or right.br != right.mc or
+			back.ml != back.mc or back.mr != back.mc or
+			back.bl != back.mc or back.br != back.mc or
+			left.ml != left.mc or left.mr != left.mc or
+			left.bl != left.mc or left.br != left.mc):
 			out = False
 		return out
-				
+		
 	# Function to determine if cube is completely solved
 	def cubeComplete(self):
 		# Simplify attributes
@@ -87,109 +63,50 @@ class AlgoBasic:
 		
 	# Function to optimize list by removing duplicates
 	def trimList(self):
-		ml = np.array(self.movelist)
-		# 10 passes over the list should catch most un-optimized move combos
-		for k in range (10):
-			for i in range (0, len(ml)):
-				j = i + 1
-				try:
-					if ml[i] == 'RM' or ml[j] == 'RM':
-						j += 1
-						continue
-					# [X , X] -> [2X]
-					elif ml[i] == ml[j] and ml[i][0] != '2':
-						ml[j] = 'RM'
-						ml[i] = '2' + ml[i][0] 
-					# [X, Xi] or [Xi, X] -> RM both
-					elif ml[i][0] == ml[j][0] and len(ml[i]) != len(ml[j]):
-						ml[i] = 'RM'
-						ml[j] = 'RM'
-					# [X, 2X] or [Xi, 2X] -> [Xi] or [X], respectively
-					elif len(ml[j]) == 2 and ml[i][0] == ml[j][1]:
-						if len(ml[i]) == 1:
-							ml[i] = ml[i] + 'i'
-							ml[j] = 'RM'
-						else:
-							ml[i] = ml[i][0]
-							ml[j] = 'RM'
-					# [2X, X] or [2X, Xi] -> [Xi] or [X], respectively
-					elif len(ml[i]) == 2 and ml[i][1] == ml[j][0]:
-						if len(ml[j]) == 1:
-							ml[i] = ml[j] + 'i'
-							ml[j] = 'RM'
-						else:
-							ml[i] = ml[j][0]
-							ml[j] = 'RM'
-					# [2X, 2X] -> RM both							
-					elif ml[i][0] == '2' and ml[i] == ml[j]:
-						ml[i] = 'RM'
-						ml[j] = 'RM'
-				except:
-					pass	
-		# New movelist without values marked 'RM'
-		self.movelist = [move for move in ml.tolist() if move != 'RM']
-		
-	# def trimList(self):
-		
-		# ml = ' '.join(self.movelist)
-		
-		# # 10 passes over the list should catch most un-optimized move combos
-		# for k in range (10):
-			
-		# # New movelist without values marked 'RM'
-		# self.movelist = [move for move in ml.tolist() if move != 'RM']
-	
+		ml = ' ' + ' '.join(self.movelist) + ' '
+		chars = ['X','Y','Z','F','L','U','D','B','F']
+		for i in range(0,5):
+			for c in chars:
+				s = ' '
+				ci = c + 'i'
+				c2 = '2' + c
+				# [ c c ] or [ ci ci ] -> [ 2c ]
+				ml = re.sub(s + c + s + c + s, s + c2 + s, ml)
+				ml = re.sub(s + ci + s + ci + s, s + c2 + s, ml)
+				# [ c ci ] or [ ci c ] -> [ ]
+				ml = re.sub(s + c + s + ci + s, s, ml)
+				ml = re.sub(s + ci + s + c + s, s, ml)
+				# [ 2c c ] or [ 2c ci ] -> [ ci ] or [ c ], respectively				
+				ml = re.sub(s + c2 + s + c + s, s + ci + s, ml)
+				ml = re.sub(s + c2 + s + ci + s, s + c + s, ml)
+				# [ c 2c ] or [ ci 2c ] -> [ ci ] or [ c ], respectively				
+				ml = re.sub(s + c + s + c2 + s, s + ci + s, ml)
+				ml = re.sub(s + ci + s + c2 + s, s + c + s, ml)
+				# [ 2c 2c ] -> [ ]				
+				ml = re.sub(s + c2 + s + c2 + s, s, ml)
+					
+		ml = re.split('\s+', ml)
+		out = ml[1:-1]
+		self.movelist = out
+
 	# Function to randomize a cube (20 turns)
 	def randomize(self):
 		# Simplify attributes and methods
 		turn = self.turn
 		turn = self.turn
-		
-		# Seed the RNG
-		random.seed(datetime.now())
+
+		# Random RNG
+		goodRNG = secrets.SystemRandom()
 		
 		# Clear existing move list
 		self.movelist = []
 		
 		# 20 random turns
+		moves = ['U','Ui','D','Di','F','Fi','B','Bi','L','Li','R','Ri',
+			'2U','2D','2F','2B','2L','2R']
 		for i in range(20):
-			randomTurn = random.randint(9,26)
-			if randomTurn == 9:
-				turn('U')				
-			elif randomTurn == 10:					
-				turn('Ui')					
-			elif randomTurn == 11:					
-				turn('D')				
-			elif randomTurn == 12:					
-				turn('Di')
-			elif randomTurn == 13:					
-				turn('F')				
-			elif randomTurn == 14:					
-				turn('Fi')
-			elif randomTurn == 15:					
-				turn('B')				
-			elif randomTurn == 16:					
-				turn('Bi')
-			elif randomTurn == 17:					
-				turn('L')				
-			elif randomTurn == 18:					
-				turn('Li')
-			elif randomTurn == 19:					
-				turn('R')	
-			elif randomTurn == 20:					
-				turn('Ri')	
-			elif randomTurn == 21:					
-				turn('2U')
-			elif randomTurn == 22:					
-				turn('2D')
-			elif randomTurn == 23:					
-				turn('2F')	
-			elif randomTurn == 24:					
-				turn('2B')	
-			elif randomTurn == 25:					
-				turn('2L')		
-			elif randomTurn == 26:					
-				turn('2R')	
+			randomTurn = goodRNG.randrange(0,18)
+			turn(moves[randomTurn])
 					
 		# Optimize the list by removing superfluous/duplicate turns
 		self.trimList()
@@ -3201,4 +3118,3 @@ class AlgoBasic:
 				
 		# Optimize the list by removing superfluous/duplicate turns
 		self.trimList()
-		
