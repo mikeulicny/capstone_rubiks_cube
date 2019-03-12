@@ -1,5 +1,7 @@
 import numpy as np
 from face import Face
+from colorama import init, Back
+init()
 
 class Cube:		
 	# Initializer	
@@ -11,6 +13,20 @@ class Cube:
 		self.left = left
 		self.right = right
 	
+	def toColor(self, cubelet):
+		if cubelet == 'r':
+			return Back.RED + '  ' + Back.RESET
+		elif cubelet == 'g':
+			return Back.GREEN + '  ' + Back.RESET
+		elif cubelet == 'b':
+			return Back.BLUE + '  ' + Back.RESET
+		elif cubelet == 'y':
+			return Back.YELLOW + '  ' + Back.RESET
+		elif cubelet == 'w':
+			return Back.WHITE + '  ' + Back.RESET		
+		elif cubelet == 'o':
+			return Back.MAGENTA + '  ' + Back.RESET
+			
 	# Default print function (it's gross but compact)
 	def __str__(self):
 		u = self.up
@@ -19,26 +35,83 @@ class Cube:
 		b = self.back
 		l = self.left
 		r = self.right
-		s = ' '
-		g = s*8
-		output=(g+'┏━━━━━━━┓\n'+
-			g+'┃ '+u.tl+s+u.tc+s+u.tr+' ┃\n'+ 
-			g+'┃ '+u.ml+s+u.mc+s+u.mr+' ┃\n'+
-			g+'┃ '+u.bl+s+u.bc+s+u.br+' ┃\n'+
-			'┏━━━━━━━╋━━━━━━━╋━━━━━━━┳━━━━━━━┓\n'+
-			'┃ '+l.tl+s+l.tc+s+l.tr+' ┃ '+f.tl+s+f.tc+s+f.tr+s+
-			'┃ '+r.tl+s+r.tc+s+r.tr+' ┃ '+b.tl+s+b.tc+s+b.tr+' ┃\n'+
-			'┃ '+l.ml+s+l.mc+s+l.mr+' ┃ '+f.ml+s+f.mc+s+f.mr+s+
-			'┃ '+r.ml+s+r.mc+s+r.mr+' ┃ '+b.ml+s+b.mc+s+b.mr+' ┃\n'+
-			'┃ '+l.bl+s+l.bc+s+l.br+' ┃ '+f.bl+s+f.bc+s+f.br+s+
-			'┃ '+r.bl+s+r.bc+s+r.br+' ┃ '+b.bl+s+b.bc+s+b.br+' ┃\n'+
-			'┗━━━━━━━╋━━━━━━━╋━━━━━━━┻━━━━━━━┛\n'+
-			g+'┃ '+d.tl+s+d.tc+s+d.tr+' ┃\n'+
-			g+'┃ '+d.ml+s+d.mc+s+d.mr+' ┃\n'+
-			g+'┃ '+d.bl+s+d.bc+s+d.br+' ┃\n'+
-			g+'┗━━━━━━━┛\n')
-		return output		
+		toColor = self.toColor
 		
+		u1 = toColor(u.tl)
+		u2 = toColor(u.tc)
+		u3 = toColor(u.tr)
+		u4 = toColor(u.ml)
+		u5 = toColor(u.mc)
+		u6 = toColor(u.mr)
+		u7 = toColor(u.bl)
+		u8 = toColor(u.bc)
+		u9 = toColor(u.br)
+
+		l1 = toColor(l.tl)
+		l2 = toColor(l.tc)
+		l3 = toColor(l.tr)
+		l4 = toColor(l.ml)
+		l5 = toColor(l.mc)
+		l6 = toColor(l.mr)
+		l7 = toColor(l.bl)
+		l8 = toColor(l.bc)
+		l9 = toColor(l.br)
+
+		f1 = toColor(f.tl)
+		f2 = toColor(f.tc)
+		f3 = toColor(f.tr)
+		f4 = toColor(f.ml)
+		f5 = toColor(f.mc)
+		f6 = toColor(f.mr)
+		f7 = toColor(f.bl)
+		f8 = toColor(f.bc)
+		f9 = toColor(f.br)
+
+		r1 = toColor(r.tl)
+		r2 = toColor(r.tc)
+		r3 = toColor(r.tr)
+		r4 = toColor(r.ml)
+		r5 = toColor(r.mc)
+		r6 = toColor(r.mr)
+		r7 = toColor(r.bl)
+		r8 = toColor(r.bc)
+		r9 = toColor(r.br)
+
+		b1 = toColor(b.tl)
+		b2 = toColor(b.tc)
+		b3 = toColor(b.tr)
+		b4 = toColor(b.ml)
+		b5 = toColor(b.mc)
+		b6 = toColor(b.mr)
+		b7 = toColor(b.bl)
+		b8 = toColor(b.bc)
+		b9 = toColor(b.br)
+
+		d1 = toColor(d.tl)
+		d2 = toColor(d.tc)
+		d3 = toColor(d.tr)
+		d4 = toColor(d.ml)
+		d5 = toColor(d.mc)
+		d6 = toColor(d.mr)
+		d7 = toColor(d.bl)
+		d8 = toColor(d.bc)
+		d9 = toColor(d.br)
+
+		output = ('         ┏━━━━━━━━┓\n'+
+			'         ┃ '+u1+u2+u3+' ┃\n'+ 
+			'         ┃ '+u4+u5+u6+' ┃\n'+
+			'         ┃ '+u7+u8+u9+' ┃\n'+
+			'┏━━━━━━━━╋━━━━━━━━╋━━━━━━━━┳━━━━━━━━┓\n'+
+			'┃ '+l1+l2+l3+' ┃ '+f1+f2+f3+' ┃ '+r1+r2+r3+' ┃ '+b1+b2+b3+' ┃\n'+
+			'┃ '+l4+l5+l6+' ┃ '+f4+f5+f6+' ┃ '+r4+r5+r6+' ┃ '+b4+b5+b6+' ┃\n'+
+			'┃ '+l7+l8+l9+' ┃ '+f7+f8+f9+' ┃ '+r7+r8+r9+' ┃ '+b7+b8+b9+' ┃\n'+
+			'┗━━━━━━━━╋━━━━━━━━╋━━━━━━━━┻━━━━━━━━┛\n'+
+			'         ┃ '+d1+d2+d3+' ┃\n'+ 
+			'         ┃ '+d4+d5+d6+' ┃\n'+
+			'         ┃ '+d7+d8+d9+' ┃\n'+
+			'         ┗━━━━━━━━┛\n')
+		return output	
+				
 	def turn(self, dir):
 	
 		# Simplify attributes

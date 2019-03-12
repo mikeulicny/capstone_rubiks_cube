@@ -1,7 +1,7 @@
 import numpy as np
 from face import Face
 from cube import Cube
-from algobasic import AlgoBasic
+from algocfop import AlgoBasic
 import time
 
 def Main():
@@ -26,9 +26,9 @@ def Main():
 		['o', 'o', 'o']])
 		
 	# Rotate arrays
-	down = np.rot90(down, 1)
-	back = np.rot90(back, 3)
-	right = np.rot90(right, 3)
+	# down = np.rot90(down, 1)
+	# back = np.rot90(back, 3)
+	# right = np.rot90(right, 3)
 
 	# Instantiate faces
 	up = Face(up)
@@ -41,31 +41,38 @@ def Main():
 	# Instantiate cube
 	cube = Cube(up, down, front, back, left, right)
 	
-	# Randomize cube
+	# Cube setup
 	algo = AlgoBasic(cube)
+	# algo = AlgoBasic(cube, 1)	
+	# algo.movelist = (['L', 'B', '2U', 'Li', 'U', 'Ri', 'Bi', 'Ri', 'Fi', '2D', '2U', '2L', 'D', '2L', 'D', '2L', 'Bi'])
+	# algo.followMoves()
 	algo.randomize()
-	
-	# Troubleshooting cubes
-	# algo.movelist = (['Fi', '2U', 'Li', 'Di', 'Li', 'F', 'B',
-		# '2U', '2F', 'D', '2F', 'Di', 'B', '2L', 'F', '2U', 'Li'])
-	algo.followMoves()
 	
 	# Print initial cube
 	print('Test from solved: y @ up, g @ front: ' + str(algo.movelist))
 	# print('Before:\n')
 	print(cube)
 	
-	input('Press Enter to solve...')
+	# input('Press Enter to solve...')
 
 	t0 = time.time()
 	algo.solve()
 	t1 = time.time()
 	
+	# Get list length without counting "Y" moves and multi-counting "U" moves:
+	listLength = 0	
+	for move in algo.movelist:
+		if move == 'U' or move == 'Ui' or move == '2U':
+			listLength += 3
+		elif move != 'Y' and move != 'Yi' and move != '2Y':
+			listLength += 1
+	
 	print('After:\n')
 	print(cube)
 	print(algo.movelist)
-	print('Current number of turns: ' + str(len(algo.movelist)))
-	print('Solve time: ' + str(t1-t0)[:6] +' s')
+	print('Number of moves in list: ' + str(len(algo.movelist)))
+	print('Actual number of turns by our bot: ' + str(listLength))
+	print('Time to generate solution: ' + str(t1-t0)[:6] +' s')
 	
 # Calling Test
 if __name__ == '__main__': 
