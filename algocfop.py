@@ -57,21 +57,7 @@ class AlgoBasic:
 		elif left.br != left.mc: 
 			out = False
 		return out
-		
-	# Function to determine if top corners are correctly oriented
-	def topCrnrsComplete(self):
-		# Simplify attributes
-		front = self.c.front
-		back = self.c.back
-		left = self.c.left
-		right = self.c.right
-
-		out = False
-		if (front.tl == front.mc and left.tl == left.mc and
-			back.tl == back.mc and right.tl == right.tr):
-			out = True
-		return out
-		
+				
 	# Function to determine if cube is completely solved
 	def cubeComplete(self):
 		# Simplify attributes
@@ -214,7 +200,6 @@ class AlgoBasic:
 		turn = self.turn
 		turn = self.turn
 		firstTwoComplete = self.firstTwoComplete
-		topCrnrsComplete = self.topCrnrsComplete
 		cubeComplete = self.cubeComplete
 		
 		# Clear existing move list
@@ -2653,6 +2638,8 @@ class AlgoBasic:
 					front.tc == up.mc and right.tl == up.mc and
 					up.tr == up.mc and up.mr == up.mc and
 					up.ml == up.mc and up.bl == up.mc):
+					if self.test == 1:
+						print('OLL 56')
 					turn('L')
 					turn('Fi')
 					turn('Xi')
@@ -2674,119 +2661,534 @@ class AlgoBasic:
 						print('Hung cube OLL')
 						input('')
 						raise EOFError
-			#---------------------------------------
-			# While the top corners are not complete
-			#---------------------------------------
-			while not topCrnrsComplete():
-				# If back corners are correct
-				if back.tl == back.tr == back.mc:
-					turn('Ri')
-					turn('F')
-					turn('Ri')
-					turn('2B')
-					turn('R')
-					turn('Fi')
-					turn('Ri')
-					turn('2B')
-					turn('2R')
-					turn('Z')
-					turn('Ri')
-					turn('Zi')
-			
-				# If there are two correct corners (i.e. same as back)
-				elif right.tl == right.tr == back.mc:
-					turn('Z')
-					turn('Ri')
-					turn('Zi')
-				elif left.tl == left.tr == back.mc:
-					turn('Z')
-					turn('R')
-					turn('Zi')		
-				elif front.tl == front.tr == back.mc:
-					turn('Z')
-					turn('2R')
-					turn('Zi')
+			#-------------------------------
+			# While the cube is not complete
+			#-------------------------------
+			while not cubeComplete():
+				i = 0
+				for i in range(4):
+				# Edge only permuations
+					# Ua permutation
+					if (right.tc == left.mc and left.tc == front.mc and
+						front.tc == right.mc and front.tr == front.mc and 
+						left.tr == left.mc and right.tr == right.mc and 
+						back.tr == back.mc):
+						if self.test == 1:
+							print('PLL Ua')	
+						turn('Xi')
+						turn('R')
+						turn('Fi')
+						turn('R')
+						turn('F')
+						turn('R')
+						turn('F')
+						turn('R')
+						turn('Fi')
+						turn('Ri')
+						turn('Fi')
+						turn('2R')
+						
+					# Ub permutation
+					elif (right.tc == front.mc and left.tc == right.mc and
+						front.tc == left.mc and front.tr == front.mc and 
+						left.tr == left.mc and right.tr == right.mc and 
+						back.tr == back.mc):
+						if self.test == 1:
+							print('PLL Ub')				
+						turn('Xi')
+						turn('2R')
+						turn('F')
+						turn('R')
+						turn('F')
+						turn('Ri')
+						turn('Fi')
+						turn('Ri')
+						turn('Fi')
+						turn('Ri')
+						turn('F')
+						turn('Ri')
+						
+					# Z permutation
+					elif (front.tc == right.mc and right.tc == front.mc and
+						left.tc == back.mc and back.tc == left.mc and 
+						front.tr == front.mc and left.tr == left.mc and 
+						right.tr == right.mc and back.tr == back.mc):
+						if self.test == 1:
+							print('PLL Z')
+						turn('Xi')
+						turn('F')
+						turn('Ri')
+						turn('Fi')
+						turn('R')
+						turn('Fi')
+						turn('R')
+						turn('F')
+						turn('R')
+						turn('Fi')
+						turn('Ri')
+						turn('F')
+						turn('R')
+						turn('F')
+						turn('2R')
+						turn('Fi')
+						turn('Ri')
+						turn('F')
 					
-				# If there is any pair of correct corners
-				elif (right.tl == right.tr or front.tl == front.tr or
-					left.tl == left.tr or front.tl == front.tr):
-					turn('Y')
-				
-				# If there are no correct corners
+					# H permutation
+					elif (front.tc == back.mc and back.tc == front.mc and
+						left.tc == right.mc and right.tc == left.mc and
+						front.tr == front.mc and left.tr == left.mc and 
+						right.tr == right.mc and back.tr == back.mc):
+						if self.test == 1:
+								print('PLL H')					
+						turn('X')
+						turn('2L')
+						turn('2R')
+						turn('F')					
+						turn('2X')
+						turn('2L')
+						turn('2R')
+						turn('2F')					
+						turn('2X')
+						turn('2L')
+						turn('2R')	
+						turn('F')					
+						turn('2X')
+						turn('2L')
+						turn('2R')		
+
+				# Corner only permutations
+					# Aa permutation
+					elif (front.tr == back.mc and back.tr == right.mc and
+						right.tr == front.mc and front.tc == front.mc and
+						left.tc == left.mc and right.tc == right.mc and 
+						back.tc == back.mc):
+						if self.test == 1:
+								print('PLL Aa')						
+						turn('Ri')
+						turn('F')
+						turn('Ri')
+						turn('2B')
+						turn('R')
+						turn('Fi')
+						turn('Ri')
+						turn('2B')
+						turn('2R')
+					
+					# Ab permutation
+					elif (left.tr == front.mc and front.tr == right.mc and
+						right.tr == left.mc and front.tc == front.mc and
+						left.tc == left.mc and right.tc == right.mc and 
+						back.tc == back.mc):
+						if self.test == 1:
+								print('PLL Aa')
+						turn('R')
+						turn('Bi')
+						turn('R')
+						turn('2F')
+						turn('Ri')
+						turn('B')
+						turn('R')
+						turn('2F')
+						turn('2R')
+					
+					# E permutation
+					elif(right.tl == back.mc and right.tr == front.mc and
+						left.tl == front.mc and left.tr == back.mc and
+						front.tc == front.mc and left.tc == left.mc and
+						right.tc == right.mc and back.tc == back.mc):
+						if self.test == 1:
+								print('PLL E')
+						turn('R')
+						turn('Bi')
+						turn('Ri')
+						turn('F')
+						turn('R')
+						turn('B')
+						turn('Ri')
+						turn('Fi')
+						turn('R')
+						turn('B')
+						turn('Ri')
+						turn('F')
+						turn('R')
+						turn('Bi')
+						turn('Ri')
+						turn('Fi')				
+				# Corner and edge swap permutations
+					# T permutation
+					elif (right.tl == back.mc and right.tr == front.mc and
+						left.tc == right.mc and right.tc == left.mc and
+						back.tc == back.mc and front.tc == front.mc and
+						back.tr == back.tc and front.tl == front.mc):
+						if self.test == 1:
+							print('PLL T')	
+						turn('Xi')
+						turn('R')
+						turn('F')
+						turn('Ri')
+						turn('Fi')
+						turn('Ri')
+						turn('X')
+						turn('F')
+						turn('2R')
+						turn('Xi')
+						turn('Fi')
+						turn('Ri')
+						turn('Fi')
+						turn('R')
+						turn('F')
+						turn('Ri')
+						turn('X')
+						turn('Fi')
+					
+					# F permutation
+					elif (front.tl == right.mc and front.tr == left.mc and	
+						left.tc == right.mc and right.tc == left.mc and 
+						back.tc == back.mc and front.tc == front.mc and
+						back.tl == back.mc and back.tr == back.mc):
+						if self.test == 1:
+							print('PLL F')	
+						turn('Xi')
+						turn('Ri')
+						turn('2F')
+						turn('Ri')
+						turn('Z')
+						turn('Fi')
+						turn('Ri')
+						turn('X')
+						turn('Fi')
+						turn('2R')
+						turn('Xi')
+						turn('Fi')
+						turn('Ri')
+						turn('F')
+						turn('Ri')
+						turn('X')
+						turn('F')
+						turn('R')
+						turn('Xi')
+						turn('Fi')
+						turn('X')
+						turn('F')
+						
+					# Ja permutation
+					elif (left.tc == back.mc and back.tc == left.mc and
+						left.tl == back.mc and back.tl == left.mc and 
+						front.tc == front.mc and right.tc == right.mc and
+						front.tl == front.mc and front.tr == front.mc):
+						if self.test == 1:
+							print('PLL Ja')	
+						turn('Xi')
+						turn('Ri')
+						turn('F')
+						turn('Li')
+						turn('2F')
+						turn('R')
+						turn('Fi')
+						turn('Ri')
+						turn('2F')
+						turn('L')
+						turn('R')
+						turn('Fi')
+					
+					# Jb permutation
+					elif (front.tc == right.mc and right.tc == front.mc and
+						front.tr == right.mc and right.tr == front.mc and
+						back.tc == back.mc and left.tc == left.mc and
+						left.tl == left.mc and left.tr == left.mc):
+						if self.test == 1:
+							print('PLL Jb')	
+						turn('Xi')
+						turn('R')
+						turn('F')
+						turn('Ri')
+						turn('X')
+						turn('Fi')
+						turn('R')
+						turn('Xi')
+						turn('F')
+						turn('Ri')
+						turn('Fi')
+						turn('Ri')
+						turn('X')
+						turn('F')
+						turn('2R')
+						turn('Xi')
+						turn('Fi')
+						turn('Ri')
+						turn('Fi')
+						
+					# Ra permutation
+					elif (back.tl == left.mc and back.tr == right.mc and
+						left.tc == front.mc and front.tc == left.mc and 
+						right.tc == right.mc and back.tc == back.mc and
+						front.tl == front.mc and front.tr == front.mc):
+						if self.test == 1:
+							print('PLL Ra')
+						turn('Xi')
+						turn('L')
+						turn('2F')
+						turn('Li')
+						turn('2F')
+						turn('L')
+						turn('X')
+						turn('Fi')
+						turn('Li')
+						turn('Xi')
+						turn('Fi')
+						turn('L')
+						turn('F')
+						turn('L')
+						turn('X')
+						turn('F')
+						turn('2L')
+						turn('Xi')
+						turn('F')
+					
+					# Rb permutation
+					elif (back.tl == left.mc and back.tr == right.mc and
+						right.tc == front.mc and front.tc == right.mc and
+						left.tc == left.mc and back.tc == back.mc and
+						front.tl == front.mc and front.tr == front.mc):
+						if self.test == 1:
+							print('PLL Rb')
+						turn('Xi')
+						turn('Ri')
+						turn('2F')
+						turn('R')
+						turn('2F')
+						turn('Ri')
+						turn('X')
+						turn('F')
+						turn('R')
+						turn('Xi')
+						turn('F')
+						turn('Ri')
+						turn('Fi')
+						turn('Ri')
+						turn('X')
+						turn('Fi')
+						turn('2R')
+						turn('Xi')
+						turn('Fi')
+					
+					# V permutation
+					elif (back.tc == right.mc and right.tc == back.mc and
+						left.tl == right.mc and front.tr == back.mc and
+						right.tr == right.mc and front.tl == front.mc and
+						left.tc == left.mc and front.tc == front.mc):
+						if self.test == 1:
+							print('PLL V')	
+						turn('Xi')
+						turn('Ri')
+						turn('F')
+						turn('Ri')
+						turn('Z')
+						turn('Fi')
+						turn('Ri')
+						turn('X')
+						turn('Fi')
+						turn('2R')
+						turn('Xi')
+						turn('Fi')
+						turn('Ri')
+						turn('F')
+						turn('Ri')
+						turn('X')
+						turn('F')
+						turn('R')
+						turn('F')
+						
+					# Y permutation
+					elif (left.tc == back.mc and back.tc == left.mc and
+						front.tr == back.mc and back.tr == front.mc and 
+						front.tc == front.mc and right.tc == right.mc and
+						front.tl == front.mc and right.tr == right.mc):
+						if self.test == 1:
+							print('PLL Y')
+						turn('F')
+						turn('Xi')
+						turn('R')
+						turn('Fi')
+						turn('Ri')
+						turn('Fi')
+						turn('R')
+						turn('F')
+						turn('Ri')
+						turn('X')
+						turn('Fi')
+						turn('R')
+						turn('Xi')
+						turn('F')
+						turn('Ri')
+						turn('Fi')
+						turn('X')
+						turn('Ri')
+						turn('F')
+						turn('R')
+						turn('Fi')
+					
+					# Na permutation
+					elif (front.tc == back.mc and back.tc == front.mc and
+						front.tr == back.mc and back.tr == front.mc and
+						right.tc == right.mc and left.tc == left.mc and
+						front.tl == front.mc and right.tr == right.mc):
+						if self.test == 1:
+							print('PLL Na')
+						turn('Xi')
+						turn('L')
+						turn('Fi')
+						turn('R')
+						turn('2F')
+						turn('Li')
+						turn('F')
+						turn('Ri')
+						turn('L')
+						turn('Fi')
+						turn('R')
+						turn('2F')
+						turn('Li')
+						turn('F')
+						turn('Ri')
+						turn('F')
+					
+					# Nb permutation
+					elif (front.tc == back.mc and back.tc == front.mc and
+						front.tl == back.mc and back.tl == front.mc and 
+						left.tc == left.mc and right.tc == right.mc and
+						front.tr == front.mc and left.tl == left.mc):
+						if self.test == 1:
+							print('PLL Nb')
+						turn('Xi')
+						turn('Ri')
+						turn('F')
+						turn('Li')
+						turn('2F')
+						turn('R')
+						turn('Fi')
+						turn('L')
+						turn('Ri')
+						turn('F')
+						turn('Li')
+						turn('2F')
+						turn('R')
+						turn('Fi')
+						turn('L')
+						turn('Fi')
+
+				# Corner and edge cycle permutations				
+					# Ga permutation
+					elif (front.tl == left.mc and left.tl == back.mc and 
+						back.tl == front.mc and left.tc == right.mc and 
+						right.tc == back.mc and back.tc == left.mc and
+						front.tc == front.mc and front.tr == front.mc):
+						if self.test == 1:
+							print('PLL Ga')		
+						turn('Xi')
+						turn('2R')
+						turn('Z')
+						turn('B')
+						turn('Ri')
+						turn('F')
+						turn('Ri')
+						turn('Fi')
+						turn('R')
+						turn('Zi')
+						turn('Bi')
+						turn('2R')
+						turn('Zi')
+						turn('Ri')
+						turn('F')
+						turn('R')
+					
+					# Gb permutation
+					elif (front.tr == right.mc and right.tr == back.mc and 
+						back.tr == front.mc and front.tc == back.mc and
+						right.tc == front.mc and back.tc == right.mc and 
+						left.tc == left.mc and left.tr == left.mc):
+						if self.test == 1:
+							print('PLL Gb')
+						turn('Xi')
+						turn('Li')
+						turn('Fi')
+						turn('L')
+						turn('Zi')
+						turn('2R')
+						turn('Z')
+						turn('B')
+						turn('Ri')
+						turn('F')
+						turn('R')
+						turn('Fi')
+						turn('R')
+						turn('Zi')
+						turn('Bi')
+						turn('2R')
+					
+					# Gc permutation
+					elif (left.tl == front.mc and front.tl == right.mc and
+					right.tl == left.mc and left.tc == right.mc and
+					front.tc == left.mc and right.tc == front.mc and 
+					back.tc == back.mc and back.tl == back.mc):
+						if self.test == 1:
+							print('PLL Gc')
+						turn('Xi')
+						turn('2R')
+						turn('Zi')
+						turn('Bi')
+						turn('R')
+						turn('Fi')
+						turn('R')
+						turn('F')
+						turn('Ri')
+						turn('Z')
+						turn('B')
+						turn('2R')
+						turn('Z')
+						turn('R')
+						turn('Fi')
+						turn('Ri')
+
+					# Gd permutation
+					elif (left.tr == back.mc and back.tr == right.mc and
+						right.tr == left.mc and left.tc == front.mc and 
+						front.tc == back.mc and back.tc == left.mc and 
+						right.tc == right.mc and right.tl == right.mc):
+						if self.test == 1:
+							print('PLL Gd')				
+						turn('Xi')
+						turn('R')
+						turn('F')
+						turn('Ri')
+						turn('Zi')
+						turn('2R')
+						turn('Zi')
+						turn('Bi')
+						turn('R')
+						turn('Fi')
+						turn('Ri')
+						turn('F')
+						turn('Ri')
+						turn('Z')
+						turn('B')
+						turn('2R')
+						
+					else:
+						turn('Y')
+					
+					if cubeComplete():
+						break
 				else:
-					turn('Ri')
-					turn('F')
-					turn('Ri')
-					turn('2B')
-					turn('R')
-					turn('Fi')
-					turn('Ri')
-					turn('2B')
-					turn('2R')
 					turn('Z')
 					turn('Ri')
 					turn('Zi')
 
-			#-------------------------------				
-			# While the cube is not complete
-			#-------------------------------
-			while not cubeComplete():
-				# If no top edges in correct position
-				if (front.tc != front.mc and left.tc != left.mc and
-					right.tc != right.mc and back.tc != back.mc):
-					turn('2F')
-					turn('Z')
-					turn('R')
-					turn('Zi')
-					turn('L')
-					turn('Ri')
-					turn('2F')
-					turn('Li')
-					turn('R')
-					turn('Z')
-					turn('R')
-					turn('Zi')
-					turn('2F')
+					if len(self.movelist) > 300:
+							print('Hung cube PLL')
+							input('')
+							raise EOFError	
 				
-				# If one edge in correct position, get it to back
-				elif left.tc == left.tl:
-					turn('Y')
-				elif right.tc == right.tl:
-					turn('Yi')
-				elif front.tc == front.tl:
-					turn('2Y')
-					
-				# If remaining three need to be rotated clockwise
-				elif front.tc == left.mc:
-					turn('2F')
-					turn('Z')
-					turn('R')
-					turn('Zi')
-					turn('L')
-					turn('Ri')
-					turn('2F')
-					turn('Li')
-					turn('R')
-					turn('Z')
-					turn('R')
-					turn('Zi')
-					turn('2F')				
-				
-				# If remaining three need to be rotated counter-clockwise
-				elif front.tc == right.mc:
-					turn('2F')
-					turn('Z')
-					turn('Ri')
-					turn('Zi')
-					turn('L')
-					turn('Ri')
-					turn('2F')
-					turn('Li')
-					turn('R')
-					turn('Z')
-					turn('Ri')
-					turn('Zi')
-					turn('2F')				
 				
 			# Optimize the list by removing superfluous/duplicate turns
 			self.trimList()
