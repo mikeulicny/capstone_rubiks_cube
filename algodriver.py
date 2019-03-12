@@ -44,7 +44,7 @@ def Main():
 	# Cube setup
 	algo = AlgoBasic(cube)
 	# algo = AlgoBasic(cube, 1)	
-	# algo.movelist = (['L', 'B', '2U', 'Li', 'U', 'Ri', 'Bi', 'Ri', 'Fi', '2D', '2U', '2L', 'D', '2L', 'D', '2L', 'Bi'])
+	# algo.movelist = (['2B', 'Ui', 'Ri', 'U', 'D', 'U', 'Li', 'F', 'U', '2F', 'R', 'B', '2L', '2U', 'F', 'Di', 'L'])
 	# algo.followMoves()
 	algo.randomize()
 	
