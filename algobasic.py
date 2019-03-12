@@ -84,8 +84,8 @@ class AlgoBasic:
 	# Function to optimize list by removing duplicates
 	def trimList(self):
 		ml = np.array(self.movelist)
-		# 5 passes over the list should catch most un-optimized move combos
-		for k in range (5):
+		# 10 passes over the list should catch most un-optimized move combos
+		for k in range (10):
 			for i in range (0, len(ml)):
 				j = i + 1
 				try:
@@ -228,27 +228,39 @@ class AlgoBasic:
 					turn('R')
 				else:
 					if up.bc != 'w':
-						turn('Ui')
+						turn('Xi')
+						turn('Fi')
 						turn('R')
+						turn('X')
 					elif up.tc != 'w':
-						turn('U')
+						turn('Xi')
+						turn('F')
 						turn('R')
+						turn('X')
 					else:
-						turn('2U')
+						turn('Xi')
+						turn('2F')
 						turn('R')
+						turn('X')
 			elif front.ml == 'w':
 				if up.ml != 'w':
 					turn('Li')
 				else:
 					if up.bc != 'w':
-						turn('U')
+						turn('Xi')
+						turn('F')
 						turn('Li')
+						turn('X')
 					elif up.tc != 'w':
-						turn('Ui')
+						turn('Xi')
+						turn('Fi')
 						turn('Li')
+						turn('X')
 					else:
-						turn('2U')
+						turn('Xi')
+						turn('2F')
 						turn('Li')
+						turn('X')
 			# If it's NOT in the front, move it there
 			elif right.mr == 'w' or right.ml == 'w':
 				turn('Y')
@@ -268,12 +280,16 @@ class AlgoBasic:
 					turn('Li')
 				elif up.tc != 'w':
 					turn('F')
-					turn('U')
+					turn('Xi')
+					turn('F')
 					turn('R')
+					turn('X')
 				elif up.bc != 'w':
 					turn('F')
-					turn('Ui')
+					turn('Xi')
+					turn('Fi')
 					turn('R')
+					turn('X')
 					
 			# If it's NOT in the front, move it there
 			elif right.tc == 'w':
@@ -295,28 +311,38 @@ class AlgoBasic:
 						turn('Li')
 					elif up.tc != 'w':
 						turn('Fi')
-						turn('U')
+						turn('Xi')
+						turn('F')
 						turn('R')
+						turn('X')
 					elif up.bc != 'w':
 						turn('Fi')
-						turn('Ui')
+						turn('Xi')
+						turn('Fi')
 						turn('R')
+						turn('X')
 				else:
 					if up.mr != 'w':
-						turn('U')
+						turn('Z')
+						turn('R')
 						turn('Fi')
-						turn('Ui')
+						turn('Ri')
+						turn('Zi')
 						turn('R')
 					elif up.ml != 'w':
-						turn('Ui')
+						turn('Z')
+						turn('Ri')
 						turn('F')
-						turn('U')
+						turn('R')
+						turn('Zi')
 						turn('Li')
 					elif up.tc != 'w':
-						turn('2U')
+						turn('Z')
+						turn('2R')
 						turn('Fi')
-						turn('Ui')
-						turn('R')					
+						turn('Ri')
+						turn('Zi')
+						turn('R')
 			# If it's NOT in the front, move it there
 			elif right.bc == 'w':
 				turn('Y')
@@ -332,14 +358,20 @@ class AlgoBasic:
 					turn('2F')
 				else:
 					if up.mr != 'w':
-						turn('U')
+						turn('Z')
+						turn('R')
 						turn('2F')
+						turn('Zi')
 					elif up.ml != 'w':
-						turn('Ui')
+						turn('Z')
+						turn('Ri')
 						turn('2F')
+						turn('Zi')
 					elif up.tc != 'w':
-						turn('2U')
+						turn('Z')
+						turn('2R')
 						turn('2F')
+						turn('Zi')
 			# If it's NOT in the front, move it there
 			elif down.mr == 'w':
 				turn('Y')
@@ -361,7 +393,9 @@ class AlgoBasic:
 			if up.mr == 'w' and right.mc == right.tc:
 				turn('2R')
 			if not down.allEdges('w'):
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 				
 		#------------------------------------
 		# While the white side isn't complete
@@ -369,66 +403,98 @@ class AlgoBasic:
 		while not downSliceComplete():
 		# If desired piece in 'good' position:
 			if front.tl == 'w' and up.bl == front.mc:
-				turn('Ui')
-				turn('Li')
-				turn('U')
-				turn('L')
-			elif front.tr == 'w' and up.br == front.mc:
+				turn('Xi')
 				turn('Fi')
-				turn('Ui')
+				turn('Li')
 				turn('F')
+				turn('L')
+				turn('X')
+			elif front.tr == 'w' and up.br == front.mc:
+				turn('Z')
+				turn('Fi')
+				turn('Ri')
+				turn('F')
+				turn('Zi')
 			elif up.bl == 'w' and front.tl == left.mc:
+				turn('Xi')
 				turn('Li')
-				turn('2U')
+				turn('2F')
 				turn('L')
-				turn('U')
+				turn('F')
 				turn('Li')
-				turn('Ui')
+				turn('Fi')
 				turn('L')
+				turn('X')
 		# If desired piece in top slice at all:
 			# Get it to the front
 			elif right.tr == 'w' and up.tr == front.mc:
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 			elif left.tr == 'w' and up.bl == front.mc:
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 			elif back.tr == 'w' and up.tl == front.mc:
-				turn('2U')
+				turn('Z')
+				turn('2R')
+				turn('Zi')
 				
 			elif right.tl == 'w' and up.br == front.mc:
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 			elif left.tl == 'w' and up.tl == front.mc:
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 			elif back.tl == 'w' and up.tr == front.mc:
-				turn('2U')
+				turn('Z')
+				turn('2R')
+				turn('Zi')
 			
 			elif up.br == 'w' and front.tr == front.mc:
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 			elif up.tl == 'w' and back.tr == front.mc:
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 			elif up.tr == 'w' and right.tr == front.mc:
-				turn('2U')
+				turn('Z')
+				turn('2R')
+				turn('Zi')
 		
 		# If white pieces remain on the front side:
 			# Toss them to the top slice
 			elif front.bl == 'w':
+				turn('Xi')
 				turn('Li')
-				turn('Ui')
-				turn('L')
-			elif front.br == 'w':
 				turn('Fi')
-				turn('Ui')
+				turn('L')
+				turn('X')
+			elif front.br == 'w':
+				turn('Z')
+				turn('Fi')
+				turn('Ri')
 				turn('F')
+				turn('Zi')
 		
 		# If incorrect white piece on bottom:
 			# Toss it to the top slice
 			elif down.tl == 'w' and front.bl != front.mc:
+				turn('Xi')
 				turn('Li')
-				turn('Ui')
-				turn('L')	
-			elif down.tr == 'w' and front.br != front.mc:
 				turn('Fi')
-				turn('Ui')
+				turn('L')
+				turn('X')
+			elif down.tr == 'w' and front.br != front.mc:
+				turn('Z')
+				turn('Fi')
+				turn('Ri')
 				turn('F')
+				turn('Zi')
 		
 		# Otherwise this side is done, make next side front
 			elif not downSliceComplete():
@@ -440,46 +506,68 @@ class AlgoBasic:
 		while not midSliceComplete():
 		# If piece to drop in the front, drop it down
 			if front.tc == front.mc and up.bc == left.mc:
-				turn('Ui')
+				turn('Xi')
+				turn('Fi')
 				turn('Li')
-				turn('U')
+				turn('F')
 				turn('L')
-				turn('U')
 				turn('F')
-				turn('Ui')
-				turn('Fi')
-			elif front.tc == front.mc and up.bc == right.mc:
-				turn('U')
+				turn('Zi')
 				turn('R')
-				turn('Ui')
-				turn('Ri')
-				turn('Ui')
 				turn('Fi')
-				turn('U')
+				turn('Ri')
+				turn('Z')
+				turn('X')
+			elif front.tc == front.mc and up.bc == right.mc:
+				turn('Xi')
 				turn('F')
+				turn('R')
+				turn('Fi')
+				turn('Ri')
+				turn('Fi')
+				turn('Z')
+				turn('Li')
+				turn('F')
+				turn('L')
+				turn('Z')
+				turn('X')
 
 		# If desired piece in top slice at all:
 			# Get it to the front
 			elif right.tc == front.mc and up.mr != 'y':
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 			elif left.tc == front.mc and up.ml != 'y':
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 			elif back.tc == front.mc and up.tc != 'y':
-				turn('2U')
+				turn('Z')
+				turn('2R')
+				turn('Zi')
 
 		# If current desired piece in top slice but turned:
 			# Get it to the proper spot and then turn
 			elif up.bc == front.mc and front.tc == left.mc:
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 				turn('Yi')
 			elif up.bc == front.mc and front.tc == right.mc:
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 				turn('Y')
 			elif up.tc == front.mc and back.tc == right.mc:
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 				turn('Y')
 			elif up.tc == front.mc and back.tc == left.mc:
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 				turn('Yi')
 			
 		# If any desired piece in top slice but turned:
@@ -493,23 +581,29 @@ class AlgoBasic:
 				
 		# If incorrect piece is currently dropped, get it out
 			elif front.mc != front.ml:
-				turn('Ui')
-				turn('Li')
-				turn('U')
-				turn('L')
-				turn('U')
-				turn('F')
-				turn('Ui')
-				turn('Fi')			
-			elif front.mc != front.mr:
-				turn('U')
-				turn('R')
-				turn('Ui')
-				turn('Ri')
-				turn('Ui')
+				turn('Xi')
 				turn('Fi')
-				turn('U')
-				turn('F')					
+				turn('Li')
+				turn('F')
+				turn('L')
+				turn('F')
+				turn('Zi')
+				turn('R')
+				turn('Fi')
+				turn('Ri')
+				turn('X')			
+			elif front.mc != front.mr:
+				turn('Xi')
+				turn('F')
+				turn('R')
+				turn('Fi')
+				turn('Ri')
+				turn('Fi')
+				turn('Z')
+				turn('Li')
+				turn('F')
+				turn('L')
+				turn('X')					
 		
 		# Otherwise this side is 'done', make next side front
 			elif not midSliceComplete():
@@ -522,10 +616,12 @@ class AlgoBasic:
 			# If only the center of the cross is yellow
 			if up.tc != 'y' and up.ml != 'y' and up.mr != 'y' and up.bc != 'y':
 				turn('F')
+				turn('Xi')
 				turn('R')
-				turn('U')
+				turn('F')
 				turn('Ri')
-				turn('Ui')
+				turn('Fi')
+				turn('X')
 				turn('Fi')
 			
 			# If there's a yellow line 
@@ -533,10 +629,12 @@ class AlgoBasic:
 				turn('Y')
 			elif up.ml == 'y' and up.mr == 'y':
 				turn('F')
+				turn('Xi')
 				turn('R')
-				turn('U')
+				turn('F')
 				turn('Ri')
-				turn('Ui')
+				turn('Fi')
+				turn('X')
 				turn('Fi')
 
 			# If there's a yellow triangle
@@ -548,25 +646,30 @@ class AlgoBasic:
 				turn('2Y')
 			elif up.tc == 'y' and up.ml == 'y':
 				turn('F')
-				turn('U')
+				turn('Xi')
+				turn('F')
 				turn('R')
-				turn('Ui')
+				turn('Fi')
 				turn('Ri')
-				turn('Fi')					
+				turn('X')
+				turn('Fi')
+				
 		#-------------------------------------
 		# While the yellow side isn't complete
 		#-------------------------------------
 		while not up.isComplete():
 			# If no corners are yellow
 			if up.tl != 'y' and up.tr != 'y' and up.bl != 'y' and up.br != 'y':
-				if left.tr == 'y':						
+				if left.tr == 'y':	
+					turn('Xi')
 					turn('R')
-					turn('U')
+					turn('F')
 					turn('Ri')
-					turn('U')
+					turn('F')
 					turn('R')
-					turn('2U')
+					turn('2F')
 					turn('Ri')
+					turn('X')
 				elif front.tr == 'y':		
 					turn('Y')
 				elif back.tr == 'y':
@@ -576,13 +679,15 @@ class AlgoBasic:
 			
 			# If exactly one corner is yellow
 			elif up.tl != 'y' and up.tr != 'y' and up.bl == 'y' and up.br != 'y':
+					turn('Xi')
 					turn('R')
-					turn('U')
+					turn('F')
 					turn('Ri')
-					turn('U')
+					turn('F')
 					turn('R')
-					turn('2U')
+					turn('2F')
 					turn('Ri')
+					turn('X')
 			elif up.tl != 'y' and up.tr != 'y' and up.bl != 'y' and up.br == 'y':
 				turn('Y')
 			elif up.tl == 'y' and up.tr != 'y' and up.bl != 'y' and up.br != 'y':
@@ -593,13 +698,15 @@ class AlgoBasic:
 			# If any two corners are yellow
 			else:
 				if front.tl == 'y':
+					turn('Xi')
 					turn('R')
-					turn('U')
+					turn('F')
 					turn('Ri')
-					turn('U')
+					turn('F')
 					turn('R')
-					turn('2U')
+					turn('2F')
 					turn('Ri')
+					turn('X')
 				elif right.tl == 'y':
 					turn('Y')
 				elif left.tl == 'y':
@@ -622,15 +729,23 @@ class AlgoBasic:
 				turn('Ri')
 				turn('2B')
 				turn('2R')
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 		
 			# If there are two correct corners (i.e. same as back)
 			elif right.tl == right.tr == back.mc:
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 			elif left.tl == left.tr == back.mc:
-				turn('U')		
+				turn('Z')
+				turn('R')
+				turn('Zi')		
 			elif front.tl == front.tr == back.mc:
-				turn('2U')
+				turn('Z')
+				turn('2R')
+				turn('Zi')
 				
 			# If there is any pair of correct corners
 			elif (right.tl == right.tr or front.tl == front.tr or
@@ -648,7 +763,9 @@ class AlgoBasic:
 				turn('Ri')
 				turn('2B')
 				turn('2R')
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 
 		#-------------------------------				
 		# While the cube is not complete
@@ -658,13 +775,17 @@ class AlgoBasic:
 			if (front.tc != front.mc and left.tc != left.mc and
 				right.tc != right.mc and back.tc != back.mc):
 				turn('2F')
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 				turn('L')
 				turn('Ri')
 				turn('2F')
 				turn('Li')
 				turn('R')
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 				turn('2F')
 			
 			# If one edge in correct position, get it to back
@@ -678,25 +799,33 @@ class AlgoBasic:
 			# If remaining three need to be rotated clockwise
 			elif front.tc == left.mc:
 				turn('2F')
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 				turn('L')
 				turn('Ri')
 				turn('2F')
 				turn('Li')
 				turn('R')
-				turn('U')
+				turn('Z')
+				turn('R')
+				turn('Zi')
 				turn('2F')				
 			
 			# If remaining three need to be rotated counter-clockwise
 			elif front.tc == right.mc:
 				turn('2F')
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 				turn('L')
 				turn('Ri')
 				turn('2F')
 				turn('Li')
 				turn('R')
-				turn('Ui')
+				turn('Z')
+				turn('Ri')
+				turn('Zi')
 				turn('2F')				
 			
 		# Optimize the list by removing superfluous/duplicate turns

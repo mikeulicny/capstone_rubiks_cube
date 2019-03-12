@@ -1,11 +1,11 @@
 import numpy as np
 from face import Face
 from cube import Cube
-from algobasic import AlgoBasic
-import time
+from algocfop import AlgoBasic
 import statistics as st
 
 def Main():
+
 	avgLength = 100
 	minLength = 1000
 	maxLength = 0
@@ -13,10 +13,10 @@ def Main():
 	maxMoveList = []
 	avgMoveList = []
 	
-	ITERS = 1000
+	ITERS = 100000
 	
 	for i in range(ITERS):
-		# Initial solved cube:
+	# Initial solved cube:
 		up = np.array([['y', 'y', 'y'],
 			['y', 'y', 'y'],
 			['y', 'y', 'y']])	
@@ -35,11 +35,6 @@ def Main():
 		right = np.array([['o', 'o', 'o'],
 			['o', 'o', 'o'],
 			['o', 'o', 'o']])
-			
-		# Rotate arrays
-		down = np.rot90(down, 1)
-		back = np.rot90(back, 3)
-		right = np.rot90(right, 3)
 
 		# Instantiate faces
 		up = Face(up)
@@ -56,31 +51,39 @@ def Main():
 		algo = AlgoBasic(cube)
 		algo.randomize()
 		setupList = algo.movelist
-		
-		# Print initial cube
-		# print('Test from solved: y @ up, g @ front: ' + str(algo.movelist))
-		# print('Before:\n')
-		# print(cube)
 
+		# Solve random cube
+		print(str(setupList))
 		algo.solve()
-		print(str(round((i / ITERS) * 100, 2)) + '%')
+		prcnt = round((i / ITERS) * 100, 2)
+		print(str(prcnt) + '%', end = '\r')
 		
-		avgLength = (avgLength*(i+1) + len(algo.movelist)) // (i+2)
-		if len(algo.movelist) < minLength:
-			minLength = len(algo.movelist)
+
+		
+		# Get list length without counting "Y" moves and multi-counting "U" moves:
+		listLength = 0	
+		for move in algo.movelist:
+			if move == 'U' or move == 'Ui' or move == '2U':
+				listLength += 3
+			elif move != 'Y' and move != 'Yi' and move != '2Y':
+				listLength += 1
+		
+		if listLength < minLength:
+			minLength = listLength
 			minMoveList = setupList
-		if len(algo.movelist) > maxLength:
-			maxLength = len(algo.movelist)
+		if listLength > maxLength:
+			maxLength = listLength
 			maxMoveList = setupList
 			
-		avgMoveList.append(len(algo.movelist))
-			
-	print('\nMin movecount: ' + str(minLength) + ' moves')
+		avgMoveList.append(listLength)
+		
+	print('\nNumber of turns our bot takes (algocfop):')
+	print('Min movecount: ' + str(minLength) + ' moves')
 	print('Min list: ' +  str(minMoveList))
 	print('Max movecount: ' +  str(maxLength) + ' moves')
 	print('Max list: ' +  str(maxMoveList))
 	print('Median number moves: ' + str(st.median(avgMoveList)))
-	print('Standard deviation: ' + str(round(st.stdev(avgMoveList),2)))
+	print('Standard deviation: ' + str(round(st.stdev(avgMoveList),2)))		
 	
 # Calling Test
 if __name__ == '__main__': 
