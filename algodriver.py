@@ -44,9 +44,9 @@ def Main():
 	# Cube setup
 	algo = AlgoBasic(cube)
 	# algo = AlgoBasic(cube, 1)	
-	# algo.movelist = (['2B', 'Ui', 'Ri', 'U', 'D', 'U', 'Li', 'F', 'U', '2F', 'R', 'B', '2L', '2U', 'F', 'Di', 'L'])
-	# algo.followMoves()
-	algo.randomize()
+	algo.movelist = (['Fi', 'Fi', 'B', 'Fi', '2B', 'D', 'B', 'D', 'B', 'L', '2F', 'R', 'B', 'Ui'])
+	algo.followMoves()
+	# algo.randomize()
 	
 	# Print initial cube
 	print('Test from solved: y @ up, g @ front: ' + str(algo.movelist))
@@ -66,7 +66,7 @@ def Main():
 			listLength += 3
 		elif move != 'Y' and move != 'Yi' and move != '2Y':
 			listLength += 1
-	
+			
 	print('After:\n')
 	print(cube)
 	print(algo.movelist)
