@@ -38,8 +38,8 @@ def Main():
 	
 	# Cube setup
 	algo = AlgoCFOP(cube)
-	# algo = AlgoBasic(cube, 1)	
-	# algo.movelist = (['Fi', 'Fi', 'B', 'Fi', '2B', 'D', 'B', 'D', 'B', 'L', '2F', 'R', 'B', 'Ui'])
+	# algo = AlgoCFOP(cube, 1)	
+	# algo.movelist = (['L', 'B', '2U', 'Li', 'U', 'Ri', 'Bi', 'Ri', 'Fi', '2D', '2U', '2L', 'D', '2L', 'D', '2L', 'Bi'])
 	# algo.followMoves()
 	algo.randomize()
 	
@@ -47,24 +47,18 @@ def Main():
 	print('Test from solved: y @ up, g @ front: ' + str(algo.movelist))
 	# print('Before:\n')
 	print(cube)
+	
+	# input('Press Enter to solve...')
 
 	t0 = time.time()
 	algo.solve()
 	t1 = time.time()
-	
-	# Get list length without counting "Y" moves and multi-counting "U" moves:
-	listLength = 0	
-	for move in algo.movelist:
-		if move == 'U' or move == 'Ui' or move == '2U':
-			listLength += 3
-		elif move != 'Y' and move != 'Yi' and move != '2Y':
-			listLength += 1
-			
+
 	print('After:\n')
 	print(cube)
 	print(algo.movelist)
 	print('Number of moves in list: ' + str(len(algo.movelist)))
-	print('Actual number of turns by our bot: ' + str(listLength))
+	print('Actual number of turns by our bot: ' + str(algo.listLength))
 	print('Time to generate solution: ' + str(t1-t0)[:6] +' s')
 	
 # Calling Test
