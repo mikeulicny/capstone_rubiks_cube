@@ -34,7 +34,20 @@ class Frame:
         #   pursposes. These are to be changed to clawDelay = 0.35 and rotateDelay = 0.5
         #   for final runs. These numbers are rough estimates and should be fine tuned
         #   to increase speed of the cube moves
-
+        
+    def openClaws(self):
+        self.frontClaw.openClaw()
+        self.backClaw.openClaw()
+        self.rightClaw.openClaw()
+        self.leftClaw.openClaw()
+        time.sleep(self.clawDelay)
+    
+    def closeClaws(self):
+        self.frontClaw.closeClaw()
+        self.backClaw.closeClaw()
+        self.rightClaw.closeClaw()
+        self.leftClaw.closeClaw()
+        time.sleep(self.clawDelay)
 
     def rotate90(self, axis, inverse = False):
         """
