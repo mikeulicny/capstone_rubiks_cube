@@ -26,7 +26,7 @@ class Frame:
         self.leftClaw = Claw(clawID=self.__servoArray[6], armID=self.__servoArray[7])
         self.clawDelay = clawDelay
         self.rotateDelay90 = rotateDelay90
-        self.rotateDelay180 = 2*rotateDelay90
+        self.rotateDelay180 = 2*rotateDelay90 - 0.05
         
         # TODO: add in initialization of claw positions
         #
@@ -70,8 +70,8 @@ class Frame:
             rightClaw.rotate(90)       # set x axis to 0 deg position
             leftClaw.rotate(90)
             time.sleep(rotateDelay90)
-            rightClaw.close()          # close x axis
-            leftClaw.close()
+            rightClaw.closeClaw()          # close x axis
+            leftClaw.closeClaw()
             time.sleep(clawDelay)
         elif axis == 'Z':               # time = 2.4 secs @ clawDelay=0.35 and rotateDelay90=0.5
             leftClaw.openClaw()        # open x axis
@@ -161,8 +161,8 @@ class Frame:
             rightClaw.rotate(90)       # set x axis to 0 deg position
             leftClaw.rotate(90)
             time.sleep(rotateDelay90)
-            rightClaw.close()          # close x axis
-            leftClaw.close()
+            rightClaw.closeClaw()          # close x axis
+            leftClaw.closeClaw()
             time.sleep(clawDelay)
 
 
@@ -179,6 +179,7 @@ class Frame:
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()          # close z axis
             backClaw.closeClaw()
+            time.sleep(clawDelay)
             leftClaw.openClaw()        # open x axis
             rightClaw.openClaw()
             time.sleep(clawDelay)
@@ -276,7 +277,7 @@ class Frame:
             rightClaw.closeClaw()
             time.sleep(clawDelay)
             
-        elif face == 'U' or 'D':
+        elif face == 'U' or face == 'D':
             rightClaw.openClaw()       # open x axis
             leftClaw.openClaw()
             time.sleep(clawDelay)
@@ -307,8 +308,8 @@ class Frame:
             frontClaw.rotate(90)       # rotate z axis to 0 deg position
             backClaw.rotate(90)
             time.sleep(rotateDelay90)
-            rightClaw.rotate(0)        # set cube back to original position
-            leftClaw.rotate(180)
+            rightClaw.rotate(180)        # set cube back to original position
+            leftClaw.rotate(0)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()      # close z axis
             backClaw.closeClaw()
@@ -416,7 +417,7 @@ class Frame:
             rightClaw.closeClaw()
             time.sleep(clawDelay)
         
-        elif face == ('U' or 'D'):
+        elif face == 'U' or face == 'D':
             frontClaw.openClaw()        # rotate x axis
             backClaw.openClaw()
             time.sleep(clawDelay)
@@ -452,6 +453,7 @@ class Frame:
                 frontClaw.rotate(90)
                 time.sleep(rotateDelay90)
                 frontClaw.closeClaw()
+                time.sleep(clawDelay)
             elif face == 'D':               # turn back 180 deg
                 backClaw.openClaw()
                 time.sleep(clawDelay)
