@@ -93,6 +93,19 @@ class AlgoCFOP:
 				out = ml[1:-1]
 				self.movelist = out
 
+	# Function to produce an inverse list
+	def inverseList(self):
+		inverselist = []
+		for move in reversed(self.movelist):
+			if len(move) == 1:
+				inverselist.append(move + 'i')
+			elif len(move) == 2:
+				if move[0] == '2':
+					inverselist.append(move)
+				elif move[1] == 'i':
+					inverselist.append(move[0])
+		return inverselist
+	
 	# Function to randomize a cube (20 turns)
 	def randomize(self):
 		# Simplify attributes and methods
@@ -3122,3 +3135,5 @@ class AlgoCFOP:
 		self.listLength = minListLength
 		self.movelist = minList
 		self.followMoves()
+	
+	# EOF
