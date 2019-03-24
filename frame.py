@@ -49,6 +49,26 @@ class Frame:
         self.leftClaw.closeClaw()
         time.sleep(self.clawDelay)
 
+    def openClawsFB(self):
+        self.frontClaw.openClaw()
+        self.backClaw.openClaw()
+        time.sleep(self.clawDelay)
+
+    def closeClawsFB(self):
+        self.frontClaw.closeClaw()
+        self.backClaw.closeClaw()
+        time.sleep(self.clawDelay)
+
+    def openClawsLR(self):
+        self.leftClaw.openClaw()
+        self.rightClaw.openClaw()
+        time.sleep(self.clawDelay)
+    
+    def closeClawsLR(self):
+        self.leftClaw.closeClaw()
+        self.rightClaw.closeClaw()
+        time.sleep(self.clawDelay)
+
     def rotate90(self, axis, inverse = False):
         """
         rotate90(axis, inverse=0)
@@ -68,7 +88,7 @@ class Frame:
             backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                righClaw.rotate(180)   # rotate x axis -90 deg position
+                rightClaw.rotate(180)   # rotate x axis -90 deg position
                 leftClaw.rotate(0)     #   OR
             else:
                 rightClaw.rotate(0)    # rotate x axis +90 deg position
