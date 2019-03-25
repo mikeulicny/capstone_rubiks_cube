@@ -67,7 +67,7 @@ class Image:
         else:
             return None            
 
-    def findColor(self,rgb):
+    def findColor(self, rgb):
         
         w = np.array([175, 178, 176])
         y = np.array([157, 176, 88 ])
@@ -90,25 +90,27 @@ class Image:
 
         return clrs[out]
 
-    def makeFace(self, x, y, d):
+    def makeFace(self, faceOpt, colorArray=np.empty((3,3),dtype=str)):
         
         findColor = self.findColor
         getSample = self.getSample
 
-        colorArray = np.empty((3,3), dtype=str)
+        x = 30
+        y = 30
+        d = 30
 
-        colorArray[0,0] = findColor(getSample(x,y))
-        colorArray[0,1] = findColor(getSample(x+d,y))
-        colorArray[0,2] = findColor(getSample(x+2*d,y))
- 
-        colorArray[1,0] = findColor(getSample(x,y+d))
-        colorArray[1,1] = findColor(getSample(x+d,y+d))
-        colorArray[1,2] = findColor(getSample(x+2*d,y+d))
- 
-        colorArray[2,0] = findColor(getSample(x,y+2+d))
-        colorArray[2,1] = findColor(getSample(x+d,y+2*d))
-        colorArray[2,2] = findColor(getSample(x+2*d,y+2*d))
+        if faceOpt == 'A':
+            colorArray[0,0] = findColor(getSample(x,y))
+            colorArray[0,1] = findColor(getSample(x+d,y))
+            colorArray[0,2] = findColor(getSample(x+2*d,y))
+            colorArray[1,1] = findColor(getSample(x+d,y+d))
+            colorArray[2,0] = findColor(getSample(x,y+2+d))
+            colorArray[2,1] = findColor(getSample(x+d,y+2*d))
+            colorArray[2,2] = findColor(getSample(x+2*d,y+2*d))
+            return colorArray
 
-        f = Face(colorArray)
-
-        return f
+        elif faceOpt == 'B':
+            colorArray[1,0] = findColor(getSample(x,y+d))
+            colorArray[1,2] = findColor(getSample(x+2*d,y+d)) 
+            f = Face(colorArray)
+            return f
