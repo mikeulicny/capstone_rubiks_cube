@@ -10,21 +10,27 @@ class Session:
     def __init__(self):
         self.frame = Frame()
 
-    def prompt(self):
-        frame = self.frame
-
+    def printOptions(self):
         print('Press <1> to open the claws')
         print('Press <2> to close the claws')
         print('Press <3> to start')
-        print('Press <4> to pause')
-        print('Press <5> to randomize cube')
+        print('Press <4> to randomize cube')
+        print('Press <5> to exit session')
+    
+    def prompt(self):
+        frame = self.frame
+        cube = self.cube
+        algo = self.algo
+        
         option = input('Please select an option from the list above and hit enter: ')
 
         if option == '1':
             frame.openClaws()
+            return True
         
         elif option == '2':
             frame.closeClaws()
+            return True
 
         elif option == '3':
             frame.closeClaws()
@@ -32,15 +38,17 @@ class Session:
             algo = AlgoCFOP(cube)
             algo.solve()
             self.solveCube(algo.movelist)
-
+            return True
+        
         elif option == '4':
-            pass
+            return True
         
         elif option == '5':
-            pass
-        
+            return False
+            
         else:
             print('ERROR: Invalid entry')
+            return True
     
     def makeCube(self):
         frame = self.frame
