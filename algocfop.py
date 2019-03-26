@@ -1,9 +1,7 @@
-import numpy as np
-import secrets
-import re
-import copy
+import numpy as np, re, copy, random
 from face import Face
 from cube import Cube
+from datetime import datetime
 
 class AlgoCFOP:			
 	# Initializer
@@ -64,10 +62,9 @@ class AlgoCFOP:
 			input('')
 		
 	# Function to optimize list by removing duplicates
-	def trimList(self):
-		
-		chars = ['X','Y','Z','F','B','U','D','L','R']
-		
+	def trimList(self):		
+		chars = ['X','Y','Z','F','B','U','D','L','R']		
+
 		for i in range(5):
 			for c in chars:
 				ml = ' ' + ' '.join(self.movelist) + ' '
@@ -113,7 +110,7 @@ class AlgoCFOP:
 		turn = self.turn
 
 		# Random RNG
-		goodRNG = secrets.SystemRandom()
+		random.seed(datetime.now())
 		
 		# Clear existing move list
 		self.movelist = []
@@ -122,7 +119,7 @@ class AlgoCFOP:
 		moves = ['U','Ui','D','Di','F','Fi','B','Bi','L','Li','R','Ri',
 			'2U','2D','2F','2B','2L','2R']
 		for i in range(20):
-			randomTurn = goodRNG.randrange(0,18)
+			randomTurn = random.randint(0,17)
 			turn(moves[randomTurn])
 					
 		# Optimize the list by removing superfluous/duplicate turns
@@ -3135,5 +3132,5 @@ class AlgoCFOP:
 		self.listLength = minListLength
 		self.movelist = minList
 		self.followMoves()
-	
+    
 	# EOF
