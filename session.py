@@ -9,13 +9,19 @@ class Session:
 
     def __init__(self):
         self.frame = Frame()
+        self.cube = None
+        self.algo = None
 
     def printOptions(self):
         print('Press <1> to open the claws')
         print('Press <2> to close the claws')
-        print('Press <3> to start')
-        print('Press <4> to randomize cube')
-        print('Press <5> to exit session')
+        print('Press <3> to capture cube')
+        print('Press <4> to generate algorithm')
+        print('Press <5> to solve the cube')
+        print('Press <6> to randomize cube')
+        print('Press <7> to Auto-Solve')
+        print('Press <8> to exit session')
+        print('\n')
     
     def prompt(self):
         frame = self.frame
@@ -33,25 +39,58 @@ class Session:
             return True
 
         elif option == '3':
-            frame.closeClaws()
+            cube = self.makeCube()
+            print('Your cube...')
+            cube.__str__()
+            return True
+        
+        elif option == '4':
+            if cube == None:
+                print('No cube')
+                return True
+            algo = AlgoCFOP(cube)
+            algo.solve()
+            length = len(algo.movelist)
+            print('Algorithm generated with ', length, ' moves')
+            return True
+        
+        elif option == '5':
+            if cube == None:
+                print('No cube')
+                return True
+            self.solveCube(algo.movelist)
+            print('Cube solved')
+            return True
+
+        elif option == '6':
+            if cube == None:
+                print('No cube')
+                return True
+            algo = AlgoCFOP(cube)
+            algo.randomize()
+            self.solveCube(algo.movelist)
+            print('Cube randomized')
+            return True
+
+        elif option == '7':
             cube = self.makeCube()
             algo = AlgoCFOP(cube)
             algo.solve()
             self.solveCube(algo.movelist)
+            print('Cube solved')
             return True
-        
-        elif option == '4':
-            return True
-        
-        elif option == '5':
+
+        elif option == '8':
+            print('Session ended')
             return False
-            
+        
         else:
             print('ERROR: Invalid entry')
             return True
     
     def makeCube(self):
         frame = self.frame
+        cube = self.cube
         img1 = Image()
         img2 = Image()
         faces = np.empty(6)
