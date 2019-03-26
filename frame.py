@@ -20,18 +20,54 @@ class Frame:
 
     def __init__(self, clawDelay=1, rotateDelay90=1):
         self.__servoArray = numpy.arange(8)
-        self.frontClaw = claw(self.clawID=__servoArray[0], self.armID=__servoArray[1])
-        self.rightClaw = claw(self.clawID=__servoArray[2], self.armID=__servoArray[3])
-        self.backClaw = claw(self.clawID=__servoArray[4], self.armID=__servoArray[5])
-        self.leftClaw = claw(self.clawID=__servoArray[6], self.armID=__servoArray[7])
+        self.frontClaw = Claw(clawID=self.__servoArray[0], armID=self.__servoArray[1])
+        self.rightClaw = Claw(clawID=self.__servoArray[2], armID=self.__servoArray[3])
+        self.backClaw = Claw(clawID=self.__servoArray[4], armID=self.__servoArray[5])
+        self.leftClaw = Claw(clawID=self.__servoArray[6], armID=self.__servoArray[7])
         self.clawDelay = clawDelay
         self.rotateDelay90 = rotateDelay90
-        self.rotateDelay180 = 2*rotateDelay90
+        self.rotateDelay180 = 2*rotateDelay90 - 0.05
+        
+        # TODO: add in initialization of claw positions
+        #
         # NOTE: clawDelay and rotateDelay are currently set to 1 second for debugging
         #   pursposes. These are to be changed to clawDelay = 0.35 and rotateDelay = 0.5
         #   for final runs. These numbers are rough estimates and should be fine tuned
         #   to increase speed of the cube moves
+        
+    def openClaws(self):
+        self.frontClaw.openClaw()
+        self.backClaw.openClaw()
+        self.rightClaw.openClaw()
+        self.leftClaw.openClaw()
+        time.sleep(self.clawDelay)
+    
+    def closeClaws(self):
+        self.frontClaw.closeClaw()
+        self.backClaw.closeClaw()
+        self.rightClaw.closeClaw()
+        self.leftClaw.closeClaw()
+        time.sleep(self.clawDelay)
 
+    def openClawsFB(self):
+        self.frontClaw.openClaw()
+        self.backClaw.openClaw()
+        time.sleep(self.clawDelay)
+
+    def closeClawsFB(self):
+        self.frontClaw.closeClaw()
+        self.backClaw.closeClaw()
+        time.sleep(self.clawDelay)
+
+    def openClawsLR(self):
+        self.leftClaw.openClaw()
+        self.rightClaw.openClaw()
+        time.sleep(self.clawDelay)
+    
+    def closeClawsLR(self):
+        self.leftClaw.closeClaw()
+        self.rightClaw.closeClaw()
+        time.sleep(self.clawDelay)
 
     def rotate90(self, axis, inverse = False):
         """
@@ -47,15 +83,12 @@ class Frame:
         rightClaw = self.rightClaw
         leftClaw = self.leftClaw
 
-        if axis != ('X' or 'Y' or 'Z'):
-            print("Error: rotate90 function invalid axis parameter")
-            return None
-        if axis == 'X':
+        if axis == 'X':                 # time = 2.4 secs @ clawDelay=0.35 and rotateDelay90=0.5
             frontClaw.openClaw()       # open z axis
             backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                righClaw.rotate(180)   # rotate x axis -90 deg position
+                rightClaw.rotate(180)   # rotate x axis -90 deg position
                 leftClaw.rotate(0)     #   OR
             else:
                 rightClaw.rotate(0)    # rotate x axis +90 deg position
@@ -70,19 +103,19 @@ class Frame:
             rightClaw.rotate(90)       # set x axis to 0 deg position
             leftClaw.rotate(90)
             time.sleep(rotateDelay90)
-            rightClaw.close()          # close x axis
-            leftClaw.close()
+            rightClaw.closeClaw()          # close x axis
+            leftClaw.closeClaw()
             time.sleep(clawDelay)
-        elif axis == 'Z':
+        elif axis == 'Z':               # time = 2.4 secs @ clawDelay=0.35 and rotateDelay90=0.5
             leftClaw.openClaw()        # open x axis
             rightClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                frontClaw.rotate(180)  # rotate z axis -90 deg position
-                backClaw.rotate(0)     #   OR
+                frontClaw.rotate(0)  # rotate z axis -90 deg position
+                backClaw.rotate(180)     #   OR
             else:
-                frontClaw.rotate(0)    # rotate z axis +90 deg position
-                backClaw.rotate(180)
+                frontClaw.rotate(180)    # rotate z axis +90 deg position
+                backClaw.rotate(0)
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()       # close x axis
             leftClaw.closeClaw()
@@ -96,24 +129,24 @@ class Frame:
             frontClaw.closeClaw()      # close z axis
             backClaw.closeClaw()
             time.sleep(clawDelay)
-        elif axis == 'Y':
+        elif axis == 'Y':               # time = 0 secs (no physical movement)
             # remap claws instead of making moves. Reduces time and moves
             #   on the physical Rubik's Cube
             if inverse:
-                self.__servoArray = numpy.roll(__servoArray, -2)
+                self.__servoArray = numpy.roll(self.__servoArray, 2)
             else:
-                self.__servoArray = numpy.roll(__servoArray, 2)
-            frontClaw.clawID = __servoArray[0]
-            frontClaw.armID = __servoArray[1]
-            rightClaw.clawID = __servoArray[2]
-            rightClaw.armID = __servoArray[3]
-            backClaw.clawID = __servoArray[4] 
-            backClaw.armID = __servoArray[5]
-            leftClaw.clawID = __servoArray[6]
-            leftClaw.armID = __servoArray[7]
+                self.__servoArray = numpy.roll(self.__servoArray, -2)
+            frontClaw.clawID = self.__servoArray[0]
+            frontClaw.armID = self.__servoArray[1]
+            rightClaw.clawID = self.__servoArray[2]
+            rightClaw.armID = self.__servoArray[3]
+            backClaw.clawID = self.__servoArray[4] 
+            backClaw.armID = self.__servoArray[5]
+            leftClaw.clawID = self.__servoArray[6]
+            leftClaw.armID = self.__servoArray[7]
             
 
-    def rotate180(axis, inverse = False):
+    def rotate180(self, axis, inverse = False):
         """
         rotate180(axis, inverse=0)
         rotate function will rotate the cube. If the rotation is along the "Y" axis it will instead
@@ -128,10 +161,7 @@ class Frame:
         rightClaw = self.rightClaw
         leftClaw = self.leftClaw
 
-        if axis != ('X' or 'Y' or 'Z'):
-            print("Error: rotate180 function invalid axis parameter")
-            return None
-        if axis == 'X':
+        if axis == 'X':                 # time=4.1
             rightClaw.openClaw()           # open x axis
             leftClaw.openClaw()
             time.sleep(clawDelay)
@@ -164,8 +194,8 @@ class Frame:
             rightClaw.rotate(90)       # set x axis to 0 deg position
             leftClaw.rotate(90)
             time.sleep(rotateDelay90)
-            rightClaw.close()          # close x axis
-            leftClaw.close()
+            rightClaw.closeClaw()          # close x axis
+            leftClaw.closeClaw()
             time.sleep(clawDelay)
 
 
@@ -182,6 +212,7 @@ class Frame:
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()          # close z axis
             backClaw.closeClaw()
+            time.sleep(clawDelay)
             leftClaw.openClaw()        # open x axis
             rightClaw.openClaw()
             time.sleep(clawDelay)
@@ -209,20 +240,20 @@ class Frame:
             # remap claws instead of making moves. Reduces time and moves
             #   on the physical Rubik's Cube
             if inverse:
-                self.__servoArray = numpy.roll(__servoArray, -4)
+                self.__servoArray = numpy.roll(self.__servoArray, 4)
             else:
-                self.__servoArray = numpy.roll(__servoArray, 4)
-            frontClaw.clawID = __servoArray[0]
-            frontClaw.armID = __servoArray[1]
-            rightClaw.clawID = __servoArray[2]
-            rightClaw.armID = __servoArray[3]
-            backClaw.clawID = __servoArray[4] 
-            backClaw.armID = __servoArray[5]
-            leftClaw.clawID = __servoArray[6]
-            leftClaw.armID = __servoArray[7]
+                self.__servoArray = numpy.roll(self.__servoArray, -4)
+            frontClaw.clawID = self.__servoArray[0]
+            frontClaw.armID = self.__servoArray[1]
+            rightClaw.clawID = self.__servoArray[2]
+            rightClaw.armID = self.__servoArray[3]
+            backClaw.clawID = self.__servoArray[4] 
+            backClaw.armID = self.__servoArray[5]
+            leftClaw.clawID = self.__servoArray[6]
+            leftClaw.armID = self.__servoArray[7]
 
 
-    def turn90(face, inverse = False):
+    def turn90(self, face, inverse = False):
         """
         turn90(face, inverse=0)
         turn function does not remap any faces
@@ -235,14 +266,11 @@ class Frame:
         rightClaw = self.rightClaw
         leftClaw = self.leftClaw
 
-        if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
-            print("Error: turn90 function invalid face parameter")
-            return None
         if inverse:
             deg = 0
         else:
             deg = 180
-        if face == 'F':
+        if face == 'F':                 # time=1.7
             frontClaw.rotate(deg)      # turn side
             time.sleep(rotateDelay90)
             frontClaw.openClaw()       # open claw
@@ -260,6 +288,7 @@ class Frame:
             backClaw.rotate(90)
             time.sleep(rotateDelay90)
             backClaw.closeClaw()
+            time.sleep(clawDelay)
 
         elif face == 'L':
             leftClaw.rotate(deg)
@@ -269,6 +298,7 @@ class Frame:
             leftClaw.rotate(90)
             time.sleep(rotateDelay90)
             leftClaw.closeClaw()
+            time.sleep(clawDelay)
 
         elif face == 'R':
             rightClaw.rotate(deg)
@@ -278,8 +308,9 @@ class Frame:
             rightClaw.rotate(90)
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()
+            time.sleep(clawDelay)
             
-        elif face == 'U' or 'D':
+        elif face == 'U' or face == 'D':
             rightClaw.openClaw()       # open x axis
             leftClaw.openClaw()
             time.sleep(clawDelay)
@@ -310,8 +341,8 @@ class Frame:
             frontClaw.rotate(90)       # rotate z axis to 0 deg position
             backClaw.rotate(90)
             time.sleep(rotateDelay90)
-            rightClaw.rotate(0)        # set cube back to original position
-            leftClaw.rotate(180)
+            rightClaw.rotate(180)        # set cube back to original position
+            leftClaw.rotate(0)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()      # close z axis
             backClaw.closeClaw()
@@ -324,8 +355,9 @@ class Frame:
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()      # close x axis
             leftClaw.closeClaw()
+            time.sleep(clawDelay)
 
-    def turn180(face, inverse = False):
+    def turn180(self, face, inverse = False):
         """
         turn180(face, inverse=0)
         turn function does not remap any faces
@@ -337,10 +369,6 @@ class Frame:
         backClaw = self.backClaw
         rightClaw = self.rightClaw
         leftClaw = self.leftClaw
-        
-        if face != ('F' or 'B' or 'L' or 'R' or 'U' or 'D'):
-            print("Error: turn180 function invalid face parameter")
-            return None
         
         if inverse:
             deg = 0
@@ -422,7 +450,7 @@ class Frame:
             rightClaw.closeClaw()
             time.sleep(clawDelay)
         
-        elif face == ('U' or 'D'):
+        elif face == 'U' or face == 'D':
             frontClaw.openClaw()        # rotate x axis
             backClaw.openClaw()
             time.sleep(clawDelay)
@@ -458,6 +486,7 @@ class Frame:
                 frontClaw.rotate(90)
                 time.sleep(rotateDelay90)
                 frontClaw.closeClaw()
+                time.sleep(clawDelay)
             elif face == 'D':               # turn back 180 deg
                 backClaw.openClaw()
                 time.sleep(clawDelay)

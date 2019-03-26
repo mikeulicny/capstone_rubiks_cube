@@ -64,6 +64,7 @@ class AlgoCFOP:
 	# Function to optimize list by removing duplicates
 	def trimList(self):		
 		chars = ['X','Y','Z','F','B','U','D','L','R']		
+
 		for i in range(5):
 			for c in chars:
 				ml = ' ' + ' '.join(self.movelist) + ' '
@@ -3130,6 +3131,6 @@ class AlgoCFOP:
 
 		self.listLength = minListLength
 		self.movelist = minList
-		self.followMoves()	
-	
+		self.followMoves()
+    
 	# EOF

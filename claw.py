@@ -7,7 +7,7 @@ class Claw:
 		self.clawID = clawID
 		self.armID = armID
 		self.kit = ServoKit(channels=16)
-		self.position
+		# self.position
 
 		# initialize claw to 90 deg (0 deg position)
 		self.rotate(90)
@@ -24,4 +24,4 @@ class Claw:
 		self.kit.servo[self.armID].angle = angle
 
 		# to be used to optimize movements
-		self.position = angle
+		# self.position = angle
