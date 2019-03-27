@@ -80,15 +80,15 @@ class AlgoCFOP:
 		
 	# Function to optimize list by removing duplicates
 	def trimList(self):		
-		chars = ['X','Y','Z','F','B','U','D','L','R']		
+		chars = ['X','Y','Z','F','B','U','D','L','R']	
+		
 		for i in range(5):
 			for c in chars:
 				ml = ' ' + ' '.join(self.movelist) + ' '
 				s = ' '
 				ci = c + 'i'
 				c2 = '2' + c
-				
-			# Common cases	
+
 				# [ c c ] or [ ci ci ] -> [ 2c ]
 				ml = re.sub(s + c + s + c + s, s + c2 + s, ml)
 				ml = re.sub(s + ci + s + ci + s, s + c2 + s, ml)
