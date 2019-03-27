@@ -39,9 +39,9 @@ def Main():
 	# Cube setup
 	algo = AlgoCFOP(cube)
 	# algo = AlgoCFOP(cube, 1)	
-	# algo.movelist = (['2B', 'U', 'L', 'Di', '2R', 'L', 'F', '2R', 'Ui', '2B', 'U', '2R', 'L', 'D', 'L', 'D', 'F'])
-	# algo.followMoves()
-	algo.randomize()
+	algo.movelist = (['U', '2R', 'F', 'B', 'R', '2B', 'R', '2U', 'L', '2B', 'R', 'Ui', 'Di', '2R', 'F', 'Ri', 'L', '2B', '2U', '2F'])
+	algo.followMoves()
+	# algo.randomize()
 	
 	# Print initial cube
 	print('Test from solved: y @ up, g @ front: ' + str(algo.movelist))
