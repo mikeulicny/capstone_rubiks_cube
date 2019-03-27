@@ -12,6 +12,23 @@ class AlgoCFOP:
 		self.test = test
 		self.listLength = 0
 
+	# Function to determine if cross is complete
+	def crossComplete(self, cntrs):
+		# Simplify attributes
+		down = self.c.down
+		front = self.c.front
+		back = self.c.back
+		left = self.c.left
+		right = self.c.right	
+
+		out = False
+		for i in range (4):
+			if (down.allEdges(down.mc) and front.bc == cntrs[i % 4] and
+				right.bc == cntrs[(i+1) % 4] and back.bc == cntrs[(i+2) % 4] and
+				left.bc == cntrs[(i+3) % 4]):
+				out = True
+		return out
+		
 	# Function to determine if bottom two slices are complete
 	def firstTwoComplete(self):
 		# Simplify attributes
@@ -64,13 +81,14 @@ class AlgoCFOP:
 	# Function to optimize list by removing duplicates
 	def trimList(self):		
 		chars = ['X','Y','Z','F','B','U','D','L','R']		
-
 		for i in range(5):
 			for c in chars:
 				ml = ' ' + ' '.join(self.movelist) + ' '
 				s = ' '
 				ci = c + 'i'
 				c2 = '2' + c
+				
+			# Common cases	
 				# [ c c ] or [ ci ci ] -> [ 2c ]
 				ml = re.sub(s + c + s + c + s, s + c2 + s, ml)
 				ml = re.sub(s + ci + s + ci + s, s + c2 + s, ml)
@@ -148,6 +166,7 @@ class AlgoCFOP:
 			# Reset cube to initial configuration
 			if i > 0:
 				self.c = copy.deepcopy(cleanCopy)
+				self.movenumber = 0
 			
 			# Simplify attributes and methods
 			up = self.c.up
@@ -157,6 +176,7 @@ class AlgoCFOP:
 			left = self.c.left
 			right = self.c.right
 			turn = self.turn
+			crossComplete = self.crossComplete
 			firstTwoComplete = self.firstTwoComplete
 			cubeComplete = self.cubeComplete	
 			
@@ -164,187 +184,395 @@ class AlgoCFOP:
 			self.movelist = []	
 			if i > 0:
 				self.turn(moves[i])
-			
-			#---------------------------------
-			# While the 'daisy' isn't complete
-			#---------------------------------
-			while not up.allEdges(down.mc):
-			# If white edge in middle slice:
-				# If it's already in the front, move it up
-				if front.mr == down.mc:
-					if up.mr != down.mc:
-						turn('R')
-					else:
-						if up.bc != down.mc:
-							turn('Xi')
-							turn('Fi')
-							turn('R')
-							turn('X')
-						elif up.tc != down.mc:
-							turn('Xi')
-							turn('F')
-							turn('R')
-							turn('X')
-						else:
-							turn('Xi')
-							turn('2F')
-							turn('R')
-							turn('X')
-				elif front.ml == down.mc:
-					if up.ml != down.mc:
-						turn('Li')
-					else:
-						if up.bc != down.mc:
-							turn('Xi')
-							turn('F')
-							turn('Li')
-							turn('X')
-						elif up.tc != down.mc:
-							turn('Xi')
-							turn('Fi')
-							turn('Li')
-							turn('X')
-						else:
-							turn('Xi')
-							turn('2F')
-							turn('Li')
-							turn('X')
-				# If it's NOT in the front, move it there
-				elif right.mr == down.mc or right.ml == down.mc:
-					turn('Y')
-				elif left.mr == down.mc or left.ml == down.mc:
-					turn('Yi')
-				elif back.mr == down.mc or back.ml == down.mc:
-					turn('2Y')
-					
-			# If white edge in top slice:
-				# If it's already in the front, move it up
-				elif front.tc == down.mc:
-					if up.mr != down.mc:
-						turn('F')
-						turn('R')
-					elif up.ml != down.mc:
-						turn('Fi')
-						turn('Li')
-					elif up.tc != down.mc:
-						turn('F')
-						turn('Xi')
-						turn('F')
-						turn('R')
-						turn('X')
-					elif up.bc != down.mc:
-						turn('F')
-						turn('Xi')
-						turn('Fi')
-						turn('R')
-						turn('X')
-						
-				# If it's NOT in the front, move it there
-				elif right.tc == down.mc:
-					turn('Y')
-				elif left.tc == down.mc:
-					turn('Yi')
-				elif back.tc == down.mc:
-					turn('2Y')
-			
-			# If white edge in bottom slice:
-				# If it's already in the front, move it up
-				elif front.bc == down.mc:
-					if up.bc != down.mc:
-						if up.mr != down.mc:
-							turn('Fi')
-							turn('R')
-						elif up.ml != down.mc:
-							turn('F')
-							turn('Li')
-						elif up.tc != down.mc:
-							turn('Fi')
-							turn('Xi')
-							turn('F')
-							turn('R')
-							turn('X')
-						elif up.bc != down.mc:
-							turn('Fi')
-							turn('Xi')
-							turn('Fi')
-							turn('R')
-							turn('X')
-					else:
-						if up.mr != down.mc:
-							turn('Z')
-							turn('R')
-							turn('Fi')
-							turn('Ri')
-							turn('Zi')
-							turn('R')
-						elif up.ml != down.mc:
-							turn('Z')
-							turn('Ri')
-							turn('F')
-							turn('R')
-							turn('Zi')
-							turn('Li')
-						elif up.tc != down.mc:
-							turn('Z')
-							turn('2R')
-							turn('Fi')
-							turn('Ri')
-							turn('Zi')
-							turn('R')
-				# If it's NOT in the front, move it there
-				elif right.bc == down.mc:
-					turn('Y')
-				elif left.bc == down.mc:
-					turn('Yi')
-				elif back.bc == down.mc:
-					turn('2Y')
-			
-			# If white edge on down face:
-				# If it's already in the 'front', move it up
-				elif down.tc == down.mc:
-					if up.bc != down.mc:
-						turn('2F')
-					else:
-						if up.mr != down.mc:
-							turn('Z')
-							turn('R')
-							turn('2F')
-							turn('Zi')
-						elif up.ml != down.mc:
-							turn('Z')
-							turn('Ri')
-							turn('2F')
-							turn('Zi')
-						elif up.tc != down.mc:
-							turn('Z')
-							turn('2R')
-							turn('2F')
-							turn('Zi')
-				# If it's NOT in the front, move it there
-				elif down.mr == down.mc:
-					turn('Y')
-				elif down.ml == down.mc:
-					turn('Yi')
-				elif down.bc == down.mc:
-					turn('2Y')
 
-			#-------------------------------------
-			# While the white cross isn't complete
-			#-------------------------------------
-			while not down.allEdges(down.mc):
-				if up.bc == down.mc and front.mc == front.tc:
-					turn('2F')
-				if up.ml == down.mc and left.mc == left.tc:
-					turn('2L')
-				if up.tc == down.mc and back.mc == back.tc:
-					turn('2B')
-				if up.mr == down.mc and right.mc == right.tc:
-					turn('2R')
-				if not down.allEdges(down.mc):
-					turn('Z')
-					turn('R')
-					turn('Zi')
+			#---------------------------------------
+			# While the colored cross isn't complete
+			#---------------------------------------
+			if True:
+				cntrs = 0
+				for j in range(4):
+				
+					# If no 'white' edges are on the bottom, get the closest one there
+					if (down.tc != down.mc and down.ml != down.mc and 
+						down.mr != down.mc and down.bc != down.mc):
+						if front.mr == down.mc:
+							turn('Ri')
+							turn('Y')
+						elif front.ml == down.mc:
+							turn('L')
+							turn('Yi')
+						elif front.tc == down.mc:
+							turn('F')
+							turn('Ri')
+							turn('Y')
+						elif front.bc == down.mc:
+							turn('Fi')
+							turn('Ri')
+							turn('Y')
+						elif up.bc == down.mc:
+							turn('2F')
+						else:
+							turn('Y')
+						
+					# Get it to front
+					if down.tc == down.mc:
+						pass
+					elif down.mr == down.mc:
+						turn('Y')
+					elif down.bc == down.mc:
+						turn('2Y')
+					elif down.ml == down.mc:
+						turn('Yi')		
+
+				# Once one 'white' edge on bottom, establish pattern
+				if front.bc == front.mc:
+					cntrs = [front.mc, right.mc, back.mc, left.mc]
+				elif front.bc == right.mc:
+					cntrs = [right.mc, back.mc, left.mc, front.mc]
+				elif front.bc == back.mc:
+					cntrs = [back.mc, left.mc, front.mc, right.mc]
+				elif front.bc == left.mc:
+					cntrs = [left.mc, front.mc, right.mc, back.mc]			
+						
+				while not crossComplete(cntrs):		
+					if self.test == 1: print('Centers: ' + str(cntrs))
 					
+					# Check if second 'white' edge isn't in place		
+					if not (down.mr == down.mc and right.bc == cntrs[1]):
+						if self.test == 1: print('2nd piece')
+						
+						# If second piece is in 'front' slice
+						if front.mr == down.mc and right.ml == cntrs[1]:
+							turn('Ri')
+						elif front.ml == down.mc and left.mr == cntrs[1]:
+							turn('2F')
+							turn('Ri')
+							turn('2F')
+						elif front.tc == down.mc and up.bc == cntrs[1]:
+							turn('F')
+							turn('Ri')
+							turn('Fi')
+						elif up.bc == down.mc and front.tc == cntrs[1]:
+							turn('Xi')
+							turn('Fi')
+							turn('2R')
+							turn('X')
+						
+						# If second piece is in 'right' slice
+						elif right.mr == down.mc and back.ml == cntrs[1]:
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Bi')
+							turn('Y')
+						elif right.ml == down.mc and front.mr == cntrs[1]:
+							turn('2R')
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Bi')
+							turn('Y')						
+						elif right.tc == down.mc and up.mr == cntrs[1]:
+							turn('R')
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Bi')
+							turn('Y')
+						elif right.bc == down.mc and down.mr == cntrs[1]:
+							turn('Ri')
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Bi')
+							turn('Y')
+						elif up.mr == down.mc and right.tc == cntrs[1]:
+							turn('2R')
+							
+						# If second piece is in 'back' slice
+						elif back.mr == down.mc and left.ml == cntrs[1]:
+							turn('2B')
+							turn('R')
+						elif back.ml == down.mc and right.mr == cntrs[1]:
+							turn('R')
+						elif back.tc == down.mc and up.tc == cntrs[1]:
+							turn('Bi')
+							turn('R')
+						elif back.bc == down.mc and down.bc == cntrs[1]:
+							turn('B')
+							turn('R')
+						elif up.tc == down.mc and back.tc == cntrs[1]:			
+							turn('X')
+							turn('B')
+							turn('2R')
+							turn('Xi')
+						elif down.bc == down.mc and back.bc == cntrs[1]:
+							turn('F')
+							turn('X')
+							turn('Fi')
+							turn('Xi')
+							turn('Fi')
+						
+						# If second piece is in 'left' slice
+						elif left.mr == down.mc and front.ml == cntrs[1]:
+							turn('X')
+							turn('Fi')
+							turn('Xi')
+							turn('Fi')
+							turn('Yi')
+						elif left.ml == down.mc and back.mr == cntrs[1]:
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('B')
+							turn('Y')
+						elif left.tc == down.mc and up.ml == cntrs[1]:
+							turn('X')
+							turn('Li')
+							turn('F')
+							turn('Xi')
+							turn('B')
+							turn('Y')
+						elif left.bc == down.mc and down.ml == cntrs[1]:
+							turn('X')
+							turn('L')
+							turn('F')
+							turn('Xi')
+							turn('B')
+							turn('Y')
+						elif up.ml == down.mc and left.tc == cntrs[1]:
+							turn('X')
+							turn('2B')
+							turn('2R')
+							turn('Xi')
+						elif down.ml == down.mc and left.bc == cntrs[1]:
+							turn('X')
+							turn('2L')
+							turn('2B')
+							turn('2R')
+							turn('Xi')
+							
+					# Check if third 'white' edge isn't in place		
+					elif not (down.bc == down.mc and back.bc == cntrs[2]):		
+						if self.test == 1: print('3rd piece')
+
+						# If third piece is in 'front' slice
+						if front.mr == down.mc and right.ml == cntrs[2]:
+							turn('X')
+							turn('Fi')
+							turn('Ri')
+							turn('Xi')
+							turn('Yi')
+						elif front.ml == down.mc and left.mr == cntrs[2]:
+							turn('X')
+							turn('F')
+							turn('L')
+							turn('Xi')
+							turn('Y')
+						elif front.tc == down.mc and up.bc == cntrs[2]:
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Fi')
+							turn('L')
+							turn('Y')
+						elif up.bc == down.mc and front.tc == cntrs[2]:
+							turn('X')
+							turn('B')
+							turn('F')
+							turn('2L')
+							turn('Xi')
+							turn('Y')
+							
+						# If third piece is in 'right' slice
+						elif right.mr == down.mc and back.ml == cntrs[2]:
+							turn('Bi')
+						elif right.ml == down.mc and front.mr == cntrs[2]:
+							turn('X')
+							turn('2F')
+							turn('Xi')
+							turn('F')
+							turn('2Y')
+						elif right.tc == down.mc and up.mr == cntrs[2]:
+							turn('X')
+							turn('Fi')
+							turn('R')
+							turn('F')
+							turn('Xi')
+							turn('Bi')	
+						elif up.mr == down.mc and right.tc == cntrs[2]:
+							turn('X')
+							turn('Fi')
+							turn('2R')
+							turn('Xi')
+							turn('Yi')
+					
+						# If third piece is in 'back' slice
+						elif back.mr == down.mc and left.ml == cntrs[2]:
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Li')
+							turn('Y')
+						elif back.ml == down.mc and right.mr == cntrs[2]:
+							turn('X')
+							turn('Fi')
+							turn('Xi')
+							turn('R')
+							turn('Yi')
+						elif back.tc == down.mc and up.tc == cntrs[2]:
+							turn('B')	
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Li')
+							turn('Y')
+						elif back.bc == down.mc and down.bc == cntrs[2]:
+							turn('Bi')
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Li')
+							turn('Y')
+						elif up.tc == down.mc and back.tc == cntrs[2]:
+							turn('2B')
+							
+						# If third piece is in 'left' slice	
+						elif left.mr == down.mc and front.ml == cntrs[2]:
+							turn('2L')
+							turn('B')
+						elif left.ml == down.mc and back.mr == cntrs[2]:
+							turn('B')
+						elif left.tc == down.mc and up.ml == cntrs[2]:
+							turn('Li')
+							turn('B')
+						elif left.bc == down.mc and down.ml == cntrs[2]:
+							turn('L')
+							turn('B')
+						elif up.ml == down.mc and left.tc == cntrs[2]:
+							turn('X')
+							turn('B')
+							turn('Xi')
+							turn('2B')
+						elif down.ml == down.mc and left.bc == cntrs[2]:
+							turn('X')
+							turn('L')
+							turn('F')
+							turn('Li')
+							turn('Xi')
+							turn('Y')
+		
+					# Check if fourth 'white' edge isn't in place		
+					elif not (down.ml == down.mc and left.bc == cntrs[3]):
+						if self.test == 1: print('4th piece')
+						
+						# If fourth piece is in 'front' slice
+						if front.mr == down.mc and right.ml == cntrs[3]:
+							turn('2F')
+							turn('L')
+							turn('2F')
+						elif front.ml == down.mc and left.mr == cntrs[3]:
+							turn('L')
+						elif front.tc == down.mc and up.bc == cntrs[3]:
+							turn('Fi')
+							turn('L')
+							turn('F')
+						elif up.bc == down.mc and front.tc == cntrs[3]:
+							turn('X')
+							turn('B')
+							turn('2L')
+							turn('Xi')
+										
+						# If fourth piece is in 'right' slice
+						elif right.mr == down.mc and back.ml == cntrs[3]:
+							turn('X')
+							turn('Fi')
+							turn('Xi')
+							turn('Bi')
+							turn('Yi')
+						elif right.ml == down.mc and front.mr == cntrs[3]:
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('F')
+							turn('Y')
+						elif right.tc == down.mc and up.mr == cntrs[3]:
+							turn('X')
+							turn('2F')
+							turn('R')
+							turn('F')
+							turn('Xi')
+							turn('Bi')	
+							turn('Yi')
+						elif up.mr == down.mc and right.tc == cntrs[3]:
+							turn('X')
+							turn('2B')
+							turn('2L')
+							turn('Xi')
+							
+						# If fourth piece is in 'back' slice
+						elif back.mr == down.mc and left.ml == cntrs[3]:
+							turn('Li')
+						elif back.ml == down.mc and right.mr == cntrs[3]:
+							turn('2B')
+							turn('Li')
+							turn('2B')	
+						elif back.tc == down.mc and up.tc == cntrs[3]:
+							turn('B')
+							turn('Li')
+							turn('Bi')
+						elif up.tc == down.mc and back.tc == cntrs[3]:
+							turn('X')
+							turn('Fi')
+							turn('Xi')
+							turn('2B')
+							turn('Yi')
+						
+						# If fourth piece is in 'left' slice	
+						elif left.mr == down.mc and front.ml == cntrs[3]:
+							turn('X')
+							turn('F')
+							turn('Xi')
+							turn('Fi')
+							turn('Y')
+						elif left.ml == down.mc and back.mr == cntrs[3]:
+							turn('X')
+							turn('Fi')
+							turn('Xi')
+							turn('B')
+							turn('Yi')
+						elif left.tc == down.mc and up.ml == cntrs[3]:
+							turn('X')
+							turn('L')
+							turn('F')
+							turn('Xi')
+							turn('Fi')
+							turn('Y')
+						elif left.bc == down.mc and down.ml == cntrs[3]:
+							turn('X')
+							turn('Li')
+							turn('F')
+							turn('Xi')
+							turn('Fi')
+							turn('Y')
+						elif up.ml == down.mc and left.tc == cntrs[3]:
+							turn('2L')
+
+				# If edges and centers mis-aligned
+				if crossComplete(cntrs):
+					if front.bc == right.mc:
+						turn('X')
+						turn('F')
+						turn('Xi')
+					elif front.bc == left.mc:
+						turn('X')
+						turn('Fi')
+						turn('Xi')
+					elif front.bc == back.mc:
+						turn('X')
+						turn('2F')
+						turn('Xi')
+			
 			#-------------------------------------------
 			# While the first two layers aren't complete
 			#-------------------------------------------
@@ -1414,9 +1642,9 @@ class AlgoCFOP:
 						print('Loop outer')
 					turn('Y')	
 					
-			#-------------------------------------
-			# While the yellow side isn't complete
-			#-------------------------------------
+			#------------------------------------
+			# While the last layer isn't oriented
+			#------------------------------------
 			while not up.isComplete():
 			# If dot (8 cases)
 				if (left.tl == up.mc and left.tc == up.mc and
@@ -2598,9 +2826,9 @@ class AlgoCFOP:
 				else:
 					turn('Y')
 					
-			#-------------------------------
-			# While the cube is not complete
-			#-------------------------------
+			#------------------------------------
+			# While the last layer isn't permuted
+			#------------------------------------
 			while not cubeComplete():
 				for j in range(4):
 				# Edge only permuations
@@ -3131,6 +3359,6 @@ class AlgoCFOP:
 
 		self.listLength = minListLength
 		self.movelist = minList
-		self.followMoves()
-    
+		self.followMoves()	
+	
 	# EOF
