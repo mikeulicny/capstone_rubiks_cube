@@ -39,7 +39,7 @@ def Main():
 	# Cube setup
 	algo = AlgoCFOP(cube)
 	# algo = AlgoCFOP(cube, 1)	
-	# algo.movelist = (['L', 'B', '2U', 'Li', 'U', 'Ri', 'Bi', 'Ri', 'Fi', '2D', '2U', '2L', 'D', '2L', 'D', '2L', 'Bi'])
+	# algo.movelist = (['2B', 'U', 'L', 'Di', '2R', 'L', 'F', '2R', 'Ui', '2B', 'U', '2R', 'L', 'D', 'L', 'D', 'F'])
 	# algo.followMoves()
 	algo.randomize()
 	
@@ -53,13 +53,19 @@ def Main():
 	t0 = time.time()
 	algo.solve()
 	t1 = time.time()
-
+	
 	print('After:\n')
 	print(cube)
+	
+	# xindex = algo.movelist.index('CROSS')
+	# algo.movelist.remove('CROSS')
+	
 	print(algo.movelist)
 	print('Number of moves in list: ' + str(len(algo.movelist)))
 	print('Actual number of turns by our bot: ' + str(algo.listLength))
 	print('Time to generate solution: ' + str(t1-t0)[:6] +' s')
+	# print('Number of moves in cross: ' + str(xindex))
+
 	
 # Calling Test
 if __name__ == '__main__': 
