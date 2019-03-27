@@ -3,7 +3,7 @@ from face import Face
 from cube import Cube
 from datetime import datetime
 
-class AlgoCFOP:			
+class AlgoCFOP:
 	# Initializer
 	def __init__(self, cube, test = 0):
 		self.c = cube		
@@ -81,14 +81,13 @@ class AlgoCFOP:
 	# Function to optimize list by removing duplicates
 	def trimList(self):		
 		chars = ['X','Y','Z','F','B','U','D','L','R']	
-		
+
 		for i in range(5):
 			for c in chars:
 				ml = ' ' + ' '.join(self.movelist) + ' '
 				s = ' '
 				ci = c + 'i'
 				c2 = '2' + c
-
 				# [ c c ] or [ ci ci ] -> [ 2c ]
 				ml = re.sub(s + c + s + c + s, s + c2 + s, ml)
 				ml = re.sub(s + ci + s + ci + s, s + c2 + s, ml)
@@ -107,7 +106,52 @@ class AlgoCFOP:
 				ml = re.split('\s+', ml)
 				out = ml[1:-1]
 				self.movelist = out
-
+				
+		# Special cases: replacing superfluous flips with Y moves
+			ml = ' ' + ' '.join(self.movelist) + ' '
+			# X Z
+			ml = re.sub(' X Z ' , ' Z Yi ', ml)
+			ml = re.sub(' X Zi ' , ' Zi Y ', ml)
+			ml = re.sub(' Xi Z ' , ' Z Y ', ml)
+			ml = re.sub(' Xi Zi ' , ' Zi Yi ', ml)
+			# Z X
+			ml = re.sub(' Z X ' , ' X Y ', ml)
+			ml = re.sub(' Z Xi ' , ' Xi Yi ', ml)
+			ml = re.sub(' Zi X ' , ' X Yi ', ml)
+			ml = re.sub(' Zi Xi ' , ' Xi Y ', ml)
+			# 2X Z or 2Z X
+			ml = re.sub(' 2X Z ' , ' Z 2Y ', ml)
+			ml = re.sub(' 2X Zi ' , ' Zi 2Y ', ml)		
+			ml = re.sub(' 2Z X ' , ' X 2Y ', ml)
+			ml = re.sub(' 2Z Xi ' , ' Xi 2Y ', ml)	
+			# 2X 2Z or 2Z 2X
+			ml = re.sub(' 2X 2Z ' , ' 2Y ', ml)
+			ml = re.sub(' 2Z 2X ' , ' 2Y ', ml)	
+			
+			# X Y Z		
+			ml = re.sub(' X Y Z ' , ' 2X Y ', ml)
+			ml = re.sub(' X Y Zi ' , ' Y ', ml)
+			ml = re.sub(' Xi Y Z ' , ' Y ', ml)
+			ml = re.sub(' Xi Y Zi ' , ' 2X Y ', ml)
+			ml = re.sub(' X Yi Z ' , ' Yi ', ml)
+			ml = re.sub(' X Yi Zi ' , ' 2X Yi ', ml)
+			ml = re.sub(' Xi Yi Z ' , ' 2X Yi ', ml)
+			ml = re.sub(' Xi Yi Zi ' , ' Yi ', ml)
+			
+			# Z Y X		
+			ml = re.sub(' Z Y X ' , ' Y ', ml)
+			ml = re.sub(' Z Y Xi ' , ' 2X Yi ', ml)
+			ml = re.sub(' Zi Y X ' , ' 2X Yi ', ml)
+			ml = re.sub(' Zi Y Xi ' , ' Y ', ml)
+			ml = re.sub(' Z Yi X ' , ' 2X Y ', ml)
+			ml = re.sub(' Z Yi Xi ' , ' Yi ', ml)
+			ml = re.sub(' Zi Yi X ' , ' Yi ', ml)
+			ml = re.sub(' Zi Yi Xi ' , ' 2X Y ', ml)
+			
+			ml = re.split('\s+', ml)
+			out = ml[1:-1]
+			self.movelist = out
+			
 	# Function to produce an inverse list
 	def inverseList(self):
 		inverselist = []
