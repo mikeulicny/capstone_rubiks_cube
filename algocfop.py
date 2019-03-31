@@ -6,7 +6,7 @@ from datetime import datetime
 class AlgoCFOP:
 	# Initializer
 	def __init__(self, cube, test = 0):
-		self.c = cube		
+		self.cube = cube		
 		self.movelist = []
 		self.movenumber = 0
 		self.test = test
@@ -15,11 +15,11 @@ class AlgoCFOP:
 	# Function to determine if cross is complete
 	def crossComplete(self, cntrs):
 		# Simplify attributes
-		down = self.c.down
-		front = self.c.front
-		back = self.c.back
-		left = self.c.left
-		right = self.c.right	
+		down = self.cube.down
+		front = self.cube.front
+		back = self.cube.back
+		left = self.cube.left
+		right = self.cube.right	
 
 		out = False
 		for i in range (4):
@@ -32,11 +32,11 @@ class AlgoCFOP:
 	# Function to determine if bottom two slices are complete
 	def firstTwoComplete(self):
 		# Simplify attributes
-		down = self.c.down
-		front = self.c.front
-		back = self.c.back
-		left = self.c.left
-		right = self.c.right	
+		down = self.cube.down
+		front = self.cube.front
+		back = self.cube.back
+		left = self.cube.left
+		right = self.cube.right	
 
 		out = True
 		if (down.isComplete() == False or 
@@ -54,12 +54,12 @@ class AlgoCFOP:
 	# Function to determine if cube is completely solved
 	def cubeComplete(self):
 		# Simplify attributes
-		up = self.c.up
-		down = self.c.down
-		front = self.c.front
-		back = self.c.back
-		left = self.c.left
-		right = self.c.right
+		up = self.cube.up
+		down = self.cube.down
+		front = self.cube.front
+		back = self.cube.back
+		left = self.cube.left
+		right = self.cube.right
 		
 		out = False
 		if (front.isComplete() == True and back.isComplete() == True and
@@ -70,19 +70,21 @@ class AlgoCFOP:
 		
 	# Expansion of cube turn method to include list appending
 	def turn(self, dir):
-		self.c.turn(dir)
+		self.cube.turn(dir)
 		self.movelist.append(dir)
 		if self.test == 1:
 			print(dir + ' (turn ' + str(self.movenumber) + '):')
 			self.movenumber += 1
-			print(self.c)		
+			print(self.cube)		
 			input('')
 		
 	# Function to optimize list by removing duplicates
 	def trimList(self):		
-		chars = ['X','Y','Z','F','B','U','D','L','R']	
-
-		for i in range(5):
+		chars = ['X','Y','Z','F','B','L','R', 'U', 'D']	
+		chars1 = ['RX', 'LX', 'FZ', 'BZ', 'XR', 'XL', 'ZF', 'ZB']
+		
+		# Four passes
+		for i in range(4):
 			for c in chars:
 				ml = ' ' + ' '.join(self.movelist) + ' '
 				s = ' '
@@ -106,8 +108,55 @@ class AlgoCFOP:
 				ml = re.split('\s+', ml)
 				out = ml[1:-1]
 				self.movelist = out
+
+		
+			
+			# Special cases: moves sandwiched by a flip
+			
+			for f in chars1:
+				ml = ' ' + ' '.join(self.movelist) + ' '
+				s = ' '
+				c = f[0]
+				ci = f[0] + 'i'
+				c2 = '2' + f[0]
+				d = f[1]
+				di = f[1] + 'i'
+				d2 = '2' + f[1]
 				
-		# Special cases: replacing superfluous flips with Y moves
+				# C D C
+				ml = re.sub(s + c + s + d + s + c + s, s + d + s + c2 + s, ml)
+				ml = re.sub(s + c + s + d + s + ci + s, s + d + s, ml)
+				ml = re.sub(s + c + s + d + s + c2 + s, s + d + s + ci + s, ml)
+				ml = re.sub(s + c + s + di + s + c + s, s + di + s + c2 + s, ml)
+				ml = re.sub(s + c + s + di + s + ci + s, s + di + s, ml)	
+				ml = re.sub(s + c + s + di + s + c2 + s, s + di + s + ci + s, ml)
+				ml = re.sub(s + c + s + d2 + s + c + s, s + d2 + s + c2 + s, ml)
+				ml = re.sub(s + c + s + d2 + s + ci + s, s + d2 + s, ml)	
+				ml = re.sub(s + c + s + d2 + s + c2 + s, s + d2 + s + ci + s, ml)
+				ml = re.sub(s + ci + s + d + s + c + s, s + d + s, ml)
+				ml = re.sub(s + ci + s + d + s + ci + s, s + d + s + c2 + s, ml)
+				ml = re.sub(s + ci + s + d + s + c2 + s, s + d + s + c + s, ml)
+				ml = re.sub(s + ci + s + di + s + c + s, s + di + s, ml)
+				ml = re.sub(s + ci + s + di + s + ci + s, s + di + s + c2 + s, ml)	
+				ml = re.sub(s + ci + s + di + s + c2 + s, s + di + s + c + s, ml)
+				ml = re.sub(s + ci + s + d2 + s + c + s, s + d2 + s, ml)
+				ml = re.sub(s + ci + s + d2 + s + ci + s, s + d2 + s + c2 + s, ml)	
+				ml = re.sub(s + ci + s + d2 + s + c2 + s, s + d2 + s + c + s, ml)
+				ml = re.sub(s + c2 + s + d + s + c + s, s + d + s + ci + s, ml)
+				ml = re.sub(s + c2 + s + d + s + ci + s, s + d + s + c + s, ml)
+				ml = re.sub(s + c2 + s + d + s + c2 + s, s + d + s, ml)
+				ml = re.sub(s + c2 + s + di + s + c + s, s + di + s + ci + s, ml)
+				ml = re.sub(s + c2 + s + di + s + ci + s, s + di + s + c + s, ml)	
+				ml = re.sub(s + c2 + s + di + s + c2 + s, s + di + s, ml)
+				ml = re.sub(s + c2 + s + d2 + s + c + s, s + d2 + s + ci + s, ml)
+				ml = re.sub(s + c2 + s + d2 + s + ci + s, s + d2 + s + c + s, ml)	
+				ml = re.sub(s + c2 + s + d2 + s + c2 + s, s + d2 + s, ml)
+			
+				ml = re.split('\s+', ml)
+				out = ml[1:-1]
+				self.movelist = out
+				
+			# Special cases: replacing superfluous flips with Y moves			
 			ml = ' ' + ' '.join(self.movelist) + ' '
 			# X Z
 			ml = re.sub(' X Z ' , ' Z Yi ', ml)
@@ -126,32 +175,83 @@ class AlgoCFOP:
 			ml = re.sub(' 2Z Xi ' , ' Xi 2Y ', ml)	
 			# 2X 2Z or 2Z 2X
 			ml = re.sub(' 2X 2Z ' , ' 2Y ', ml)
-			ml = re.sub(' 2Z 2X ' , ' 2Y ', ml)	
-			
-			# X Y Z		
-			ml = re.sub(' X Y Z ' , ' 2X Y ', ml)
-			ml = re.sub(' X Y Zi ' , ' Y ', ml)
-			ml = re.sub(' Xi Y Z ' , ' Y ', ml)
-			ml = re.sub(' Xi Y Zi ' , ' 2X Y ', ml)
-			ml = re.sub(' X Yi Z ' , ' Yi ', ml)
-			ml = re.sub(' X Yi Zi ' , ' 2X Yi ', ml)
-			ml = re.sub(' Xi Yi Z ' , ' 2X Yi ', ml)
-			ml = re.sub(' Xi Yi Zi ' , ' Yi ', ml)
-			
-			# Z Y X		
-			ml = re.sub(' Z Y X ' , ' Y ', ml)
-			ml = re.sub(' Z Y Xi ' , ' 2X Yi ', ml)
-			ml = re.sub(' Zi Y X ' , ' 2X Yi ', ml)
-			ml = re.sub(' Zi Y Xi ' , ' Y ', ml)
-			ml = re.sub(' Z Yi X ' , ' 2X Y ', ml)
-			ml = re.sub(' Z Yi Xi ' , ' Yi ', ml)
-			ml = re.sub(' Zi Yi X ' , ' Yi ', ml)
-			ml = re.sub(' Zi Yi Xi ' , ' 2X Y ', ml)
-			
+			ml = re.sub(' 2Z 2X ' , ' 2Y ', ml)				
 			ml = re.split('\s+', ml)
 			out = ml[1:-1]
 			self.movelist = out
-			
+	
+	# Function to optimize list by removing Y moves
+	def cypherTwistList(self):
+		
+		# Set up
+		nl = []
+		y = 0
+		
+		# Equivalency mappings
+		flips = ['X', 'Z', 'Xi', 'Zi']		
+		turns = ['F', 'Fi', 'L', 'Li', 'B', 'Bi', 'R', 'Ri']
+		dubflips = ['2X', '2Z']
+		dubturns = ['2F', '2L', '2B', '2R']
+		
+		# Three passes
+		for i in range (3):
+			nl.clear()
+			y = 0
+			j = 0
+			# Translation			
+			for move in self.movelist:
+				j += 1
+				# If 'Y' move
+				if move == 'Y':
+					y = (y + 1) % 4
+				elif  move == 'Yi':
+					y = (y + 3) % 4
+				elif move == '2Y':
+					y = (y + 2) % 4
+					
+				# If not 'Y' move
+				else:
+					if move in flips:
+						place = flips.index(move)
+						if y == 0:
+							nl.append(flips[place])
+						elif y == 1:
+							nl.append(flips[(place + 3) % 4])
+						elif y == 2:
+							nl.append(flips[(place + 2) % 4])
+						elif y == 3:
+							nl.append(flips[(place + 1) % 4])	
+					elif move in turns:
+						place = turns.index(move)
+						if y == 0:
+							nl.append(turns[place])	
+						elif y == 1:
+							nl.append(turns[(place + 6) % 8])
+						elif y == 2:
+							nl.append(turns[(place + 4) % 8])
+						elif y == 3:
+							nl.append(turns[(place + 2) % 8])						
+					elif move in dubflips:
+						place = dubflips.index(move)
+						if y == 0 or y == 2:
+							nl.append(dubflips[place])		
+						elif y == 1 or y == 3:
+							nl.append(dubflips[(place + 1) % 2])
+					
+					elif move in dubturns:
+						place = dubturns.index(move)
+						if y == 0:
+							nl.append(dubturns[place])
+						elif y == 1:
+							nl.append(dubturns[(place + 3) % 4])
+						elif y == 2:
+							nl.append(dubturns[(place + 2) % 4])
+						elif y == 3:
+							nl.append(dubturns[(place + 1) % 4])	
+
+			self.movelist = nl
+			self.trimList()
+	
 	# Function to produce an inverse list
 	def inverseList(self):
 		inverselist = []
@@ -165,12 +265,11 @@ class AlgoCFOP:
 					inverselist.append(move[0])
 		return inverselist
 	
-	# Function to randomize a cube (20 turns)
-	def randomize(self):
+	# Function to randomize a cube (20 or select number of turns)
+	def randomize(self, iters = 20):
 		# Simplify attributes and methods
 		turn = self.turn
-		turn = self.turn
-
+		
 		# Random RNG
 		random.seed(datetime.now())
 		
@@ -180,7 +279,7 @@ class AlgoCFOP:
 		# 20 random turns
 		moves = ['U','Ui','D','Di','F','Fi','B','Bi','L','Li','R','Ri',
 			'2U','2D','2F','2B','2L','2R']
-		for i in range(20):
+		for i in range(iters):
 			randomTurn = random.randint(0,17)
 			turn(moves[randomTurn])
 					
@@ -188,16 +287,19 @@ class AlgoCFOP:
 		self.trimList()
 	
 	# Function to get a cube to a pre-determined configuration
-	def followMoves(self):	
-		L = len(self.movelist)
-		for i in range(L):
-			self.c.turn(self.movelist[i])
+	def followMoves(self, somelist = None):	
+		if somelist == None:
+			for i in range(len(self.movelist)):
+				self.cube.turn(self.movelist[i])
+		else:
+			for i in range(len(somelist)):	
+				self.cube.turn(somelist[i])
 	
 	# Function to solve a cube				
 	def solve(self):		
 			
 		# Make a clean copy of the cube
-		cleanCopy = copy.deepcopy(self.c)
+		cleanCopy = copy.deepcopy(self.cube)
 		
 		# List of initial moves for initial configuration
 		moves = ['','X','Xi','Z','Zi','2X']
@@ -209,16 +311,16 @@ class AlgoCFOP:
 		for i in range(6):
 			# Reset cube to initial configuration
 			if i > 0:
-				self.c = copy.deepcopy(cleanCopy)
+				self.cube = copy.deepcopy(cleanCopy)
 				self.movenumber = 0
 			
 			# Simplify attributes and methods
-			up = self.c.up
-			down = self.c.down
-			front = self.c.front
-			back = self.c.back
-			left = self.c.left
-			right = self.c.right
+			up = self.cube.up
+			down = self.cube.down
+			front = self.cube.front
+			back = self.cube.back
+			left = self.cube.left
+			right = self.cube.right
 			turn = self.turn
 			crossComplete = self.crossComplete
 			firstTwoComplete = self.firstTwoComplete
@@ -3389,7 +3491,7 @@ class AlgoCFOP:
 					turn('Zi')
 							
 			# Optimize the list by removing superfluous/duplicate turns
-			self.trimList()
+			self.cypherTwistList()
 			
 			# Get list length without counting "Y" moves:
 			listLength = 0	
@@ -3400,9 +3502,11 @@ class AlgoCFOP:
 			if listLength < minListLength:
 				minListLength = listLength
 				minList = self.movelist
-
+			
 		self.listLength = minListLength
 		self.movelist = minList
-		self.followMoves()	
+
+		self.cube = copy.deepcopy(cleanCopy)
+		self.followMoves()
 	
 	# EOF
