@@ -83,8 +83,8 @@ class AlgoCFOP:
 		chars = ['X','Y','Z','F','B','L','R', 'U', 'D']	
 		chars1 = ['RX', 'LX', 'FZ', 'BZ', 'XR', 'XL', 'ZF', 'ZB']
 		
-		# Four passes
-		for i in range(4):
+		# Three passes
+		for i in range(3):
 			for c in chars:
 				ml = ' ' + ' '.join(self.movelist) + ' '
 				s = ' '
@@ -109,8 +109,6 @@ class AlgoCFOP:
 				out = ml[1:-1]
 				self.movelist = out
 
-		
-			
 			# Special cases: moves sandwiched by a flip
 			
 			for f in chars1:
@@ -193,8 +191,8 @@ class AlgoCFOP:
 		dubflips = ['2X', '2Z']
 		dubturns = ['2F', '2L', '2B', '2R']
 		
-		# Three passes
-		for i in range (3):
+		# Four passes
+		for i in range (4):
 			nl.clear()
 			y = 0
 			j = 0
@@ -264,7 +262,17 @@ class AlgoCFOP:
 				elif move[1] == 'i':
 					inverselist.append(move[0])
 		return inverselist
-	
+
+	# Function to print the list in an aesthetic way
+	def printList(self):
+		out = ''
+		for i in range(0,len(self.movelist)):
+			if i % 20 == 0 and i != 0:
+				out += '\n'
+			out += (self.movelist[i] + ' ')
+
+		print(out)
+		
 	# Function to randomize a cube (20 or select number of turns)
 	def randomize(self, iters = 20):
 		# Simplify attributes and methods
@@ -3502,7 +3510,7 @@ class AlgoCFOP:
 			if listLength < minListLength:
 				minListLength = listLength
 				minList = self.movelist
-			
+
 		self.listLength = minListLength
 		self.movelist = minList
 
