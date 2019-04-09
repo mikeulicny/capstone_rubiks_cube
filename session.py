@@ -8,7 +8,7 @@ import numpy as np
 class Session:
 
     def __init__(self):
-        self.frame = Frame()
+        self.frame = Frame(clawDelay=0.3, rotateDelay90=0.35)
         self.cube = None
         self.algo = None
 
@@ -125,7 +125,7 @@ class Session:
     def solveCube(self, movelist):
         frame = self.frame
 
-        for i in movelist:
+        for i in range(len(movelist)):
             if movelist[i] == 'X':
                 frame.rotate90('X')
             elif movelist[i] == 'Xi':
