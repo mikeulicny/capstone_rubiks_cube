@@ -6,15 +6,20 @@ class Claw:
 		# object elements
 		self.clawID = clawID
 		self.armID = armID
-		self.kit = ServoKit(channels=16)
+		self.kit = ServoKit(channels=16)		
 		
-
-		self.kit.servo[1].set_pulse_width_range(700, 2300)
-		self.kit.servo[3].set_pulse_width_range(675, 2355)
-		self.kit.servo[5].set_pulse_width_range(750, 2350)
-		self.kit.servo[7].set_pulse_width_range(750, 2450)
-
-				
+		'''MIN/MAX PWM FOR CLAWS'''
+		self.kit.servo[0].set_pulse_width_range(700, 2300)	# FRONT
+		self.kit.servo[2].set_pulse_width_range(700, 2300)	# RIGHT
+		self.kit.servo[4].set_pulse_width_range(700, 2300)	# BACK
+		self.kit.servo[6].set_pulse_width_range(700, 2300)	# LEFT
+		
+		'''MIN?MAX PWM FOR ARMS'''
+		self.kit.servo[1].set_pulse_width_range(740, 2330)	# FRONT
+		self.kit.servo[3].set_pulse_width_range(800, 2450)	# RIGHT
+		self.kit.servo[5].set_pulse_width_range(800, 2600)	# BACK
+		self.kit.servo[7].set_pulse_width_range(600, 2500)	# LEFT
+		
 		# self.position
 
 		# initialize claw to 90 deg (0 deg position)
@@ -22,13 +27,21 @@ class Claw:
 
 
 	def openClaw(self):
-		self.kit.servo[self.clawID].angle = 60
+		self.kit.servo[self.clawID].angle = 70
 
 	def closeClaw(self):
-
-		self.kit.servo[self.clawID].angle = 14
+		self.kit.servo[self.clawID].angle = 22
 
 	def rotate(self, angle):
+		if self.armID == 1 and angle == 90:
+			angle = 85
+		if self.armID == 3 and angle == 90:
+			angle = 82
+		if self.armID == 5 and angle == 90:
+			angle = 84
+		if self.armID == 7 and angle == 90:
+			angle = 94
+		
 		self.kit.servo[self.armID].angle = angle
 
 		# to be used to optimize movements
