@@ -32,7 +32,33 @@ class Claw:
 	def closeClaw(self):
 		self.kit.servo[self.clawID].angle = 22
 
-	def rotate(self, angle):
+	def rotate(self, angle, overturn=True):
+		# if overturn=True
+			# use default turn value. This is for claw turns on the cube
+		if overturn == False:
+			# use "perfect" angles. This is for setting the claws to grip the cube
+			if self.armID == 1:
+				if angle == 0:
+					angle = 3
+				elif angle = 180:
+					angle = 178
+			elif self.armID == 3:
+				if angle == 0:
+					angle = 4
+				elif angle = 180:
+					angle = 176
+			elif self.armID == 5:
+				if angle == 0:
+					angle = 3
+				elif angle == 180:
+					angle = 167
+			elif self.armID == 15:
+				if angle = 0:
+					angle = 15
+				elif angle = 180:
+					angle = 177
+
+
 		if self.armID == 1 and angle == 90:
 			angle = 85
 		if self.armID == 3 and angle == 90:

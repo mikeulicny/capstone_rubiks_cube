@@ -88,11 +88,11 @@ class Frame:
             backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                rightClaw.rotate(180)   # rotate x axis -90 deg position
-                leftClaw.rotate(0)     #   OR
+                rightClaw.rotate(180, overturn=False)   # rotate x axis -90 deg position
+                leftClaw.rotate(0, overturn=False)     #   OR
             else:
-                rightClaw.rotate(0)    # rotate x axis +90 deg position
-                leftClaw.rotate(180)
+                rightClaw.rotate(0, overturn=False)    # rotate x axis +90 deg position
+                leftClaw.rotate(180, overturn=False)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()      # close z axis
             backClaw.closeClaw()
@@ -111,11 +111,11 @@ class Frame:
             rightClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                frontClaw.rotate(0)  # rotate z axis -90 deg position
-                backClaw.rotate(180)     #   OR
+                frontClaw.rotate(0, overturn=False)  # rotate z axis -90 deg position
+                backClaw.rotate(180, overturn=False)     #   OR
             else:
-                frontClaw.rotate(180)    # rotate z axis +90 deg position
-                backClaw.rotate(0)
+                frontClaw.rotate(180, overturn=False)    # rotate z axis +90 deg position
+                backClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()       # close x axis
             leftClaw.closeClaw()
@@ -166,11 +166,11 @@ class Frame:
             leftClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                rightClaw.rotate(180)        # set x axis to +90 deg position
-                leftClaw.rotate(0)       #   OR
+                rightClaw.rotate(180, overturn=False)        # set x axis to +90 deg position
+                leftClaw.rotate(0, overturn=False)       #   OR
             else:
-                rightClaw.rotate(0)      # set x axis to -90 deg position
-                leftClaw.rotate(180)
+                rightClaw.rotate(0, overturn=False)      # set x axis to -90 deg position
+                leftClaw.rotate(180, overturn=False)
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()          # close x axis
             leftClaw.closeClaw()
@@ -179,11 +179,11 @@ class Frame:
             backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                righClaw.rotate(0)   # rotate x axis -90 deg position
-                leftClaw.rotate(180)     #   OR
+                righClaw.rotate(0, overturn=False)   # rotate x axis -90 deg position
+                leftClaw.rotate(180, overturn=False)     #   OR
             else:
-                rightClaw.rotate(180)    # rotate x axis +90 deg position
-                leftClaw.rotate(0)
+                rightClaw.rotate(180, overturn=False)    # rotate x axis +90 deg position
+                leftClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay180)
             frontClaw.closeClaw()      # close z axis
             backClaw.closeClaw()
@@ -204,11 +204,11 @@ class Frame:
             backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                frontClaw.rotate(180)        # set z axis to +90 deg position
-                backClaw.rotate(0)       #   OR
+                frontClaw.rotate(180, overturn=False)        # set z axis to +90 deg position
+                backClaw.rotate(0, overturn=False)       #   OR
             else:
-                frontClaw.rotate(0)      # set z axis to -90 deg position
-                backClaw.rotate(180)
+                frontClaw.rotate(0, overturn=False)      # set z axis to -90 deg position
+                backClaw.rotate(180, overturn=False)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()          # close z axis
             backClaw.closeClaw()
@@ -217,11 +217,11 @@ class Frame:
             rightClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                frontClaw.rotate(0)  # rotate z axis -90 deg position
-                backClaw.rotate(180)     #   OR
+                frontClaw.rotate(0, overturn=False)  # rotate z axis -90 deg position
+                backClaw.rotate(180, overturn=False)     #   OR
             else:
-                frontClaw.rotate(180)    # rotate z axis +90 deg position
-                backClaw.rotate(0)
+                frontClaw.rotate(180, overturn=False)    # rotate z axis +90 deg position
+                backClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay180)
             rightClaw.closeClaw()       # close x axis
             leftClaw.closeClaw()
@@ -314,8 +314,8 @@ class Frame:
             rightClaw.openClaw()       # open x axis
             leftClaw.openClaw()
             time.sleep(clawDelay)
-            rightClaw.rotate(180)      # set x axis to +90 deg position
-            leftClaw.rotate(0)
+            rightClaw.rotate(180, overturn=False)      # set x axis to +90 deg position
+            leftClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()      # close x axis
             leftClaw.closeClaw()
@@ -341,8 +341,8 @@ class Frame:
             frontClaw.rotate(90)       # rotate z axis to 0 deg position
             backClaw.rotate(90)
             time.sleep(rotateDelay90)
-            rightClaw.rotate(180)        # set cube back to original position
-            leftClaw.rotate(0)
+            rightClaw.rotate(180, overturn=False)        # set cube back to original position
+            leftClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()      # close z axis
             backClaw.closeClaw()
@@ -379,9 +379,9 @@ class Frame:
             frontClaw.openClaw()        # open claw
             time.sleep(clawDelay)
             if inverse:
-                frontClaw.rotate(180)   # rotate opposite direction of turn
+                frontClaw.rotate(180, overturn=False)   # rotate opposite direction of turn
             else:
-                frontClaw.rotate(0)
+                frontClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()       # close claw
             time.sleep(clawDelay)
@@ -398,9 +398,9 @@ class Frame:
             backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                backClaw.rotate(180)
+                backClaw.rotate(180, overturn=False)
             else:
-                backClaw.rotate(0)
+                backClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             backClaw.closeClaw()
             time.sleep(clawDelay)
@@ -417,9 +417,9 @@ class Frame:
             leftClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                leftClaw.rotate(180)
+                leftClaw.rotate(180, overturn=False)
             else:
-                leftClaw.rotate(0)
+                leftClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             leftClaw.closeClaw()
             time.sleep(clawDelay)
@@ -435,9 +435,9 @@ class Frame:
             rightClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                rightClaw.rotate(180)
+                rightClaw.rotate(180, overturn=False)
             else:
-                rightClaw.rotate(0)
+                rightClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()
             time.sleep(clawDelay)
@@ -454,8 +454,8 @@ class Frame:
             frontClaw.openClaw()        # rotate x axis
             backClaw.openClaw()
             time.sleep(clawDelay)
-            rightClaw.rotate(0)
-            leftClaw.rotate(180)
+            rightClaw.rotate(0, overturn=False)
+            leftClaw.rotate(180, overturn=False)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()
             backClaw.closeClaw()
@@ -473,9 +473,9 @@ class Frame:
                 frontClaw.openClaw()        # turn front 180 deg
                 time.sleep(clawDelay)
                 if inverse:
-                    frontClaw.rotate(180)
+                    frontClaw.rotate(180, overturn=False)
                 else:
-                    frontClaw.rotate(0)
+                    frontClaw.rotate(0, overturn=False)
                 time.sleep(rotateDelay90)
                 frontClaw.closeClaw()
                 time.sleep(clawDelay)
@@ -491,9 +491,9 @@ class Frame:
                 backClaw.openClaw()
                 time.sleep(clawDelay)
                 if inverse:
-                    backClaw.rotate(180)
+                    backClaw.rotate(180, overturn=False)
                 else:
-                    backClaw.rotate(0)
+                    backClaw.rotate(0, overturn=False)
                 time.sleep(rotateDelay90)
                 backClaw.closeClaw()
                 time.sleep(clawDelay)
@@ -507,8 +507,8 @@ class Frame:
             rightClaw.openClaw()
             leftClaw.openClaw()
             time.sleep(clawDelay)
-            rightClaw.rotate(0)
-            leftClaw.rotate(180)
+            rightClaw.rotate(0, overturn=False)
+            leftClaw.rotate(180, overturn=False)
             time.sleep(rotateDelay90)
             rightClaw.closeClaw()
             leftClaw.closeClaw()
