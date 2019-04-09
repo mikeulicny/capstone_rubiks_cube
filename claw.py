@@ -27,10 +27,28 @@ class Claw:
 
 
 	def openClaw(self):
-		self.kit.servo[self.clawID].angle = 70
+		if self.armID == 0:
+			angle = 70	
+		if self.armID == 2:
+			angle = 65
+		if self.armID == 4:
+			angle = 75
+		if self.armID == 6:
+			angle = 73
+		self.kit.servo[self.clawID].angle = angle
+
 
 	def closeClaw(self):
-		self.kit.servo[self.clawID].angle = 22
+		if self.armID == 0:
+			angle = 22
+		if self.armID == 2:
+			angle = 22
+		if self.armID == 4:
+			angle = 22
+		if self.armID == 6:
+			angle = 22
+
+		self.kit.servo[self.clawID].angle = angle
 
 	def rotate(self, angle, overturn=True):
 		# if overturn=True
@@ -40,12 +58,12 @@ class Claw:
 			if self.armID == 1:
 				if angle == 0:
 					angle = 3
-				elif angle = 180:
+				elif angle == 180:
 					angle = 178
 			elif self.armID == 3:
 				if angle == 0:
 					angle = 4
-				elif angle = 180:
+				elif angle == 180:
 					angle = 176
 			elif self.armID == 5:
 				if angle == 0:
@@ -53,9 +71,9 @@ class Claw:
 				elif angle == 180:
 					angle = 167
 			elif self.armID == 15:
-				if angle = 0:
+				if angle == 0:
 					angle = 15
-				elif angle = 180:
+				elif angle == 180:
 					angle = 177
 
 
