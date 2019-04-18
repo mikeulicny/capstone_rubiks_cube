@@ -3,7 +3,7 @@ from face import Face
 from colorama import init, Back
 init()
 
-class Cube:		
+class Cube:
 	# Initializer	
 	def __init__(self, up, down, front, back, left, right):
 		self.up = up
@@ -12,7 +12,9 @@ class Cube:
 		self.back = back
 		self.left = left
 		self.right = right
-	
+		self.__getCheckSum()
+
+	# Returns colorama 'object' based on cube color
 	def toColor(self, cubelet):
 		if cubelet == 'r':
 			return Back.RED + '  ' + Back.RESET
@@ -26,7 +28,37 @@ class Cube:
 			return Back.WHITE + '  ' + Back.RESET		
 		elif cubelet == 'o':
 			return Back.MAGENTA + '  ' + Back.RESET
-			
+
+	# Internal function to generate checksum variable
+	def __getCheckSum(self):
+		faces = [self.up, self.down, self.front,
+			self.back, self.left, self.right]		
+		output = True
+		
+		colorSums = {'r':0, 'g':0, 'b':0, 'y':0, 'o':0, 'w':0}
+		
+		for face in faces:
+			templist = [face.tl, face.tc, face.tr,
+				face.ml, face.mc, face.mr, 
+				face.bl, face.bc, face.br]
+			for cubelet in templist:
+				if cubelet == 'r':
+					colorSums['r'] += 1
+				elif cubelet == 'g':
+					colorSums['g'] += 1
+				elif cubelet == 'b':
+					colorSums['b'] += 1		
+				elif cubelet == 'y':
+					colorSums['y'] += 1	
+				elif cubelet == 'o':
+					colorSums['o'] += 1	
+				elif cubelet == 'w':
+					colorSums['w'] += 1	
+		for value in colorSums.values():
+			if value != 9:
+				output = False
+		self.checkSumGood = output
+
 	# Default print function (it's gross but compact)
 	def __str__(self):
 		u = self.up
@@ -391,55 +423,3 @@ class Cube:
 		# input('Press Enter to continue...')
 		del temp
 		return self
-		
-		# ------------------------------------------------------------------------
-		# COMMENTS:	
-		# Whole cube turns:
-		# Special composite (3 stage) turns (because of claw limitations)
-		# turn('Y') = turn('Z') + turn('X') + turn('Zi')
-		# turn('Yi') = turn('Z') + turn('Xi') + turn('Zi')
-		
-		# Special "180 degree" turns (for consistent code)
-		# (The 2Y implementation is more efficient than 2 "turn('Y') calls)
-		# turn('2X') = turn('X') + turn('X')
-		# turn('2Y') = turn('Z') + turn('2X') + turn('Zi')
-		# turn('2Z') = turn('Z') + turn('Z')		
-		
-		# turn('Y') and its variants 'Yi' and '2Y' would be more efficient
-		# move-wise if they were instead represented by an internal re-mapping
-		# of the faces (e.g. turn('Y') would actually just re-map the faces:
-		# left = front, front = right, right = back, and back = left) and claws.
-		# This would significantly cut down on the number of turns needed,
-		# because 'Y' moves wouldn't actually turn the cube.
-	
-		# Single-side turns: 
-		# example: 	turn('F') = turn front face clockwise
-		#			turn('Li') = turn left face counter-clockwise ('inverse')
-		
-		# Special composite (3 stage) turns (because of claw limitations)
-		# turn('U')	= turn('Z') + turn('R') + turn('Zi')
-		# turn('Ui') = turn('Z') + turn('Ri') + turn('Zi')
-		# turn('D') = turn('Z') + turn('L') + turn('Zi')
-		# turn('Di') = turn('Z') + turn('Li') + turn('Zi')
-		
-		# Special "180 degree" turns (for consistent code)
-		# (The 2U implementation is more efficient than 2 "turn('U') calls)
-		# turn('2F') = turn('F') + turn('F')
-		# turn('2B') = turn('B') + turn('B') 
-		# turn('2L') = turn('L') + turn('L') 
-		# turn('2R') = turn('R') + turn('R')
-		# turn('2U') = turn('Z') + turn('2R') + turn('Zi')
-		# turn('2D') = turn('Z') + turn('2L') + turn('Zi')
-		
-		# Up turns could also be done more efficiently by remapping the faces,
-		# however this would likely be rather complicated and doing so nuanced.
-		# ------------------------------------------------------------------------		
-
-		
-		
-		
-		
-		
-		
-		
-		
