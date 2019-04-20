@@ -1,6 +1,7 @@
 import time
 from claw import Claw
 import numpy
+from image import Image
 
 class Frame:
 
@@ -68,6 +69,109 @@ class Frame:
         self.leftClaw.closeClaw()
         self.rightClaw.closeClaw()
         time.sleep(self.clawDelay)
+        
+    def mapCube(self):
+        front = Image()
+        back = Image()
+        right = Image()
+        left = Image()
+        down = Image()
+        up = Image()
+        
+        clawDelay = self.clawDelay
+        rotateDelay90 = self.rotateDelay90
+        rotateDelay180 = self.rotateDelay180
+        frontClaw = self.frontClaw
+        backClaw = self.backClaw
+        rightClaw = self.rightClaw
+        leftClaw = self.leftClaw
+        
+        # begin mapping
+        
+        frontClaw.openClaw()
+        backClaw.openClaw()
+        time.sleep(clawDelay)
+        rightClaw.rotate(0, overturn=False)
+        leftClaw.rotate(180, overturn=False)
+        time.sleep(rotateDelay90)
+
+        # take picture of front
+        front = front.capture()
+        
+        rightClaw.rotate(180, overturn=False)
+        leftClaw.rotate(0, overturn=False)
+        time.sleep(rotateDelay180)
+        
+        # take picture of back
+        back = back.capture()
+        
+        rightClaw.rotate(90)
+        leftClaw.rotate(90)
+        time.sleep(rotateDelay90)
+        frontClaw.closeClaw()
+        backClaw.closeClaw()
+        time.sleep(clawDelay)
+        rightClaw.openClaw()
+        leftClaw.openClaw()
+        time.sleep(clawDelay)
+        frontClaw.rotate(180, overturn=False)
+        backClaw.rotate(0, overturn=False)
+        time.sleep(rotateDelay90)
+        
+        # take picture of right side
+        right = right.capture()
+        
+        frontClaw.rotate(0, overturn=False)
+        backClaw.rotate(180, overturn=False)
+        time.sleep(rotateDelay180)
+        
+        # take picture of left side
+        left = left.capture()
+        
+        frontClaw.rotate(90)
+        backClaw.rotate(90)
+        time.sleep(rotateDelay90)
+        rightClaw.rotate(0, overturn=False)
+        leftClaw.rotate(180, overturn=False)
+        time.sleep(rotateDelay90)
+        rightClaw.closeClaw()
+        leftClaw.closeClaw()
+        time.sleep(clawDelay)
+        frontClaw.openClaw()
+        backClaw.openClaw()
+        time.sleep(clawDelay)
+        
+        # take picture of bottom
+        down = down.capture()
+        
+        rightClaw.rotate(180, overturn=False)
+        leftClaw.rotate(0, overturn=False)
+        time.sleep(rotateDelay180)
+        
+        # take picture of top
+        up = up.capture()
+        
+        rightClaw.rotate(0, overturn=False)
+        leftClaw.rotate(180, overturn=False)
+        time.sleep(rotateDelay180)
+        frontClaw.closeClaw()
+        backClaw.closeClaw()
+        time.sleep(clawDelay)
+        rightClaw.openClaw()
+        leftClaw.openClaw()
+        time.sleep(clawDelay)
+        rightClaw.rotate(90)
+        leftClaw.rotate(90)
+        time.sleep(rotateDelay90)
+        rightClaw.closeClaw()
+        leftClaw.closeClaw()
+        time.sleep(clawDelay)
+        
+        # end of mapping cube
+        
+        images = (front, back, right, left, down, up)
+        
+        return images   
 
     def rotate90(self, axis, inverse = False):
         """
@@ -88,11 +192,11 @@ class Frame:
             backClaw.openClaw()
             time.sleep(clawDelay)
             if inverse:
-                rightClaw.rotate(180, overturn=False)   # rotate x axis -90 deg position
-                leftClaw.rotate(0, overturn=False)     #   OR
+                rightClaw.rotate(0, overturn=False)   # rotate x axis -90 deg position
+                leftClaw.rotate(180, overturn=False)     #   OR
             else:
-                rightClaw.rotate(0, overturn=False)    # rotate x axis +90 deg position
-                leftClaw.rotate(180, overturn=False)
+                rightClaw.rotate(180, overturn=False)    # rotate x axis +90 deg position
+                leftClaw.rotate(0, overturn=False)
             time.sleep(rotateDelay90)
             frontClaw.closeClaw()      # close z axis
             backClaw.closeClaw()
