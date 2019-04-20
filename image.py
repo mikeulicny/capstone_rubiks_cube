@@ -17,21 +17,20 @@ class Image:
         - interfacing with camera to adjust settings/effects (wb,aperature,exposure)
     '''
 
-    def __init__(self, img=np.empty(128,128,3)):
-        self.img = img
+    def __init__(self):
+        pass
         
-    def capture(self, res=128, delay=1, awb='', expsr='', eff=''):
+    def capture(self, res=128, delay=0.5, awb='', expsr='', eff=''):
         with picamera.PiCamera() as camera:
             with picamera.array.PiRGBArray(camera) as self.img:
                 
                 time.sleep(delay)
-                camera.resolution = res
-                camera.awb_mode = awb
-                camera.exposure_mode = expsr
-                camera.image_effect = eff
-
+                camera.resolution = (res, res)
+                #~ camera.awb_mode = awb
+                #~ camera.exposure_mode = expsr
+                #~ camera.image_effect = eff
+                self.img = np.empty((128,128,3), dtype=np.uint8)
                 camera.capture(self.img,'rgb')
-        
         return self.img
 
     def getSample(self, x, y, average=False):
@@ -95,22 +94,20 @@ class Image:
         findColor = self.findColor
         getSample = self.getSample
 
-        x = 30
-        y = 30
+        x = 28
+        y = 38
         d = 30
 
-        if faceOpt == 'A':
-            colorArray[0,0] = findColor(getSample(x,y))
-            colorArray[0,1] = findColor(getSample(x+d,y))
-            colorArray[0,2] = findColor(getSample(x+2*d,y))
-            colorArray[1,1] = findColor(getSample(x+d,y+d))
-            colorArray[2,0] = findColor(getSample(x,y+2+d))
-            colorArray[2,1] = findColor(getSample(x+d,y+2*d))
-            colorArray[2,2] = findColor(getSample(x+2*d,y+2*d))
-            return colorArray
-
-        elif faceOpt == 'B':
-            colorArray[1,0] = findColor(getSample(x,y+d))
-            colorArray[1,2] = findColor(getSample(x+2*d,y+d)) 
-            f = Face(colorArray)
-            return f
+        colorArray[0,0] = findColor(getSample(x,y))
+        colorArray[0,1] = findColor(getSample(x+d,y))
+        colorArray[0,2] = findColor(getSample(x+2*d,y))
+        
+        colorArray[1,0] = findColor(getSample(x,y+d))
+        colorArray[1,1] = findColor(getSample(x+d,y+d))
+        colorArray[1,2] = findColor(getSample(x+2*d,y+d))
+        
+        colorArray[2,0] = findColor(getSample(x,y+2+d))
+        colorArray[2,1] = findColor(getSample(x+d,y+2*d))
+        colorArray[2,2] = findColor(getSample(x+2*d,y+2*d))
+        
+        return colorArray
