@@ -16,6 +16,7 @@ import numpy as np
 from face import Face
 from cube import Cube
 from algocfop import AlgoCFOP
+import statistics as st
 import time
 
 # Completion flag
@@ -28,7 +29,8 @@ while done == False:
 	print('    1: Solve cube from random configuration')
 	print('    2: Solve cube from stored move configuration')
 	print('    3: Solve from manual entry of cube configuration')
-	print('    4: Exit')
+	print('    4: Solve N cubes and display statistical info')
+	print('    5: Exit')
 	controlValue = input('    Option: ')
 	print('--------------------------------------------------------------\n')
 
@@ -177,28 +179,106 @@ while done == False:
 		print('Test from manual entry of cube: ')
 		algo.printList()
 
+	# 4: Solve N cubes and display statistical info
+	elif controlValue == '4':
+		# Input number of iterations
+		iters = input('Please enter number of cubes to solve: ')
 
-	# 4: Exit
+		avgLength = 100
+		minLength = 1000
+		maxLength = 0
+		minMoveList = []
+		maxMoveList = []
+		avgMoveList = []
+	
+		# Initial solved cube:
+		up = np.array([['y', 'y', 'y'],
+			['y', 'y', 'y'],
+			['y', 'y', 'y']])	
+		front = np.array([['g', 'g', 'g'],
+			['g', 'g', 'g'],
+			['g', 'g', 'g']])
+		left = np.array([['r', 'r', 'r'],
+			['r', 'r', 'r'],
+			['r', 'r', 'r']])
+		down = np.array([['w', 'w', 'w'],
+			['w', 'w', 'w'],
+			['w', 'w', 'w']])
+		back = np.array([['b', 'b', 'b'],
+			['b', 'b', 'b'],
+			['b', 'b', 'b']])
+		right = np.array([['o', 'o', 'o'],
+			['o', 'o', 'o'],
+			['o', 'o', 'o']])
+				
+		# Instantiate faces
+		up = Face(up)
+		down = Face(down)
+		front = Face(front)
+		back = Face(back)
+		left = Face(left)
+		right = Face(right)
+
+		# Instantiate cube
+		cube = Cube(up, down, front, back, left, right)
+
+		for i in range(int(iters)):
+			# Cube setup
+			algo = AlgoCFOP(cube)
+			algo.randomize()
+			setupList = algo.movelist
+			
+			# Solve random cube
+			algo.solve()
+			prcnt = round((i / int(iters)) * 100, 2)
+			print(str(prcnt) + '%', end = '\r')
+
+			# Determine min and max list lengths
+			if algo.listLength < minLength:
+				minLength = algo.listLength
+				minMoveList = setupList
+			if algo.listLength > maxLength:
+				maxLength = algo.listLength
+				maxMoveList = setupList
+			
+			# Add list l
+			avgMoveList.append(algo.listLength)
+			
+			del algo
+		
+		print('100.0%', end = '\r')
+		print('\nInformation per ' + str(iters) + ' cubes:')
+		print('    Number of turns our bot takes (algocfop):')
+		print('    Min movecount: ' + str(minLength) + ' moves')
+		print('    Min list: ' +  str(minMoveList))
+		print('    Max movecount: ' +  str(maxLength) + ' moves')
+		print('    Max list: ' +  str(maxMoveList))
+		print('    Median number moves: ' + str(st.median(avgMoveList)))
+		print('    Standard deviation: ' + str(round(st.stdev(avgMoveList),2)))
+		print('\n--------------------------------------------------------------\n')
+
+	# 5: Exit
 	else:
 		done = True
 		break
 	
-	# Print input cube
-	print('\nBefore:\n')
-	print(algo.cube)
+	if controlValue != '4':
+		# Print input cube
+		print('\nBefore:\n')
+		print(algo.cube)
 
-	# Solve cube
-	t0 = time.time()
-	algo.solve()
-	t1 = time.time()
+		# Solve cube
+		t0 = time.time()
+		algo.solve()
+		t1 = time.time()
 
-	# Print output (solved) cube
-	print('After:\n')
-	print(algo.cube)
+		# Print output (solved) cube
+		print('After:\n')
+		print(algo.cube)
 
-	# Print solution list
-	print('Solution move list:')
-	algo.printList()
-	print('\nActual number of turns by our bot: ' + str(algo.listLength))
-	print('Time to generate solution: ' + str(t1-t0)[:6] +' s')
-	print('\n--------------------------------------------------------------\n')
+		# Print solution list
+		print('Solution move list:')
+		algo.printList()
+		print('\nActual number of turns by our bot: ' + str(algo.listLength))
+		print('Time to generate solution: ' + str(t1-t0)[:6] +' s')
+		print('\n--------------------------------------------------------------\n')
