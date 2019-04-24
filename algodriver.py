@@ -248,7 +248,6 @@ while done == False:
 		
 		print('100.0%', end = '\r')
 		print('\nInformation per ' + str(iters) + ' cubes:')
-		print('    Number of turns our bot takes (algocfop):')
 		print('    Min movecount: ' + str(minLength) + ' moves')
 		print('    Min list: ' +  str(minMoveList))
 		print('    Max movecount: ' +  str(maxLength) + ' moves')
