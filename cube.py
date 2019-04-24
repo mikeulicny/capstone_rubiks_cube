@@ -1,8 +1,25 @@
+#--------------------------------------------------------------
+# ECE 4600 Capstone - Winter 2019
+# Wayne State University
+# Project: Rubik's Cube Solving Robot
+# Primary author: Joseph VanBuhler
+# Additional team members: Michael Ulicny, Joseph Breitner
+#
+# This class creates a Cube object from six Face objects. Each
+# Face of the Cube is capable of being rotated; dependencies 
+# between Faces are maintained implicitly by the Cube. Function
+# to print the cube hooks into default Python print function
+# and allows for better visual confirmation of Cube 
+# configurations and drastically simplifies troubleshooting.
+#--------------------------------------------------------------
+
+# Resolving dependencies
 import numpy as np
 from face import Face
 from colorama import init, Back
 init()
 
+# Cube class
 class Cube:
 	# Initializer	
 	def __init__(self, up, down, front, back, left, right):
@@ -143,7 +160,8 @@ class Cube:
 			'         ┃ '+d7+d8+d9+' ┃\n'+
 			'         ┗━━━━━━━━┛\n')
 		return output	
-				
+	
+	# Function to turn a face of the cube
 	def turn(self, dir):
 	
 		# Simplify attributes
@@ -423,3 +441,5 @@ class Cube:
 		# input('Press Enter to continue...')
 		del temp
 		return self
+	
+	# EOF
