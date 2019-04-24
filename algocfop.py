@@ -1,8 +1,29 @@
+#--------------------------------------------------------------
+# ECE 4600 Capstone - Winter 2019
+# Wayne State University
+# Project: Rubik's Cube Solving Robot
+# Primary author: Joseph VanBuhler
+# Additional team members: Michael Ulicny, Joseph Breitner
+#
+# This class allows a Rubik's cube to be solved using the 
+# advanced Friedrich / CFOP method. The solution is optimized
+# for our four-clawed hardware. Solution can be generated from
+# any initial configuration. Median turn count of generated
+# solution is 71 with a standard deviation of 6 turns.
+
+# Optimization of resultant solution is done via trimList and
+# cypherTwistList functions. Can also be used to manipulate
+# cube in various ways including randomization and rotating it
+# according to a pre-determined set of moves.
+#--------------------------------------------------------------
+
+# Resolving dependencies
 import numpy as np, re, copy, random
 from face import Face
 from cube import Cube
 from datetime import datetime
 
+# Algorithm class
 class AlgoCFOP:
 	# Initializer
 	def __init__(self, cube, test = 0):

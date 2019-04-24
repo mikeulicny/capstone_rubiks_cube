@@ -1,18 +1,19 @@
-# On any given face mapping is as follows:
+#--------------------------------------------------------------
+# ECE 4600 Capstone - Winter 2019
+# Wayne State University
+# Project: Rubik's Cube Solving Robot
+# Primary author: Joseph VanBuhler
+# Additional team members: Michael Ulicny, Joseph Breitner
+#
+# This class converts a 3x3 numpy array to a Face object. Face
+# objects are capable of being rotated 90 degrees clockwise,
+# 90 degrees counter-clockwise, and 180 degrees.
+#--------------------------------------------------------------
 
-# 6 faces:
-# up, front, left, back, right, down
-
-# topLeft 		topCenter 		topRight
-# middleLeft	middleCenter	middleRight
-# bottomLeft	bottomCenter	bottomRight
-
-# face.tl face.tc face.tr
-# face.ml face.mc face.mr
-# face.bl face.bc face.br
-
+# Resolving dependencies
 import numpy as np
 
+# Face class
 class Face:
 	# Initializer (either from faceArray or uninitialized)
 	def __init__(self, faceArray = np.empty([3,3])):
@@ -125,3 +126,5 @@ class Face:
 			self.mr = otherFace.mr
 			self.br = otherFace.br
 		return self
+
+	# EOF
