@@ -246,7 +246,7 @@ while done == False:
 			
 			del algo
 		
-		print('100.0%', end = '\r')
+		print('100.0% Complete', end = '\r')
 		print('\nInformation per ' + str(iters) + ' cubes:')
 		print('    Min movecount: ' + str(minLength) + ' moves')
 		print('    Min list: ' +  str(minMoveList))
