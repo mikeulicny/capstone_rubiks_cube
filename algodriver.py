@@ -193,6 +193,17 @@ while done == False:
 			print('\nCube configuration as entered:\n')
 			print(cube)
 		
+			# Print text-copyable list of configurations
+			print('\nCurrent cube configuration as text inputs:')
+			textColors = ''
+			for face in faces:
+				for color in face:
+					textColors += str(color)
+				textColors += '\n'
+			textColors = ''.join(x for x in textColors if (
+				x.isalpha() or x == '\n'))
+			print(textColors)
+		
 			# Prompt for correction
 			failcol = {'r':'red', 'o':'orange', 'y':'yellow',
 				'g':'green', 'b':'blue', 'w':'white'}
