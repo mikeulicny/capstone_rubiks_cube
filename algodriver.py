@@ -22,6 +22,20 @@ import time
 # Completion flag
 done = False
 
+# Delays for approximating hardware solve time
+clawDelay = 0.4
+rotDelay90 = 0.5
+rotDelay180 = 2*rotDelay90 - 0.05
+xz90 = 4*clawDelay + 2*rotDelay90
+xz180 = 6*clawDelay + 2*rotDelay90 + rotDelay180
+trn90 = 2*clawDelay + 2*rotDelay90
+trn180 = 4*clawDelay + 2*rotDelay90 + rotDelay180
+moveDelay = {'X': xz90, 'Xi': xz90, 'Z': xz90, 'Zi': xz90,
+	'F': trn90, 'Fi': trn90, 'B': trn90, 'Bi': trn90,
+	'L': trn90, 'Li': trn90, 'R': trn90, 'Ri': trn90,
+	'2X': xz180, '2Z': xz180, '2F': trn180, '2B': trn180,
+	'2L': trn180, '2R': trn180}
+
 while done == False:
 
 	# User prompt
@@ -33,7 +47,7 @@ while done == False:
 	print('    5: Exit')
 	controlValue = input('    Option: ')
 	print('--------------------------------------------------------------\n')
-
+	
 	# 1: Solve cube from random configuration
 	if controlValue == '1':
 		# Initial solved cube:
@@ -110,7 +124,8 @@ while done == False:
 
 		# Cube setup
 		algo = AlgoCFOP(cube)
-		algo.movelist = ['U', '2R', 'F', 'B', 'R', '2B', 'R', '2U', 'L', '2B', 'R', 'Ui', 'Di', '2R', 'F', 'Ri', 'L', '2B', '2U', '2F']
+		# algo.movelist = ['U', '2R', 'F', 'B', 'R', '2B', 'R', '2U', 'L', '2B', 'R', 'Ui', 'Di', '2R', 'F', 'Ri', 'L', '2B', '2U', '2F']
+		algo.movelist = ['Bi', '2F', 'U', 'Li', 'B', 'Li', '2F', 'D', 'Li', 'B', '2L', 'Ri', 'Li']
 		algo.followMoves()	
 
 		# Print initial cube
@@ -190,6 +205,7 @@ while done == False:
 		minMoveList = []
 		maxMoveList = []
 		avgMoveList = []
+		solveTimeList = []
 	
 		# Initial solved cube:
 		up = np.array([['y', 'y', 'y'],
@@ -244,7 +260,21 @@ while done == False:
 			# Add list l
 			avgMoveList.append(algo.listLength)
 			
+			# Determine approximate time it will take hardware to solve
+			hardwareTime = 0
+			for move in algo.movelist:
+				hardwareTime += moveDelay.get(move, 0)
+			solveTimeList.append(hardwareTime)
 			del algo
+
+		# Determining average predicted solve time and standard dev
+		avgSolveTime = st.median(solveTimeList)
+		solveTimeDev = str(round(st.stdev(solveTimeList),2)) + ' s'
+		mins = str(int(avgSolveTime//60))
+		secs = str(int(avgSolveTime % 60)).rjust(2,'0')
+		subsecs = str(round((avgSolveTime % 60) - int(
+			avgSolveTime % 60), 3))[1:]
+		avgSolveTime = mins + ':' + secs + subsecs + ' min'
 		
 		print('100.0% Complete', end = '\r')
 		print('\nInformation per ' + str(iters) + ' cubes:')
@@ -253,7 +283,10 @@ while done == False:
 		print('    Max movecount: ' +  str(maxLength) + ' moves')
 		print('    Max list: ' +  str(maxMoveList))
 		print('    Median number moves: ' + str(st.median(avgMoveList)))
-		print('    Standard deviation: ' + str(round(st.stdev(avgMoveList),2)))
+		print('    Standard dev of moves: ' + str(round(st.stdev(avgMoveList),2)))
+		print('    Median predicted solve time: ' + avgSolveTime)
+		print('    Standard dev of solve time: ' + solveTimeDev)
+
 		print('\n--------------------------------------------------------------\n')
 
 	# 5: Exit
@@ -274,10 +307,21 @@ while done == False:
 		# Print output (solved) cube
 		print('After:\n')
 		print(algo.cube)
-
+		
+		# Determine approximate time it will take hardware to solve
+		hardwareTime = 0
+		for move in algo.movelist:
+			hardwareTime += moveDelay.get(move, 0)
+		mins = str(int(hardwareTime//60))
+		secs = str(int(hardwareTime % 60)).rjust(2,'0')
+		subsecs = str(round((hardwareTime % 60) - int(
+			hardwareTime % 60), 3))[1:]
+		solveTime = mins + ':' + secs + subsecs + ' min'
+			
 		# Print solution list
 		print('Solution move list:')
 		algo.printList()
 		print('\nActual number of turns by our bot: ' + str(algo.listLength))
-		print('Time to generate solution: ' + str(t1-t0)[:6] +' s')
+		print('Time to generate solution: ' + str(t1-t0)[:6] +'s')
+		print('Predicted time to solve: ' + solveTime)
 		print('\n--------------------------------------------------------------\n')
