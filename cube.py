@@ -53,6 +53,7 @@ class Cube:
 		output = True
 		
 		colorSums = {'r':0, 'g':0, 'b':0, 'y':0, 'o':0, 'w':0}
+		self.failedColor = None
 		
 		for face in faces:
 			templist = [face.tl, face.tc, face.tr,
@@ -71,9 +72,11 @@ class Cube:
 					colorSums['o'] += 1	
 				elif cubelet == 'w':
 					colorSums['w'] += 1	
-		for value in colorSums.values():
+		for key, value in colorSums.items():
 			if value != 9:
 				output = False
+				if value > 9:
+					self.failedColor = key
 		self.checkSumGood = output
 
 	# Default print function (it's gross but compact)

@@ -194,12 +194,20 @@ while done == False:
 			print(cube)
 		
 			# Prompt for correction
-			status = input('Is this correct? (Y/N): ')
-			if status == 'n' or status == 'N':
+			failcol = {'r':'red', 'o':'orange', 'y':'yellow',
+				'g':'green', 'b':'blue', 'w':'white'}
+			if cube.checkSumGood == False:
+				print('Too many ' + failcol[cube.failedColor] + 's! ' + 
+				'Impossible cube configuration.')
 				inputOK = False
-				print('')
-			else:
-				inputOK = True
+			elif cube.checkSumGood == True:
+				print('Checksum passes; there are nine of each color.')
+				status = input('Is this cube correct? (Y/N): ')
+				if status == 'n' or status == 'N':
+					inputOK = False
+					print('')
+				else:
+					inputOK = True
 		
 		# Print initial cube
 		print('Test from manual entry of cube: ')
