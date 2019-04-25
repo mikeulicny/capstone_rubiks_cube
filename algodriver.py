@@ -23,7 +23,7 @@ import time
 done = False
 
 # Delays for approximating hardware solve time
-clawDelay = 0.4
+clawDelay = 0.3
 rotDelay90 = 0.5
 rotDelay180 = 2*rotDelay90 - 0.05
 xz90 = 4*clawDelay + 2*rotDelay90
@@ -124,8 +124,19 @@ while done == False:
 
 		# Cube setup
 		algo = AlgoCFOP(cube)
+		
+		# Superflip configuration
 		# algo.movelist = ['U', '2R', 'F', 'B', 'R', '2B', 'R', '2U', 'L', '2B', 'R', 'Ui', 'Di', '2R', 'F', 'Ri', 'L', '2B', '2U', '2F']
-		algo.movelist = ['Bi', '2F', 'U', 'Li', 'B', 'Li', '2F', 'D', 'Li', 'B', '2L', 'Ri', 'Li']
+		
+		# 37 move solution
+		# algo.movelist = ['Bi', '2F', 'U', 'Li', 'B', 'Li', '2F', 'D', 'Li', 'B', '2L', 'Ri', 'Li']
+		
+		# First hardware solve scramble
+		algo.movelist = ['B', 'L', 'Fi', 'Di', 'Ui', '2B', '2U', '2L', 'B', '2D', '2L', 'U', 'Li', 'Fi', 'R', 'L']
+		
+		# Arrow pattern
+		# algo.movelist = (['U', 'Di', 'R', 'Li', 'F', 'Bi', 'U', 'Di', 'F', 'Bi', 'U', 'F', 'U', 'F', 'U', 'L', 'B', '2L', 'Bi', 'U', 'Fi', 'L', 'U', 'Li', 'B']
+		
 		algo.followMoves()	
 
 		# Print initial cube
