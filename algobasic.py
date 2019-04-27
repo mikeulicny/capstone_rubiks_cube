@@ -1,9 +1,31 @@
+#--------------------------------------------------------------
+# ECE 4600 Capstone - Winter 2019
+# Wayne State University
+# Project: Rubik's Cube Solving Robot
+# Primary author: Joseph VanBuhler
+# Additional team members: Michael Ulicny, Joseph Breitner
+#
+# This class allows a Rubik's cube to be solved using the 
+# basic layer-by-layer method. The solution is optimized
+# for our four-clawed hardware. Solution can be generated from
+# any initial configuration. Median turn count of generated
+# solution was ~169 ± with a standard deviation of 21 turns.
+
+# This class was primarily implemented to help us establish
+# our solutioning methodology. Per the implementation of 
+# algocfop.py, it has been rendered obsolete and as such has 
+# been deprecated from our project. This code has been included
+# in the code listing for purposes of comprehensiveness.
+#--------------------------------------------------------------
+
+# Resolving dependencies
 import numpy as np
 import random
 from datetime import datetime
 from face import Face
 from cube import Cube
 
+# Algorithm class
 class AlgoBasic:			
 	# Initializer
 	def __init__(self, cube):
@@ -830,3 +852,5 @@ class AlgoBasic:
 			
 		# Optimize the list by removing superfluous/duplicate turns
 		self.trimList()
+		
+	# EOF

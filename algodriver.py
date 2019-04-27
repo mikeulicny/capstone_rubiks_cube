@@ -129,10 +129,10 @@ while done == False:
 		# algo.movelist = ['U', '2R', 'F', 'B', 'R', '2B', 'R', '2U', 'L', '2B', 'R', 'Ui', 'Di', '2R', 'F', 'Ri', 'L', '2B', '2U', '2F']
 		
 		# 37 move solution
-		# algo.movelist = ['Bi', '2F', 'U', 'Li', 'B', 'Li', '2F', 'D', 'Li', 'B', '2L', 'Ri', 'Li']
+		algo.movelist = ['Bi', '2F', 'U', 'Li', 'B', 'Li', '2F', 'D', 'Li', 'B', '2L', 'Ri', 'Li']
 		
 		# First hardware solve scramble
-		algo.movelist = ['B', 'L', 'Fi', 'Di', 'Ui', '2B', '2U', '2L', 'B', '2D', '2L', 'U', 'Li', 'Fi', 'R', 'L']
+		# algo.movelist = ['B', 'L', 'Fi', 'Di', 'Ui', '2B', '2U', '2L', 'B', '2D', '2L', 'U', 'Li', 'Fi', 'R', 'L']
 		
 		# Arrow pattern
 		# algo.movelist = (['U', 'Di', 'R', 'Li', 'F', 'Bi', 'U', 'Di', 'F', 'Bi', 'U', 'F', 'U', 'F', 'U', 'L', 'B', '2L', 'Bi', 'U', 'Fi', 'L', 'U', 'Li', 'B']
@@ -355,3 +355,5 @@ while done == False:
 		print('Time to generate solution: ' + str(t1-t0)[:6] +'s')
 		print('Predicted time to solve: ' + solveTime)
 		print('\n--------------------------------------------------------------\n')
+		
+# EOF
