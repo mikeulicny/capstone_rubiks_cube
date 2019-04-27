@@ -79,7 +79,7 @@ class Cube:
 					self.failedColor = key
 		self.checkSumGood = output
 
-	# Default print function (it's gross but compact)
+	# Default print function
 	def __str__(self):
 		u = self.up
 		d = self.down
@@ -164,7 +164,7 @@ class Cube:
 			'         ┗━━━━━━━━┛\n')
 		return output	
 	
-	# Function to turn a face of the cube
+	# Function to turn a face of the cube or flip along an axis
 	def turn(self, dir):
 	
 		# Simplify attributes
