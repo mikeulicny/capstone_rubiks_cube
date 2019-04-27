@@ -1,3 +1,5 @@
+# Deprecated; functionality wrapped into algodriver.py.
+
 import numpy as np
 from face import Face
 from cube import Cube
