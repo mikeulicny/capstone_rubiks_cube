@@ -40,29 +40,6 @@ class Session:
         elif option == '3':
             images = self.frame.mapCube()
             self.makeCube(images)
-            
-            #~ self.cube = self.makeCube()
-            #~ plt.imshow(images[0])
-            #~ plt.show()
-            #~ plt.close()
-            #~ plt.imshow(images[1])
-            #~ plt.show()
-            #~ plt.close()
-            #~ plt.imshow(images[2])
-            #~ plt.show()
-            #~ plt.close()
-            #~ plt.imshow(images[3])
-            #~ plt.show()
-            #~ plt.close()
-            #~ plt.imshow(images[4])
-            #~ plt.show()
-            #~ plt.close()
-            #~ plt.imshow(images[5])
-            #~ plt.show()
-            #~ plt.close()
-            
-            print(self.cube)
-            
             return True
         
         elif option == '4':
@@ -94,11 +71,6 @@ class Session:
             return True
 
         elif option == '7':
-            self.cube = self.makeCube()
-            self.algo = AlgoCFOP(cube)
-            self.algo.solve()
-            self.solveCube(algo.movelist)
-            print('Cube solved')
             return True
 
         elif option == '8':
@@ -111,14 +83,100 @@ class Session:
     
     def makeCube(self, images):
         
-            frontFace = Face(np.rot90(self.makeFace(images[0]),2))
-            backFace = Face(self.makeFace(images[1]))
-            rightFace = Face(np.rot90(self.makeFace(images[2]),3))
-            leftFace = Face(np.rot90(self.makeFace(images[3]),1))
-            downFace = Face(np.rot90(self.makeFace(images[4]),2))
-            upFace = Face(np.rot90(self.makeFace(images[5]),2))
-                        
-            self.cube = Cube(upFace, downFace, frontFace, backFace, leftFace, rightFace)
+        inputOK = False
+        retry = False
+        while inputOK == False:
+            
+            if retry == True:
+                # Input current cube state
+                print('Please enter the cube configuration for each side as prompted.')
+                upColors = input('    Up layer colors:    ')
+                frontColors = input('    Front layer colors: ')
+                downColors = input('    Down layer colors:  ')
+                rightColors = input('    Right layer colors: ')
+                backColors = input('    Back layer colors:  ')
+                leftColors = input('    Left layer colors:  ')
+                colorSides = [upColors, frontColors, downColors, rightColors, backColors, leftColors]
+
+                # Create numpy arrays
+                up = np.empty([3,3], dtype=np.str)
+                front = np.empty([3,3], dtype=np.str)
+                down = np.empty([3,3], dtype=np.str)
+                right = np.empty([3,3], dtype=np.str)
+                back = np.empty([3,3], dtype=np.str)
+                left = np.empty([3,3], dtype=np.str)
+                faces = [up, front, down, right, back, left]
+
+                # Fill numpy arrays
+                for i in range(6):
+                    for j in range(3):
+                        for k in range(3):
+                            faces[i][j][k] = colorSides[i][3*j + k]
+		
+                # Instantiate faces
+                up = Face(up)
+                down = Face(down)
+                front = Face(front)
+                back = Face(back)
+                left = Face(left)
+                right = Face(right)
+
+                # Instantiate cube
+                self.cube = Cube(up, down, front, back, left, right)
+            
+            elif retry == False:
+                front = self.makeFace(images[0])
+                back = self.makeFace(images[1])
+                right = np.rot90(self.makeFace(images[2]),1)
+                left = np.rot90(self.makeFace(images[3]),3)
+                down = self.makeFace(images[4])
+                up = self.makeFace(images[5])
+                
+                colorArrays = [up,front,down,right,back,left]
+            
+                frontFace = Face(front)
+                backFace = Face(back)
+                rightFace = Face(right)
+                leftFace = Face(left)
+                downFace = Face(down)
+                upFace = Face(up)
+        
+                self.cube = Cube(upFace, downFace, frontFace, backFace, leftFace, rightFace)
+        
+            # Print cube for inspection
+            print('\nCube configuration as entered:\n')
+            print(self.cube)
+    
+            # Print text-copyable list of configurations
+            print('\nCurrent cube configuration as text inputs:')
+            textColors = ''
+            for face in colorArrays:
+                for color in face:
+                    textColors += str(color)
+                textColors += '\n'
+            textColors = ''.join(x for x in textColors if (
+                x.isalpha() or x == '\n'))
+            print(textColors)
+    
+            # Prompt for correction
+            failcol = {'r':'red', 'o':'orange', 'y':'yellow',
+                'g':'green', 'b':'blue', 'w':'white'}
+    
+            if self.cube.checkSumGood == False:
+                print('Too many ' + failcol[self.cube.failedColor] + 's! ' + 
+                'Impossible cube configuration.')
+                inputOK = False
+                retry = True
+                
+            elif self.cube.checkSumGood == True:
+                print('Checksum passes; there are nine of each color.')
+                status = input('Is this cube correct? (Y/N): ')
+                if status == 'n' or status == 'N':
+                    inputOK = False
+                    retry = True
+                    print('')
+                else:
+                    inputOK = True
         
         #~ inputStage = True
         #~ while inputStage == True:            
@@ -265,27 +323,24 @@ class Session:
 
     def findColor(self, rgb):
         
-        w=np.array([189,171,154])
-        y=np.array([163,128,62])
-        r=np.array([113,42,49])
-        o=np.array([106,77,68])
-        g=np.array([49,80,63])
-        b=np.array([31,47,83])
+        w=np.array([255,255,255])
+        y=np.array([255,128,0])
+        r=np.array([255,0,0])
+        o=np.array([255,255,0])
+        g=np.array([0,128,0])
+        b=np.array([0,0,128])
 
         colors = [w, y, r, o, g, b]
         dist = np.empty((6), dtype=np.float) 
 
         i = 0
         for col in colors:
-            print(((rgb[0]-col[0])**2) + ((rgb[1]-col[1])**2) + ((rgb[2]-col[2])**2))
-            
             dist[i] = (np.sqrt(((rgb[0]-col[0])**2) + ((rgb[1]-col[1])**2) + ((rgb[2]-col[2])**2)))
-            
             i+=1
 
         out = np.argmin(dist)
         clrs = ['w', 'y', 'r', 'o', 'g', 'b']
-
+        
         return clrs[out]
 
     def makeFace(self, img):
@@ -294,9 +349,9 @@ class Session:
         findColor = self.findColor
         getSample = self.getSample
 
-        x = 28
-        y = 38
-        d = 30
+        x = 55
+        y = 50
+        d = 75
 
         colorArray[0,0] = findColor(getSample(img,x,y))
         colorArray[0,1] = findColor(getSample(img,x+d,y))
@@ -311,3 +366,28 @@ class Session:
         colorArray[2,2] = findColor(getSample(img,x+2*d,y+2*d))
         
         return colorArray
+
+    def calibrateColor(self, img):
+        
+        calib = np.emtpy((3,3),dtype=uint9)
+        getSample = self.getSample
+        
+        x = 50
+        y = 55
+        d = 75
+        
+        print(x)
+        print(y)
+        for col in range(calib.shape[1]):
+            for row in range(calib.shape[0]):
+                calib[row,col] = getSample(img,x,y)
+                x += d
+                print(x)
+                print(y)
+            x = 50
+            y += d
+            print(x)
+            print(y)
+                
+        
+                
