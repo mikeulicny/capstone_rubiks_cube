@@ -20,7 +20,7 @@ class Image:
     def __init__(self):
         pass
         
-    def capture(self, res=128, delay=0.5, awb='', expsr='', eff=''):
+    def capture(self, res=256, delay=0.5, awb='', expsr='', eff=''):
         with picamera.PiCamera() as camera:
             with picamera.array.PiRGBArray(camera) as self.img:
                 
@@ -29,7 +29,7 @@ class Image:
                 #~ camera.awb_mode = awb
                 #~ camera.exposure_mode = expsr
                 #~ camera.image_effect = eff
-                self.img = np.empty((128,128,3), dtype=np.uint8)
+                self.img = np.empty((res,res,3), dtype=np.uint8)
                 camera.capture(self.img,'rgb')
         return self.img
 
@@ -68,7 +68,7 @@ class Image:
 
     def findColor(self, rgb):
         
-        w = np.array([175, 178, 176])
+        w = np.array([178, 174, 177])
         y = np.array([157, 176, 88 ])
         r = np.array([152, 58 , 64 ])
         o = np.array([178, 113, 85 ])
