@@ -33,7 +33,7 @@ class Session:
 
     def __init__(self):
     # Initialize Frame, Cube, and Algorithm
-        self.frame = Frame(clawDelay=0.3, rotateDelay90=0.5)
+        self.frame = Frame(clawDelay=0.5, rotateDelay90=0.5)
         self.cube = None
         self.algo = None
 
@@ -56,17 +56,21 @@ class Session:
         # <1> : open the claws
         if option == '1':
             self.frame.openClaws()
+            print('Claws opened\n')
             return True
         
         # <2> : close the claws
         elif option == '2':
             self.frame.closeClaws()
+            print('Claws closed\n')
             return True
 
         # <3> : map the cube
         elif option == '3':
             images = self.frame.mapCube()   # list of image arrays of each face 
             self.makeCube(images)           # creates software representation
+            print('Your cube...')
+            print(self.cube)
             return True
         
         # <4> : generate the algorithm
@@ -82,6 +86,8 @@ class Session:
             self.algo.solve()               # solve the cube
             length = len(self.algo.movelist)    # return length of move list
             print('Algorithm generated with ', length, ' moves')    # display length of move list
+            print('\nThe move list: ')
+            self.algo.printList()
             return True
         
         # <5> : begins solving the physical cube
@@ -91,10 +97,18 @@ class Session:
             if self.cube == None:
                 print('No cube')
                 return True     # exit and re-prompt
-            
+
+            # Ask for single step
+            tempStep = input('Single-step through solution? (n/y): ')
+            if tempStep == 'n' or tempStep == 'N':
+                singleStep = False
+            elif tempStep == 'y' or tempStep == 'Y':
+                singleStep = True
+
             # pass move list to list parser
-            self.solveCube(self.algo.movelist)
+            self.solveCube(singleStep)
             print('Cube solved')
+            print(self.algo.cube, '\n')
             return True
 
         # <6> : generate random config and execute moves
@@ -121,7 +135,7 @@ class Session:
         else:
             print('ERROR: Invalid entry')
             return True
-    
+
     def makeCube(self, images):
     # calls necessary functions to create software representaion of the cube
     # handles errors by allowing user to verify camera capture and manually
@@ -233,76 +247,96 @@ class Session:
 
             return self.cube
 
-    def solveCube(self, movelist):
-    # move list parser:
-    #   iterates through move list and translates the character symbol 
-    #   representation to the proper command for the frame class to 
-    #   move the claws and solve the physical cube 
+    # Function to solve the cube with the claws
+    def solveCube(self, singleStep = True):
         
-        # initialize frame
-        frame = self.frame
-
-        # parse list
-        for i in range(len(movelist)):
-            if movelist[i] == 'X':
-                frame.rotate90('X')
-            elif movelist[i] == 'Xi':
-                frame.rotate90('X', inverse=True)
-            elif movelist[i] == 'Z':
-                frame.rotate90('Z')
-            elif movelist[i] == 'Zi':
-                frame.rotate90('Z', inverse=True)
-            elif movelist[i] == 'Y':
-                frame.rotate90('Y')
-            elif movelist[i] == 'Yi':
-                frame.rotate90('Y', inverse=True)
-            elif movelist[i] == '2X':
-                frame.rotate180('X')
-            elif movelist[i] == '2Y':
-                frame.rotate180('Y')
-            elif movelist[i] == '2Z':
-                frame.rotate180('Z')
-            elif movelist[i] == 'F':
-                frame.turn90('F')
-            elif movelist[i] == 'Fi':
-                frame.turn90('F', inverse=True)
-            elif movelist[i] == 'B':
-                frame.turn90('B')
-            elif movelist[i] == 'Bi':
-                frame.turn90('B', inverse=True)
-            elif movelist[i] == 'L':
-                frame.turn90('L')
-            elif movelist[i] == 'Li':
-                frame.turn90('L', inverse=True)
-            elif movelist[i] == 'R':
-                frame.turn90('R')
-            elif movelist[i] == 'Ri':
-                frame.turn90('R', inverse=True)
-            elif movelist[i] == 'U':
-                frame.turn90('U')
-            elif movelist[i] == 'Ui':
-                frame.turn90('U', inverse=True)
-            elif movelist[i] == 'D':
-                frame.turn90('D')
-            elif movelist[i] == 'Di':
-                frame.turn90('D', inverse=True)
-            elif movelist[i] == '2F':
-                frame.turn180('F')
-            elif movelist[i] == '2B':
-                frame.turn180('B')
-            elif movelist[i] == '2L':
-                frame.turn180('L')
-            elif movelist[i] == '2R':
-                frame.turn180('R')
-            elif movelist[i] == '2U':
-                frame.turn180('U')
-            elif movelist[i] == '2D':
-                frame.turn180('D')
-            else:
-                pass
-
-        return
+        # Alias for simplifying code
+        movelist = self.algo.movelist
         
+		# Flag to indicate whether current iteration is an inverse one
+        isInverse = False
+        
+		# Runtime indicator flag
+        goodToGo = True
+        
+		# Initial range parameter
+        liststart = 0
+        tempindex = 0
+        
+		# Sets of moves
+        turns = 'F B U D R L'
+        iturns = 'Fi Bi Ui Di Ri Li'
+        dturns = '2F 2B 2U 2D 2R 2L'
+        rots = 'X Z'
+        irots = 'Xi Yi Zi'
+        drots = '2X 2Y 2Z'
+        
+		# Entering main loop of claw solving
+        while goodToGo == True:
+            try:
+                for i in range(liststart, len(movelist)):
+                    tempindex = i
+
+					# Print move number and move
+                    if not isInverse:
+                        print('Move ' + str(i) + ': ' + str(movelist[i]))	
+                    else:
+                        print('Move ' + str(len(movelist) - i - 1) + ': ' 
+							+ str(movelist[i]))
+                    
+					# Parse list
+                    if movelist[i] in turns:
+                        self.frame.turn90(movelist[i])
+                    elif movelist[i] in iturns:
+                        self.frame.turn90(movelist[i][0], inverse=True)
+                    elif movelist[i] in dturns:
+                        self.frame.turn180(movelist[i][1])
+                    elif movelist[i] in rots:
+                        self.frame.rotate90(movelist[i])
+                    elif movelist[i] in irots:
+                        self.frame.rotate90(movelist[i][0], inverse=True)
+                    elif movelist[i] in drots:
+                        self.frame.rotate180(movelist[i][1])					
+                    
+					# Loop terminator statement
+                    if tempindex == (len(movelist) - 1):
+                        goodToGo = False
+                    
+					# If single stepping
+                    if singleStep:
+                        input('')
+                    
+			# On a CTRL+C press:
+            except KeyboardInterrupt:
+                goodToGo = False
+                print('-----------\nUSER PAUSE\n-----------')
+                print('Type 0 - 20 and press Enter to repeat last n moves.')
+                print('Press "i" to proceed backwards through the list')
+                print('Press "s" to enable single-step through the solution.')
+                print('(Pressing Enter will proceed to the next step)')
+                print('Press "m" to exit single-stepping mode')
+                extCommand = input('Option: ')
+                if extCommand in '0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20':
+                    goodToGo = True
+					# Set new list start to next movelist
+                    liststart = tempindex - int(extCommand) + 1
+                elif extCommand == 'i':
+                    isInverse = not isInverse
+                    templist = self.algo.inverseList()
+                    movelist = templist
+                    goodToGo = True
+					# Set new list start to next movelist
+                    liststart = len(movelist) - (tempindex + 1)
+                elif extCommand == 's':
+                    singleStep = True
+                    liststart = tempindex + 1
+                    goodToGo = True
+                elif extCommand == 'm':
+                    singleStep = False
+                    liststart = tempindex + 1
+                    goodToGo = True
+                print('-----------\nUSER RESUME\n-----------')      
+    
     def getSample(self, img, x, y):
     # function to pick a sample from the image array
     # accepts the image array and the X, Y location
