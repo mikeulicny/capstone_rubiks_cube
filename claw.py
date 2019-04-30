@@ -82,11 +82,11 @@ class Claw:
 
 
 		if self.armID == 1 and angle == 90:
-			angle = 91
-		if self.armID == 3 and angle == 90:
-			angle = 78
-		if self.armID == 5 and angle == 90:
 			angle = 89
+		if self.armID == 3 and angle == 90:
+			angle = 74
+		if self.armID == 5 and angle == 90:
+			angle = 85
 		if self.armID == 7 and angle == 90:
 			angle = 92
 		
